@@ -3,11 +3,24 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "rea
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import OptionButton from "../components/OptionButton";
 import LinkButton from "../components/LinkButton";
-import BackButton from "../components/BackButton";
-
+import { router } from 'expo-router';
 export default function Main() {
 
+    const handleGameSettings = () => {
+        router.push('../private/gamesettings');
+    }
 
+    const handlePlayers = () => {
+        router.push('../private/players');
+    }
+
+    const handleHistory = () => {
+        router.push('../private/history');
+    }
+
+    const handleStatistics = () => {
+        router.push('../private/statistics');
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -25,13 +38,13 @@ export default function Main() {
                 </View>
 
                 <View style={styles.buttons}>
-                    <OptionButton placeholder="Game Settings" iconName="cog" onPress={() => console.log('Settings')} />
+                    <OptionButton placeholder="Game Settings" iconName="cog" onPress={ handleGameSettings } />
 
-                    <OptionButton placeholder="Players" iconName="account-group" onPress={() => console.log('Players')} />
+                    <OptionButton placeholder="Players" iconName="account-group" onPress={ handlePlayers } />
 
-                    <OptionButton placeholder="History" iconName="history" onPress={() => console.log('History')} />
+                    <OptionButton placeholder="History" iconName="history" onPress={ handleHistory } />
 
-                    <OptionButton placeholder="Statistics" iconName="trending-up" onPress={() => console.log('Statistics')} />
+                    <OptionButton placeholder="Statistics" iconName="trending-up" onPress={ handleStatistics } />
                 </View>
 
                 <View style={styles.linkbtn}>

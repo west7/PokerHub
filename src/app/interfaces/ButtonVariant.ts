@@ -22,7 +22,7 @@ export interface ButtonVariant {
     disabled: ButtonStyles;    
 }
 
-export const primaryButton: ButtonVariant ={
+export const primaryButton: ButtonVariant = { 
     enabled:{
         button:{
             backgroundColor: primayColorRed,
@@ -76,7 +76,7 @@ export const outlineButton: ButtonVariant = {
     },
 }
 
-export const variants ={
+export const variants = {
     primary : primaryButton,
     outline : outlineButton,
 }

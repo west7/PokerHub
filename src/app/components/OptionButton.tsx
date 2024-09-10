@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     icon:{
-
+        color: '#f0f0f0'
     },
     text:{
         color: "#f0f0f0",
