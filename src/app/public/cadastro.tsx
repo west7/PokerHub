@@ -1,17 +1,68 @@
 import React from "react";
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import Input from "../components/Input";
 import LinkButton from "../components/LinkButton";
 import { router } from "expo-router";
 import BackButton from "../components/BackButton";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../firebaseConnection";
 
+interface Errors {
+    name?: boolean;
+    email?: boolean;
+    password?: boolean;
+}
 
 export default function Cadatro() {
+    const [errors, setErrors] = useState<Errors>({ name: false, email: false, password: false})
+    const [showErrors, setShowErrors] = useState(false)
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    const handleErrors = () => {
+        const e: Errors = {}
+
+        if (!name)
+            e.name = true
+
+        if (!email)
+            e.email = true
+        else if (!/\S+@\S+\.\S+/.test(email))
+            e.email = true
+
+        if (!password)
+            e.password = true
+        else if (password !== confirmPassword)
+            e.password = true
+
+        setErrors(e)
+    }
+
+    useEffect(handleErrors, [name ,email, password, confirmPassword])
+
+
+    const handleRegister = async () => {
+        if (Object.keys(errors).length > 0) {
+            setShowErrors(true)
+            return
+        }
+        setShowErrors(false)
+        await addDoc(collection(db, "users"), {
+            name: name,
+            email: email,
+            password: password, //TODO: hash password
+        })
+        .then(() => {
+            console.log("Succsessfully registered");
+            router.push('../public/login');
+        })
+        .catch((error) => {
+            console.error("Error registring: ", error);
+        })
+    }
 
 
     return (
@@ -30,19 +81,19 @@ export default function Cadatro() {
                     <View style={styles.inputs}>
 
                         <View style={styles.input}>
-                            <Input placeholder="Name" animation value={name} onChangeText={setName} iconName="account" />
+                            <Input placeholder="Name" animation err={ showErrors ? errors.name : false } value={name} onChangeText={setName} iconName="account" />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Insert email" animation value={email} onChangeText={setEmail} iconName="email"/>
+                            <Input placeholder="Insert email" animation err={ showErrors ? errors.email : false }  value={email} onChangeText={setEmail} iconName="email" />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Password" animation value={password} onChangeText={setPassword} iconName="lock"/>
+                            <Input placeholder="Password" animation err={ showErrors ? errors.password : false}  value={password} onChangeText={setPassword} iconName="lock" />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Confirm password" animation value={confirmPassword} onChangeText={setConfirmPassword} iconName="lock"/>
+                            <Input placeholder="Confirm password" animation err={ showErrors ? errors.password : false } value={confirmPassword} onChangeText={setConfirmPassword} iconName="lock" />
                         </View>
 
                     </View>
@@ -50,8 +101,8 @@ export default function Cadatro() {
                 </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-                    <LinkButton title="Sign up" onPress={() => router.push('../public/login')} variant="outline"/>
-                    <Pressable onPress={() => router.push('../public/login') }>
+                    <LinkButton title="Sign up" onPress={ handleRegister } variant="outline" />
+                    <Pressable onPress={() => router.push('../public/login')}>
                         <Text style={styles.text}>Already have an account? Log in</Text>
                     </Pressable>
                 </View>
@@ -72,7 +123,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: "#f0f0f0",
         marginLeft: 28,
-        marginTop: 60,
+        marginTop: 20,
     },
     inputs: {
         marginTop: 20,

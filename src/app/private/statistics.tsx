@@ -3,8 +3,15 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "rea
 
 export default function Statistics() {
     return (
-        <View>
-            <Text>Statistics</Text>
+        <View style={styles.container}>
+            <Text style={{color: '#f0f0f0'}}>Statistics</Text>
         </View>
     );
 } 
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: "#121212",
+        flex: 1,
+    }
+});

@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "rea
 
 export default function Players() {
     return (
-        <View>
+        <View style={styles.container}>
             <Text style={{color: '#f0f0f0'}}>Players</Text>
         </View>
     );

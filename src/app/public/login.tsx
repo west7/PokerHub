@@ -52,7 +52,7 @@ export default function Login() {
 
                 <BackButton />
 
-                <Text style={styles.title}>Poker Tracker</Text>
+                <Text style={styles.title}>Poker App</Text>
                 <Text style={styles.subtitle}>Manage your own games!</Text>
                 
                 <KeyboardAvoidingView
