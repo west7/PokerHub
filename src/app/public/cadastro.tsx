@@ -6,8 +6,8 @@ import LinkButton from "../components/LinkButton";
 import { router } from "expo-router";
 import BackButton from "../components/BackButton";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebaseConnection";
-
+import { db, auth } from "../../firebaseConnection";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 interface Errors {
     name?: boolean;
     email?: boolean;
@@ -15,12 +15,13 @@ interface Errors {
 }
 
 export default function Cadatro() {
-    const [errors, setErrors] = useState<Errors>({ name: false, email: false, password: false})
+    const [errors, setErrors] = useState<Errors>({ name: false, email: false, password: false })
     const [showErrors, setShowErrors] = useState(false)
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const handleErrors = () => {
         const e: Errors = {}
@@ -41,7 +42,7 @@ export default function Cadatro() {
         setErrors(e)
     }
 
-    useEffect(handleErrors, [name ,email, password, confirmPassword])
+    useEffect(handleErrors, [name, email, password, confirmPassword])
 
 
     const handleRegister = async () => {
@@ -50,7 +51,7 @@ export default function Cadatro() {
             return
         }
         setShowErrors(false)
-        await addDoc(collection(db, "users"), {
+        /* await addDoc(collection(db, "users"), {
             name: name,
             email: email,
             password: password, //TODO: hash password
@@ -61,7 +62,27 @@ export default function Cadatro() {
         })
         .catch((error) => {
             console.error("Error registring: ", error);
+        }) */
+    }
+
+    const signUp = async () => {
+        if (Object.keys(errors).length > 0) {
+            setShowErrors(true)
+            return
+        }
+        setShowErrors(false)
+        setLoading(true)
+        await createUserWithEmailAndPassword(auth, email, password)
+        .then((response) => {
+            console.log(response);
+            router.push("../public/login");
         })
+        .catch((e) => {
+            alert(e.message);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
     }
 
 
@@ -75,25 +96,24 @@ export default function Cadatro() {
 
                 <KeyboardAvoidingView
                     behavior={Platform.OS == "ios" ? "padding" : "height"}
-                    keyboardVerticalOffset={25}
                     style={styles.avoid}>
 
                     <View style={styles.inputs}>
 
                         <View style={styles.input}>
-                            <Input placeholder="Name" animation err={ showErrors ? errors.name : false } value={name} onChangeText={setName} iconName="account" />
+                            <Input placeholder="Name" animation err={showErrors ? errors.name : false} value={name} onChangeText={setName} iconName="account" />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Insert email" animation err={ showErrors ? errors.email : false }  value={email} onChangeText={setEmail} iconName="email" />
+                            <Input placeholder="Insert email" animation err={showErrors ? errors.email : false} value={email} onChangeText={setEmail} iconName="email" />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Password" animation err={ showErrors ? errors.password : false}  value={password} onChangeText={setPassword} iconName="lock" />
+                            <Input placeholder="Password" animation err={showErrors ? errors.password : false} value={password} onChangeText={setPassword} iconName="lock" />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Confirm password" animation err={ showErrors ? errors.password : false } value={confirmPassword} onChangeText={setConfirmPassword} iconName="lock" />
+                            <Input placeholder="Confirm password" animation err={showErrors ? errors.password : false} value={confirmPassword} onChangeText={setConfirmPassword} iconName="lock" />
                         </View>
 
                     </View>
@@ -101,7 +121,7 @@ export default function Cadatro() {
                 </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-                    <LinkButton title="Sign up" onPress={ handleRegister } variant="outline" />
+                    <LinkButton title="Sign up" onPress={signUp} variant="outline" />
                     <Pressable onPress={() => router.push('../public/login')}>
                         <Text style={styles.text}>Already have an account? Log in</Text>
                     </Pressable>
@@ -132,10 +152,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     avoid: {
-        width: "90%",
-        margin: 10,
         flex: 1,
-        alignSelf: "center",
     },
     btn: {
         marginTop: 100,
@@ -146,8 +163,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#f0f0f0",
         marginTop: 5,
-        borderBottomWidth: 1,
-        borderBottomColor: "#f0f0f0",
         marginBottom: 15,
+        textDecorationLine: "underline",
     }
 })

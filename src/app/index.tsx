@@ -15,7 +15,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Poker Tracker</Text>
+      <Text style={styles.title}>Poker App</Text>
       <Text style={styles.subtitle}>Manage your own games!</Text>
 
       {/*  <Image
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
     marginTop: 200,
     marginBottom: 10,
     color: "#f0f0f0",
-    borderBottomWidth: 2,
-    borderBottomColor: "#C61414",
+    textDecorationLine: "underline",
+    textDecorationColor: "#A90800",
   },
   subtitle: {
     fontWeight: "bold",

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable, SafeAreaView, KeyboardAvoidingView } from "react-native";
 import { router } from "expo-router";
 import LinkButton from "../components/LinkButton";
 import BackButton from "../components/BackButton";
 import Input from "../components/Input";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-
+import { auth } from "../../firebaseConnection";
+import { signInWithEmailAndPassword } from "firebase/auth";
 interface Errors {
     email?: boolean;
     senha?: boolean;
@@ -17,14 +16,35 @@ export default function Login() {
     const [showErrors, setShowErrors] = useState(false)
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
+    const [loading, setLoading] = useState(false)
 
-    const login = () => {
+    /* const login = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
             return
         }
         setShowErrors(false)
         router.push("../private/")
+    } */
+
+    const signIn = async () => {
+        if (Object.keys(errors).length > 0) {
+            setShowErrors(true)
+            return
+        }
+        setShowErrors(false)
+        setLoading(true)
+        signInWithEmailAndPassword(auth, email, senha)
+            .then((response) => {
+                console.log(response);
+                router.push("../private/");
+            })
+            .catch((e) => {
+                alert(e.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
 
     const handleErrors = () => {
@@ -47,36 +67,51 @@ export default function Login() {
 
 
     return (
-        <ScrollView style={{ height: "100%", backgroundColor: "#121212" }}>
-            <View style={styles.container}>
-
-                <BackButton />
+        <SafeAreaView style={styles.container}>
+            <BackButton />
+            <ScrollView style={{ height: '100%', width: '100%' }}>
 
                 <Text style={styles.title}>Poker App</Text>
                 <Text style={styles.subtitle}>Manage your own games!</Text>
-                
+
                 <KeyboardAvoidingView
                     behavior={Platform.OS == "ios" ? "padding" : "height"}
-                    keyboardVerticalOffset={50}
                     style={styles.avoid}
                 >
                     <View style={styles.inputs}>
-                        <Input placeholder="Email" iconName="email" animation err={showErrors ? errors.email : false} value={email} onChangeText={setEmail} />
+                        <Input
+                            placeholder="Email"
+                            iconName="email"
+                            animation
+                            err={showErrors ? errors.email : false}
+                            value={email}
+                            onChangeText={setEmail}
+                        />
                     </View>
                     <View style={styles.inputs}>
-                        <Input placeholder="Password" iconName="lock" animation
-                            err={showErrors ? errors.senha : false} value={senha} onChangeText={setSenha} />
+                        <Input
+                            placeholder="Password"
+                            iconName="lock"
+                            animation
+                            err={showErrors ? errors.senha : false}
+                            value={senha}
+                            onChangeText={setSenha}
+                            secureTextEntry
+                        />
                     </View>
                 </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-                    <LinkButton title="Sign in" onPress={login} />
+                    <LinkButton
+                        title="Sign in"
+                        onPress={signIn}
+                    />
                     <Pressable onPress={() => router.push("../public/cadastro")}>
                         <Text style={styles.text}>Don't have an account? Register</Text>
                     </Pressable>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -85,6 +120,7 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         alignItems: "center",
+        backgroundColor: "#121212",
     },
     title: {
         fontWeight: "bold",
@@ -93,8 +129,8 @@ const styles = StyleSheet.create({
         marginTop: 100,
         marginBottom: 10,
         color: "#f0f0f0",
-        borderBottomWidth: 2,
-        borderBottomColor: "#C61414",
+        textDecorationLine: "underline",
+        textDecorationColor: "#C61414",
     },
     subtitle: {
         fontWeight: "bold",
@@ -104,14 +140,13 @@ const styles = StyleSheet.create({
         color: "#f0f0f0",
     },
     avoid: {
-        width: "90%",
         flex: 1,
-        margin: 10,
     },
     btn: {
-        marginTop: 100,
-        width: "100%",
-        alignItems: "center"
+        alignItems: "center",
+        bottom: 0,
+        marginTop: 40,
+        flex: 1,
     },
     inputs: {
         margin: 10,
@@ -121,7 +156,6 @@ const styles = StyleSheet.create({
         color: "#f0f0f0",
         marginTop: 5,
         marginBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: "#f0f0f0"
+        textDecorationLine: "underline",
     },
 })
