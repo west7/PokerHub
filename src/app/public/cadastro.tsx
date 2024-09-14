@@ -20,7 +20,9 @@ export default function Cadatro() {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const handleErrors = () => {
@@ -36,6 +38,8 @@ export default function Cadatro() {
 
         if (!password)
             e.password = true
+        else if (password.length < 6)
+            e.password = true
         else if (password !== confirmPassword)
             e.password = true
 
@@ -44,27 +48,6 @@ export default function Cadatro() {
 
     useEffect(handleErrors, [name, email, password, confirmPassword])
 
-
-    const handleRegister = async () => {
-        if (Object.keys(errors).length > 0) {
-            setShowErrors(true)
-            return
-        }
-        setShowErrors(false)
-        /* await addDoc(collection(db, "users"), {
-            name: name,
-            email: email,
-            password: password, //TODO: hash password
-        })
-        .then(() => {
-            console.log("Succsessfully registered");
-            router.push('../public/login');
-        })
-        .catch((error) => {
-            console.error("Error registring: ", error);
-        }) */
-    }
-
     const signUp = async () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
@@ -72,17 +55,26 @@ export default function Cadatro() {
         }
         setShowErrors(false)
         setLoading(true)
+
         await createUserWithEmailAndPassword(auth, email, password)
-        .then((response) => {
-            console.log(response);
-            router.push("../public/login");
-        })
-        .catch((e) => {
-            alert(e.message);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+            .then((response) => {
+                console.log(response);
+                router.push("../public/login");
+            })
+            .catch((e) => {
+                alert(e.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword)
+    }
+
+    const handleShowConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword)
     }
 
 
@@ -101,19 +93,50 @@ export default function Cadatro() {
                     <View style={styles.inputs}>
 
                         <View style={styles.input}>
-                            <Input placeholder="Name" animation err={showErrors ? errors.name : false} value={name} onChangeText={setName} iconName="account" />
+                            <Input
+                                placeholder="Name"
+                                animation
+                                err={showErrors ? errors.name : false}
+                                value={name}
+                                onChangeText={setName}
+                                iconName="account"
+                            />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Insert email" animation err={showErrors ? errors.email : false} value={email} onChangeText={setEmail} iconName="email" />
+                            <Input
+                                placeholder="Insert email"
+                                animation
+                                err={showErrors ? errors.email : false}
+                                value={email}
+                                onChangeText={setEmail}
+                                iconName="email"
+                            />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Password" animation err={showErrors ? errors.password : false} value={password} onChangeText={setPassword} iconName="lock" />
+                            <Input
+                                placeholder="Password"
+                                animation
+                                err={showErrors ? errors.password : false}
+                                value={password}
+                                onChangeText={setPassword}
+                                iconName={showPassword ? "lock-open-variant" : "lock"} iconFunction={handleShowPassword}
+                                secureTextEntry={!showPassword}
+                            />
                         </View>
 
                         <View style={styles.input}>
-                            <Input placeholder="Confirm password" animation err={showErrors ? errors.password : false} value={confirmPassword} onChangeText={setConfirmPassword} iconName="lock" />
+                            <Input
+                                placeholder="Confirm password"
+                                animation
+                                err={showErrors ? errors.password : false}
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                                iconName={showConfirmPassword ? "lock-open-variant" : "lock"} 
+                                iconFunction={handleShowConfirmPassword}
+                                secureTextEntry={!showConfirmPassword} 
+                            />
                         </View>
 
                     </View>

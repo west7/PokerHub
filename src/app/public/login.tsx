@@ -15,17 +15,12 @@ export default function Login() {
     const [errors, setErrors] = useState<Errors>({ email: false, senha: false })
     const [showErrors, setShowErrors] = useState(false)
     const [email, setEmail] = useState("")
-    const [senha, setSenha] = useState("")
+    const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
 
-    /* const login = () => {
-        if (Object.keys(errors).length > 0) {
-            setShowErrors(true)
-            return
-        }
-        setShowErrors(false)
-        router.push("../private/")
-    } */
+    //TODO: Implementar o Loading 
+    //TODO: Implementar o erro de login
+    //TODO: Implementar recuperação de senha
 
     const signIn = async () => {
         if (Object.keys(errors).length > 0) {
@@ -34,7 +29,8 @@ export default function Login() {
         }
         setShowErrors(false)
         setLoading(true)
-        signInWithEmailAndPassword(auth, email, senha)
+
+        await signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
                 console.log(response);
                 router.push("../private/");
@@ -55,15 +51,17 @@ export default function Login() {
         else if (!/\S+@\S+\.\S+/.test(email))
             e.email = true
 
-        if (!senha)
+        if (!password)
             e.senha = true
-
 
         setErrors(e)
     }
 
+    
 
-    useEffect(handleErrors, [email, senha])
+
+
+    useEffect(handleErrors, [email, password])
 
 
     return (
@@ -94,8 +92,8 @@ export default function Login() {
                             iconName="lock"
                             animation
                             err={showErrors ? errors.senha : false}
-                            value={senha}
-                            onChangeText={setSenha}
+                            value={password}
+                            onChangeText={setPassword}
                             secureTextEntry
                         />
                     </View>

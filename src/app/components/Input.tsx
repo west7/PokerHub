@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, TextInput, KeyboardAvoidingView, StyleSheet, Platform, Text, Animated, Keyboard, Easing, TextInputProps } from "react-native";
+import { View, TextInput, KeyboardAvoidingView, StyleSheet, Platform, Text, Animated, Keyboard, Easing, TextInputProps, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface IProps extends TextInputProps {
@@ -10,9 +10,20 @@ interface IProps extends TextInputProps {
     textColor?: string;
     borderColor?: string;
     err?: boolean;
+    iconFunction?: () => void;
 }
 
-export default function Input({ placeholder, iconName, animation = false, duration = 100, textColor = "#f0f0f0", borderColor = "#fff", err = false, ...nativeprops }: IProps) {
+export default function Input({
+    placeholder,
+    iconName,
+    animation = false,
+    duration = 100,
+    textColor = "#f0f0f0",
+    borderColor = "#fff",
+    err = false,
+    iconFunction,
+    ...nativeprops }: IProps) {
+
     const [iconAnimation, setIconAnimation] = useState(false)
     const [errColor, setErrColor] = useState("#FF0000")
     const [holder, setPlaceHolder] = useState(placeholder)
@@ -99,7 +110,9 @@ export default function Input({ placeholder, iconName, animation = false, durati
                 underlineColorAndroid="transparent"
             />
             {iconName && (
-                <Icon name={iconName} color={err ? errColor : (iconAnimation ? textColor : "#f0f0f0")} size={16} style={[styles.icon, { opacity: iconAnimation ? 1 : 0.7 }]} />
+                <Pressable onPress={iconFunction}>
+                    <Icon name={iconName} color={err ? errColor : (iconAnimation ? textColor : "#f0f0f0")} size={16} style={[styles.icon, { opacity: iconAnimation ? 1 : 0.7 }]} />
+                </Pressable>
             )}
         </Animated.View>
     )
