@@ -4,12 +4,14 @@ import { router } from "expo-router";
 import LinkButton from "../components/LinkButton";
 import BackButton from "../components/BackButton";
 import Input from "../components/Input";
-import { auth } from "../../firebaseConnection";
+import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
 interface Errors {
     email?: boolean;
     senha?: boolean;
 }
+
+const auth = FIREBASE_AUTH;
 
 export default function Login() {
     const [errors, setErrors] = useState<Errors>({ email: false, senha: false })
@@ -17,12 +19,14 @@ export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     //TODO: Implementar o Loading 
     //TODO: Implementar o erro de login
     //TODO: Implementar recuperação de senha
+    //TODO: Implementar Notificações internas no app
 
-    const signIn = async () => {
+    const signIn = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
             return
@@ -30,10 +34,10 @@ export default function Login() {
         setShowErrors(false)
         setLoading(true)
 
-        await signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
                 console.log(response);
-                router.push("../private/");
+                router.replace("../private/");
             })
             .catch((e) => {
                 alert(e.message);
@@ -57,9 +61,9 @@ export default function Login() {
         setErrors(e)
     }
 
-    
-
-
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword)
+    }
 
     useEffect(handleErrors, [email, password])
 
@@ -89,25 +93,30 @@ export default function Login() {
                     <View style={styles.inputs}>
                         <Input
                             placeholder="Password"
-                            iconName="lock"
+                            iconName= {showPassword ? "lock-open-variant" : "lock"}
                             animation
                             err={showErrors ? errors.senha : false}
                             value={password}
                             onChangeText={setPassword}
-                            secureTextEntry
+                            iconFunction={handleShowPassword}
+                            secureTextEntry={!showPassword}
                         />
                     </View>
-                </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
+
                     <LinkButton
                         title="Sign in"
                         onPress={signIn}
-                    />
+                        isLoading={loading}
+                        />
+
                     <Pressable onPress={() => router.push("../public/cadastro")}>
                         <Text style={styles.text}>Don't have an account? Register</Text>
                     </Pressable>
+                
                 </View>
+                    </KeyboardAvoidingView>
             </ScrollView>
         </SafeAreaView>
     );

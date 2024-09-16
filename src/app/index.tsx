@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import LinkButton from "./components/LinkButton";
-import { Link, router } from "expo-router";
+import { Stack, Link, router } from "expo-router";
 
 export default function App() {
 
@@ -14,20 +14,19 @@ export default function App() {
   }
 
   return (
+
     <View style={styles.container}>
+      <StatusBar hidden />
       <Text style={styles.title}>Poker App</Text>
       <Text style={styles.subtitle}>Manage your own games!</Text>
 
-      {/*  <Image
-        source={require("../../assets/logo2.png")}
-        style={styles.imagem}
-      /> */}
 
       <LinkButton title="Sign in" onPress={navigateLogin} backgroundColor="#A90800" />
 
       <LinkButton title="Sign up" onPress={navigateCadastrar} backgroundColor="#A90800" variant="outline" />
     </View>
-  );
+
+  )
 }
 
 const styles = StyleSheet.create({

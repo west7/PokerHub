@@ -3,16 +3,19 @@ import { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import Input from "../components/Input";
 import LinkButton from "../components/LinkButton";
-import { router } from "expo-router";
+import { router, } from "expo-router";
 import BackButton from "../components/BackButton";
-import { addDoc, collection } from "firebase/firestore";
-import { db, auth } from "../../firebaseConnection";
+import { setDoc, doc } from "firebase/firestore";
+import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 interface Errors {
     name?: boolean;
     email?: boolean;
     password?: boolean;
 }
+
+const auth = FIREBASE_AUTH;
+const db = FIREBASE_DB;
 
 export default function Cadatro() {
     const [errors, setErrors] = useState<Errors>({ name: false, email: false, password: false })
@@ -48,7 +51,7 @@ export default function Cadatro() {
 
     useEffect(handleErrors, [name, email, password, confirmPassword])
 
-    const signUp = async () => {
+    const signUp = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
             return
@@ -56,10 +59,19 @@ export default function Cadatro() {
         setShowErrors(false)
         setLoading(true)
 
-        await createUserWithEmailAndPassword(auth, email, password)
-            .then((response) => {
-                console.log(response);
-                router.push("../public/login");
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(async (response) => {
+                const user = response.user;
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                })
+                    .then(() => {
+                        router.push("../public/login");
+                    })
+                    .catch((e) => {
+                        alert(e.message);
+                    })
             })
             .catch((e) => {
                 alert(e.message);
@@ -133,9 +145,9 @@ export default function Cadatro() {
                                 err={showErrors ? errors.password : false}
                                 value={confirmPassword}
                                 onChangeText={setConfirmPassword}
-                                iconName={showConfirmPassword ? "lock-open-variant" : "lock"} 
+                                iconName={showConfirmPassword ? "lock-open-variant" : "lock"}
                                 iconFunction={handleShowConfirmPassword}
-                                secureTextEntry={!showConfirmPassword} 
+                                secureTextEntry={!showConfirmPassword}
                             />
                         </View>
 
@@ -144,7 +156,7 @@ export default function Cadatro() {
                 </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-                    <LinkButton title="Sign up" onPress={signUp} variant="outline" />
+                    <LinkButton title="Sign up" onPress={signUp} variant="outline" isLoading={loading} />
                     <Pressable onPress={() => router.push('../public/login')}>
                         <Text style={styles.text}>Already have an account? Log in</Text>
                     </Pressable>

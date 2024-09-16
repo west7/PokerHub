@@ -5,12 +5,10 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function BackButton() {
 
-    const canGoBack = () => {
-        router.canGoBack(); 
-    }
-
     const goBack = () => {
-        router.back();
+        if (router.canGoBack()) {
+            router.back();
+        }
     }
 
     return (

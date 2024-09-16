@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import OptionButton from "../components/OptionButton";
 import LinkButton from "../components/LinkButton";
 import { router } from 'expo-router';
-export default function Main() {
+import { User } from "firebase/auth";
+
+export default function Home() {
+    const [user, setUser] = useState<User | null>(null);
+
+    const getUser = () => {
+        
+    }
 
     const handleGameSettings = () => {
         router.push('../private/gamesettings');
@@ -38,13 +45,13 @@ export default function Main() {
                 </View>
 
                 <View style={styles.buttons}>
-                    <OptionButton placeholder="Game Settings" iconName="cog" onPress={ handleGameSettings } />
+                    <OptionButton placeholder="Game Settings" iconName="cog" onPress={handleGameSettings} />
 
-                    <OptionButton placeholder="Players" iconName="account-group" onPress={ handlePlayers } />
+                    <OptionButton placeholder="Players" iconName="account-group" onPress={handlePlayers} />
 
-                    <OptionButton placeholder="History" iconName="history" onPress={ handleHistory } />
+                    <OptionButton placeholder="History" iconName="history" onPress={handleHistory} />
 
-                    <OptionButton placeholder="Statistics" iconName="trending-up" onPress={ handleStatistics } />
+                    <OptionButton placeholder="Statistics" iconName="trending-up" onPress={handleStatistics} />
                 </View>
 
                 <View style={styles.linkbtn}>
