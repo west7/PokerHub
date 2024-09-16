@@ -102,21 +102,20 @@ export default function Login() {
                             secureTextEntry={!showPassword}
                         />
                     </View>
+                </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-
                     <LinkButton
                         title="Sign in"
                         onPress={signIn}
                         isLoading={loading}
-                        />
+                    />
 
                     <Pressable onPress={() => router.push("../public/cadastro")}>
                         <Text style={styles.text}>Don't have an account? Register</Text>
                     </Pressable>
                 
                 </View>
-                    </KeyboardAvoidingView>
             </ScrollView>
         </SafeAreaView>
     );
