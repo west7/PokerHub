@@ -5,6 +5,7 @@ import OptionButton from "../components/OptionButton";
 import LinkButton from "../components/LinkButton";
 import { router } from 'expo-router';
 import { User } from "firebase/auth";
+import { colors } from "../interfaces/Colors";
 
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);
@@ -35,12 +36,12 @@ export default function Home() {
 
                 <View style={styles.header}>
                     <Pressable onPress={() => console.log('menu')}>
-                        <Icon name="menu" size={30} color={"#f0f0f0"} />
+                        <Icon name="menu" size={30} color={colors.textColor} />
                     </Pressable>
                 </View>
 
                 <View style={styles.nameContainer}>
-                    <Icon name="account-circle" size={40} color={"#f0f0f0"} style={styles.icon} />
+                    <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
                     <Text style={styles.name}>Guilherme Westphall</Text>
                 </View>
 
@@ -65,7 +66,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#121212",
+        backgroundColor: colors.backgroundColor,
         height: "100%",
         width: "100%",
     },
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     name: {
-        color: "#f0f0f0",
+        color: colors.textColor,
         fontSize: 25,
         fontWeight: 'bold',
     },

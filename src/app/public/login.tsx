@@ -6,6 +6,7 @@ import BackButton from "../components/BackButton";
 import Input from "../components/Input";
 import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import {colors} from "../interfaces/Colors"
 interface Errors {
     email?: boolean;
     senha?: boolean;
@@ -36,7 +37,7 @@ export default function Login() {
 
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 router.replace("../private/");
             })
             .catch((e) => {
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         alignItems: "center",
-        backgroundColor: "#121212",
+        backgroundColor: colors.backgroundColor,
     },
     title: {
         fontWeight: "bold",
@@ -134,16 +135,16 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginTop: 100,
         marginBottom: 10,
-        color: "#f0f0f0",
+        color: colors.textColor,
         textDecorationLine: "underline",
-        textDecorationColor: "#C61414",
+        textDecorationColor: colors.primaryColor,
     },
     subtitle: {
         fontWeight: "bold",
         fontSize: 18,
         alignSelf: "center",
         marginBottom: 40,
-        color: "#f0f0f0",
+        color: colors.textColor,
     },
     avoid: {
         flex: 1,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 15,
-        color: "#f0f0f0",
+        color: colors.textColor,
         marginTop: 5,
         marginBottom: 15,
         textDecorationLine: "underline",

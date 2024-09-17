@@ -8,6 +8,7 @@ import BackButton from "../components/BackButton";
 import { setDoc, doc } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { colors } from "../interfaces/Colors";
 interface Errors {
     name?: boolean;
     email?: boolean;
@@ -169,14 +170,14 @@ export default function Cadatro() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#121212",
+        backgroundColor: colors.backgroundColor,
         height: "100%",
         width: "100%",
     },
     title: {
         fontSize: 40,
         fontWeight: 'bold',
-        color: "#f0f0f0",
+        color: colors.textColor,
         marginLeft: 28,
         marginTop: 20,
     },
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 15,
-        color: "#f0f0f0",
+        color: colors.textColor,
         marginTop: 5,
         marginBottom: 15,
         textDecorationLine: "underline",

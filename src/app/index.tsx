@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, SafeAreaView } from 'react-native';
 import LinkButton from "./components/LinkButton";
 import { Stack, Link, router } from "expo-router";
+import { colors } from "./interfaces/Colors";
+import type { StatusBarStyle } from 'react-native';
+
 
 export default function App() {
+  
 
   const navigateLogin = () => {
     router.push("public/login");
@@ -15,26 +19,29 @@ export default function App() {
 
   return (
 
-    <View style={styles.container}>
-      <StatusBar hidden />
-      <Text style={styles.title}>Poker App</Text>
+    <SafeAreaView style={styles.container}>
+
+      <StatusBar
+        hidden
+      />
+        <Text style={styles.title}>Poker App</Text>
+
       <Text style={styles.subtitle}>Manage your own games!</Text>
 
+      <LinkButton title="Sign in" onPress={navigateLogin} backgroundColor={colors.primaryDarkColor} />
 
-      <LinkButton title="Sign in" onPress={navigateLogin} backgroundColor="#A90800" />
+      <LinkButton title="Sign up" onPress={navigateCadastrar} backgroundColor={colors.primaryDarkColor} variant="outline" />
 
-      <LinkButton title="Sign up" onPress={navigateCadastrar} backgroundColor="#A90800" variant="outline" />
-    </View>
+    </SafeAreaView >
 
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "#121212",
-    alignItems: "center"
+    flex: 1,
+    backgroundColor: colors.backgroundColor,
+    alignItems: "center",
   },
   imagem: {
     height: 200,
@@ -48,15 +55,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 200,
     marginBottom: 10,
-    color: "#f0f0f0",
+    color: colors.textColor,
     textDecorationLine: "underline",
-    textDecorationColor: "#A90800",
+    textDecorationColor: colors.primaryDarkColor,
   },
   subtitle: {
     fontWeight: "bold",
     fontSize: 18,
     alignSelf: "center",
     marginBottom: 70,
-    color: "#f0f0f0",
+    color: colors.textColor,
   },
 });
