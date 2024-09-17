@@ -1,15 +1,9 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from "react-native";
 
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyBDU5GTpOnTcaih_PCPd9x-L7Xq2nSLC-Q",
     authDomain: "pokerapp-67e8e.firebaseapp.com",
@@ -23,11 +17,14 @@ const firebaseConfig = {
 // Initialize Firebaser
 const FIREBASE_APP = initializeApp(firebaseConfig);
 const FIREBASE_DB = getFirestore(FIREBASE_APP);
-/* const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
-    persistence: getReactNativePersistence(AsyncStorage)
-}) */
-const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-});
+const FIREBASE_AUTH = (() => {
+    if (Platform.OS !== 'web') {
+        return initializeAuth(FIREBASE_APP, {
+            persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+        });
+    } else {
+        return  getAuth(FIREBASE_APP);
+    }
+})();
 
-export { FIREBASE_APP, FIREBASE_DB, FIREBASE_AUTH};
+export { FIREBASE_APP, FIREBASE_DB, FIREBASE_AUTH };
