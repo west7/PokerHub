@@ -38,7 +38,7 @@ export default function Login() {
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
                 //console.log(response);
-                router.replace("../private/");
+                router.push("../private/"); //replace
             })
             .catch((e) => {
                 alert(e.message);
@@ -83,6 +83,9 @@ export default function Login() {
                 >
                     <View style={styles.inputs}>
                         <Input
+                            keyboardType="email-address"
+                            autoComplete="email"
+                            autoCapitalize="none"
                             placeholder="Email"
                             iconName="email"
                             animation
@@ -93,6 +96,7 @@ export default function Login() {
                     </View>
                     <View style={styles.inputs}>
                         <Input
+                            keyboardType="visible-password"
                             placeholder="Password"
                             iconName= {showPassword ? "lock-open-variant" : "lock"}
                             animation

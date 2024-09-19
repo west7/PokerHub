@@ -2,13 +2,14 @@ import React from "react";
 import { StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import { colors } from "./interfaces/Colors";
 import Home from "./public/home";
+import AuthProvider from "./context/AuthProvider";
 
 export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="default" /> 
-      <Home />
+        <StatusBar barStyle="default" />
+        <Home />
     </SafeAreaView >
 
   )

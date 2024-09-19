@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import OptionButton from "../components/OptionButton";
 import LinkButton from "../components/LinkButton";
 import { router } from 'expo-router';
-import { User } from "firebase/auth";
 import { colors } from "../interfaces/Colors";
+import { AuthContext } from "../context/AuthProvider";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function Index() {
-    const [user, setUser] = useState<User | null>(null);
+    const context = useContext(AuthContext);
 
-    const getUser = () => {
-        
+    if (!context) {
+        throw new Error("User not found");
+    }
+
+    const { user, loading } = context;
+
+    if (loading) {
+        return (
+            <LoadingScreen />
+        )
     }
 
     const handleGameSettings = () => {
@@ -42,7 +51,12 @@ export default function Index() {
 
                 <View style={styles.nameContainer}>
                     <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
-                    <Text style={styles.name}>Guilherme Westphall</Text>
+
+                    { user ? 
+                    <Text style={styles.name}>{user.name}</Text> 
+                        : 
+                    <Text style={styles.name}>Por favor, faça login.</Text> 
+                    }
                 </View>
 
                 <View style={styles.buttons}>
@@ -66,9 +80,8 @@ export default function Index() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: colors.backgroundColor,
-        height: "100%",
-        width: "100%",
     },
     nameContainer: {
         marginTop: 20,
