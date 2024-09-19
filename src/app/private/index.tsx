@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import { User } from "firebase/auth";
 import { colors } from "../interfaces/Colors";
 
-export default function Home() {
+export default function Index() {
     const [user, setUser] = useState<User | null>(null);
 
     const getUser = () => {
