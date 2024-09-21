@@ -119,6 +119,9 @@ export default function Cadatro() {
                         <View style={styles.input}>
                             <Input
                                 placeholder="Insert email"
+                                keyboardType="email-address"
+                                autoComplete="email"
+                                autoCapitalize="none"    
                                 animation
                                 err={showErrors ? errors.email : false}
                                 value={email}

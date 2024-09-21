@@ -17,12 +17,6 @@ export default function Index() {
 
     const { user, loading } = context;
 
-    if (loading) {
-        return (
-            <LoadingScreen />
-        )
-    }
-
     const handleGameSettings = () => {
         router.push('../private/gamesettings');
     }
@@ -41,39 +35,43 @@ export default function Index() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
+            { loading ?
+                <LoadingScreen />
+                    :
+                <ScrollView>
 
-                <View style={styles.header}>
-                    <Pressable onPress={() => console.log('menu')}>
-                        <Icon name="menu" size={30} color={colors.textColor} />
-                    </Pressable>
-                </View>
+                    {/* <View style={styles.header}>
+                        <Pressable onPress={() => console.log('menu')}>
+                            <Icon name="menu" size={30} color={colors.textColor} />
+                        </Pressable>
+                    </View> */}
 
-                <View style={styles.nameContainer}>
-                    <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
+                    <View style={styles.nameContainer}>
+                        <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
 
-                    { user ? 
-                    <Text style={styles.name}>{user.name}</Text> 
-                        : 
-                    <Text style={styles.name}>Por favor, faça login.</Text> 
-                    }
-                </View>
+                        {user ?
+                            <Text style={styles.name}>{user.name}</Text>
+                            :
+                            <Text style={styles.name}>Por favor, faça login.</Text>
+                        }
+                    </View>
 
-                <View style={styles.buttons}>
-                    <OptionButton placeholder="Game Settings" iconName="cog" onPress={handleGameSettings} />
+                    <View style={styles.buttons}>
+                        <OptionButton placeholder="Game Settings" iconName="cog" onPress={handleGameSettings} />
 
-                    <OptionButton placeholder="Players" iconName="account-group" onPress={handlePlayers} />
+                        <OptionButton placeholder="Players" iconName="account-group" onPress={handlePlayers} />
 
-                    <OptionButton placeholder="History" iconName="history" onPress={handleHistory} />
+                        <OptionButton placeholder="History" iconName="history" onPress={handleHistory} />
 
-                    <OptionButton placeholder="Statistics" iconName="trending-up" onPress={handleStatistics} />
-                </View>
+                        <OptionButton placeholder="Statistics" iconName="trending-up" onPress={handleStatistics} />
+                    </View>
 
-                <View style={styles.linkbtn}>
-                    <LinkButton title="Start Match" onPress={() => console.log('começou')} iconName="cards-playing" variant="outline" />
-                </View>
+                    <View style={styles.linkbtn}>
+                        <LinkButton title="Start Match" onPress={() => console.log('começou')} iconName="cards-playing" variant="outline" />
+                    </View>
 
-            </ScrollView>
+                </ScrollView>
+            }
         </SafeAreaView>
     );
 }

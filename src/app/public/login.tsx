@@ -83,6 +83,7 @@ export default function Login() {
                 >
                     <View style={styles.inputs}>
                         <Input
+                        clearButtonMode="while-editing"
                             keyboardType="email-address"
                             autoComplete="email"
                             autoCapitalize="none"
@@ -128,8 +129,7 @@ export default function Login() {
 
 const styles = StyleSheet.create({
     container: {
-        height: "100%",
-        width: "100%",
+        flex: 1,
         alignItems: "center",
         backgroundColor: colors.backgroundColor,
     },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 40,
         alignSelf: "center",
-        marginTop: 100,
+        marginTop: 60,
         marginBottom: 10,
         color: colors.textColor,
         textDecorationLine: "underline",
