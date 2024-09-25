@@ -6,6 +6,7 @@ interface Colors {
     primaryDarkColor: string;
     secondaryColor: string;
     secondaryDarkColor: string;
+    disabledColor: string;
 }
 
 export const colors: Colors = {
@@ -16,4 +17,5 @@ export const colors: Colors = {
     primaryDarkColor: "#A90800",
     secondaryColor: "#0E4916",
     secondaryDarkColor: "#0A3A11",
+    disabledColor: "#5a5a5a"
 }

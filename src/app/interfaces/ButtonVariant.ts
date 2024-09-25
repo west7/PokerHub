@@ -1,7 +1,4 @@
-const primayColorRed = "#C61414"
-const primaryColorGreen = "#0E4916"
-const whiteColor = "#f0f0f0"
-const disabledColor = "#5a5a5a"
+import { colors } from "./Colors";
 
 export interface ButtonStyles {
     button:{
@@ -25,24 +22,24 @@ export interface ButtonVariant {
 export const primaryButton: ButtonVariant = { 
     enabled:{
         button:{
-            backgroundColor: primayColorRed,
+            backgroundColor: colors.primaryColor,
         },
         title:{
-            color: whiteColor,
+            color: colors.textColor,
         },
         icon:{
-            color: whiteColor,  
+            color: colors.textColor,  
         }
     },
     disabled:{
         button:{
-            backgroundColor: disabledColor,
+            backgroundColor: colors.disabledColor,
         },
         title:{
-            color: whiteColor,
+            color: colors.textColor,
         },
         icon:{
-            color: whiteColor,  
+            color: colors.textColor,  
         }
     },
 }
@@ -52,26 +49,26 @@ export const outlineButton: ButtonVariant = {
         button: {
             backgroundColor: "transparent",
             borderWidth: 2,
-            borderColor: primayColorRed,
+            borderColor: colors.primaryColor,
         },
         title:{
-            color: primayColorRed,
+            color: colors.primaryColor,
         },
         icon:{
-            color: primayColorRed,  
+            color: colors.primaryColor,  
         }
     },
     disabled:{
         button:{
             backgroundColor: "transparent",
             borderWidth: 2,
-            borderColor: primayColorRed,
+            borderColor: colors.disabledColor,
         },
         title:{
-            color: disabledColor,
+            color: colors.disabledColor,
         },
         icon:{
-            color: disabledColor,  
+            color: colors.disabledColor,  
         }
     },
 }
