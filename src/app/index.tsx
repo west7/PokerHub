@@ -9,31 +9,17 @@ import { AuthContext } from './context/AuthProvider';
 import { router } from 'expo-router';
 import LoadingScreen from './components/LoadingScreen';
 
-/* const LoginPage = () => {
-  return (
-    <Login />
-  )
-}
-
-const HomePage = () => {
-  return (
-    <Home />
-  )
-} */
-
 export default function App() {
-  const { user, loading } = useContext(AuthContext) ?? (() => { throw new Error("AuthContext not provided on Index Root") })();
+  const { user, loading } = useContext(AuthContext) ?? (() => { throw new Error("AuthContext not provided") })();
 
   useEffect(() => {
     console.log('App', user, loading)
-    if (!loading) {
-      if (user) {
-        router.replace("private/");
-      }
+    if (user) {
+      router.replace("private/");
     }
   }, [user, loading]);
 
-  if (loading || !user) {
+  if (loading) {
     return <LoadingScreen />
   }
 

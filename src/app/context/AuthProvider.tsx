@@ -25,7 +25,7 @@ export const AuthContext = createContext<UserContextProps | undefined>(undefined
 
 export default function AuthProvider({ children } : AuthProviderProps) {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(true); 
 
     const getUser = () => {
         onAuthStateChanged(auth, async (authUser: FirebaseUser | null) => {
@@ -38,8 +38,8 @@ export default function AuthProvider({ children } : AuthProviderProps) {
                 else {
                     setUser(null)
                 }
-                setLoading(false);
             }
+            setLoading(false)
         })
     }
 
