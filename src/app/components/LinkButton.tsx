@@ -7,18 +7,20 @@ interface Props {
     title: string;
     onPress: () => void;
     backgroundColor?: string;
+    textColor?: string;
     isLoading?: boolean;
     disabled?: boolean;
     iconName?: string;
     variant?: "primary" | "outline";
 }
 
-export default function LinkButton({ 
-    title, 
-    onPress, 
-    backgroundColor, 
-    isLoading = false, 
-    disabled, 
+export default function LinkButton({
+    title,
+    onPress,
+    backgroundColor,
+    textColor,
+    isLoading = false,
+    disabled,
     iconName,
     variant = "primary" }: Props) {
 
@@ -26,11 +28,15 @@ export default function LinkButton({
     const buttonStyle = disabled ? buttonVar.disabled : buttonVar.enabled;
 
     return (
-        <Pressable disabled={isLoading || disabled} 
-        onPress={onPress} 
-        style={[styles.button, {...buttonStyle.button}]}>
+        <Pressable disabled={isLoading || disabled}
+            onPress={onPress}
+            style={[
+                styles.button,
+                { ...buttonStyle.button },
+                backgroundColor ? { backgroundColor } : {}
+            ]}>
             {isLoading ?
-                (<ActivityIndicator color={buttonStyle.icon.color} />)
+                (<ActivityIndicator color={textColor ? textColor : buttonStyle.icon.color} />)
                 :
                 (
                     <View style={styles.content}>
@@ -38,11 +44,18 @@ export default function LinkButton({
                             <Icon
                                 style={{ marginRight: 12 }}
                                 size={20}
-                                color={buttonVar == primaryButton ? "#f0f0f0" : "#C61414"}
+                                color={textColor ? textColor : buttonStyle.icon.color}
                                 name={iconName}
                             />
                         )}
-                        <Text style={[styles.text, buttonStyle.title]}>{title}</Text>
+                        <Text style={[
+                            styles.text,
+                            buttonStyle.title,
+                            textColor ? { color: textColor } : { color: buttonStyle.title.color }
+                        ]}
+                        >
+                            {title}
+                        </Text>
                     </View>
                 )
             }
