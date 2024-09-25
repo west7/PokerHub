@@ -19,6 +19,7 @@ interface UserContextProps {
     signed: boolean;
     user: User | null;
     loading: boolean;
+    logout: () => void;
 }
 
 export const AuthContext = createContext<UserContextProps | undefined>(undefined);
@@ -43,10 +44,14 @@ export default function AuthProvider({ children } : AuthProviderProps) {
         })
     }
 
+    const logout = () => {
+        setUser(null);
+    }
+
     useEffect(getUser, [auth, db]);
 
     return (
-        <AuthContext.Provider value={{ signed: !!user, user, loading }}>
+        <AuthContext.Provider value={{ signed: !!user, user, loading, logout }}>
             {children}
         </AuthContext.Provider>
     );

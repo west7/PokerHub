@@ -22,12 +22,12 @@ export default function InsideLayout() {
         throw new Error("User not found");
     }
 
-    const { signed, user, loading } = context;
+    const { signed, user, loading, logout } = context;
 
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            //console.log("Deslogado com sucesso");
+            logout();
             router.replace("../public/login")
         }
         catch (err) {
