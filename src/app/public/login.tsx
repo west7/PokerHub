@@ -6,7 +6,7 @@ import BackButton from "../components/BackButton";
 import Input from "../components/Input";
 import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {colors} from "../interfaces/Colors"
+import { colors } from "../interfaces/Colors"
 interface Errors {
     email?: boolean;
     senha?: boolean;
@@ -38,7 +38,7 @@ export default function Login() {
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
                 //console.log(response);
-                router.push("../private/"); //replace
+                if (response) router.replace("../private/"); 
             })
             .catch((e) => {
                 alert(e.message);
@@ -71,20 +71,19 @@ export default function Login() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <BackButton />
-            <ScrollView style={{ height: '100%', width: '100%' }}>
+            {/* <BackButton /> */}
+            <ScrollView style={styles.contentContainer}>
 
                 <Text style={styles.title}>Poker App</Text>
                 <Text style={styles.subtitle}>Manage your own games!</Text>
 
                 <KeyboardAvoidingView
                     behavior={Platform.OS == "ios" ? "padding" : "height"}
-                    style={styles.avoid}
                 >
                     <View style={styles.inputs}>
                         <Input
-                        clearButtonMode="while-editing"
-                            keyboardType="email-address"
+                            clearButtonMode="while-editing"
+                            inputMode="email"
                             autoComplete="email"
                             autoCapitalize="none"
                             placeholder="Email"
@@ -97,9 +96,9 @@ export default function Login() {
                     </View>
                     <View style={styles.inputs}>
                         <Input
-                            keyboardType="visible-password"
+                            inputMode="text"
                             placeholder="Password"
-                            iconName= {showPassword ? "lock-open-variant" : "lock"}
+                            iconName={showPassword ? "lock-open-variant" : "lock"}
                             animation
                             err={showErrors ? errors.senha : false}
                             value={password}
@@ -117,10 +116,10 @@ export default function Login() {
                         isLoading={loading}
                     />
 
-                    <Pressable onPress={() => router.push("../public/cadastro")}>
+                    <Pressable onPress={() => router.push("../public/register")}>
                         <Text style={styles.text}>Don't have an account? Register</Text>
                     </Pressable>
-                
+
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -133,12 +132,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: colors.backgroundColor,
     },
+    contentContainer: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+    },
     title: {
         fontWeight: "bold",
         fontSize: 40,
         alignSelf: "center",
-        marginTop: 60,
         marginBottom: 10,
+        marginTop: 150,
         color: colors.textColor,
         textDecorationLine: "underline",
         textDecorationColor: colors.primaryColor,

@@ -8,7 +8,7 @@ import { colors } from "../interfaces/Colors";
 import { AuthContext } from "../context/AuthProvider";
 import LoadingScreen from "../components/LoadingScreen";
 
-export default function Index() {
+export default function Home() {
     const context = useContext(AuthContext);
 
     if (!context) {
@@ -17,61 +17,27 @@ export default function Index() {
 
     const { user, loading } = context;
 
-    const handleGameSettings = () => {
-        router.push('../private/gamesettings');
-    }
-
-    const handlePlayers = () => {
-        router.push('../private/players');
-    }
-
-    const handleHistory = () => {
-        router.push('../private/history');
-    }
-
-    const handleStatistics = () => {
-        router.push('../private/statistics');
+    if (loading || !user) {
+        return <LoadingScreen />
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            { loading ?
-                <LoadingScreen />
-                    :
-                <ScrollView>
 
-                    {/* <View style={styles.header}>
-                        <Pressable onPress={() => console.log('menu')}>
-                            <Icon name="menu" size={30} color={colors.textColor} />
-                        </Pressable>
-                    </View> */}
+            <ScrollView style={styles.contentContainer}>
 
-                    <View style={styles.nameContainer}>
-                        <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
+                <View style={styles.nameContainer}>
+                    <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
 
-                        {user ?
-                            <Text style={styles.name}>{user.name}</Text>
-                            :
-                            <Text style={styles.name}>Por favor, faça login.</Text>
-                        }
-                    </View>
+                    { user && <Text style={styles.name}>{user.name}</Text>}
+                </View>
 
-                    <View style={styles.buttons}>
-                        <OptionButton placeholder="Game Settings" iconName="cog" onPress={handleGameSettings} />
+            </ScrollView>
 
-                        <OptionButton placeholder="Players" iconName="account-group" onPress={handlePlayers} />
-
-                        <OptionButton placeholder="History" iconName="history" onPress={handleHistory} />
-
-                        <OptionButton placeholder="Statistics" iconName="trending-up" onPress={handleStatistics} />
-                    </View>
-
-                    <View style={styles.linkbtn}>
-                        <LinkButton title="Start Match" onPress={() => console.log('começou')} iconName="cards-playing" variant="outline" />
-                    </View>
-
-                </ScrollView>
-            }
+            <View style={styles.linkbtn}>
+                <LinkButton title="Start Match" onPress={() => console.log('começou')} iconName="cards-playing" variant="primary" />
+            </View>
+            
         </SafeAreaView>
     );
 }
@@ -80,6 +46,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.backgroundColor,
+    },
+    contentContainer: {
+        flex: 1,
     },
     nameContainer: {
         marginTop: 20,
@@ -101,7 +70,11 @@ const styles = StyleSheet.create({
         marginTop: 40,
     },
     linkbtn: {
-        marginTop: 120,
+        position: 'absolute',
+        bottom: 50,
+        right: 0,
+        left: 0,
+        justifyContent: 'center',
         alignItems: 'center',
     },
     header: {

@@ -5,8 +5,6 @@ import { doc, getDoc } from "firebase/firestore";
 
 const auth = FIREBASE_AUTH;
 const db = FIREBASE_DB;
-
-
 interface AuthProviderProps {
     children: ReactNode;
 }
@@ -18,6 +16,7 @@ interface User {
 }
 
 interface UserContextProps {
+    signed: boolean;
     user: User | null;
     loading: boolean;
 }
@@ -47,7 +46,7 @@ export default function AuthProvider({ children } : AuthProviderProps) {
     useEffect(getUser, [auth, db]);
 
     return (
-        <AuthContext.Provider value={{ user, loading }}>
+        <AuthContext.Provider value={{ signed: !!user, user, loading }}>
             {children}
         </AuthContext.Provider>
     );

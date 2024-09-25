@@ -1,18 +1,46 @@
-import React from "react";
+import 'react-native-gesture-handler';
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { colors } from "./interfaces/Colors";
-import Home from "./public/home";
 import AuthProvider from "./context/AuthProvider";
+import Login from "./public/login"
+import Home from './private';
+import { AuthContext } from './context/AuthProvider';
+import { router } from 'expo-router';
+import LoadingScreen from './components/LoadingScreen';
 
+/* const LoginPage = () => {
+  return (
+    <Login />
+  )
+}
+
+const HomePage = () => {
+  return (
+    <Home />
+  )
+} */
 
 export default function App() {
+  const { user, loading } = useContext(AuthContext) ?? (() => { throw new Error("AuthContext not provided on Index Root") })();
+
+  useEffect(() => {
+    console.log('App', user, loading)
+    if (!loading) {
+      if (user) {
+        router.replace("private/");
+      }
+    }
+  }, [user, loading]);
+
+  if (loading || !user) {
+    return <LoadingScreen />
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <AuthProvider>
-        <StatusBar barStyle="default" />
-        <Home />
-      </AuthProvider>
+      <StatusBar barStyle="default" />
+      <Login />
     </SafeAreaView >
 
   )

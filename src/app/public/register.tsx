@@ -9,6 +9,8 @@ import { setDoc, doc } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../interfaces/Colors";
+import { FirebaseError } from "firebase/app";
+
 interface Errors {
     name?: boolean;
     email?: boolean;
@@ -70,12 +72,14 @@ export default function Cadatro() {
                     .then(() => {
                         router.push("../public/login");
                     })
-                    .catch((e) => {
-                        alert(e.message);
+                    .catch((e: any) => {
+                        const err = e as FirebaseError
+                        alert(err.message);
                     })
             })
-            .catch((e) => {
-                alert(e.message);
+            .catch((e: any) => {
+                const err = e as FirebaseError
+                alert(err.message);
             })
             .finally(() => {
                 setLoading(false);
