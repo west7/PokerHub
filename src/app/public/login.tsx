@@ -22,10 +22,9 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
 
-    //TODO: Implementar o Loading 
     //TODO: Implementar o erro de login
     //TODO: Implementar recuperação de senha
-    //TODO: Implementar Notificações internas no app
+    //TODO: Implementar Notificações internas no app?
 
     const signIn = () => {
         if (Object.keys(errors).length > 0) {

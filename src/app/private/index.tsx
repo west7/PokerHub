@@ -31,19 +31,28 @@ export default function Home() {
     return (
         <SafeAreaView style={styles.container}>
 
-            <ScrollView style={styles.contentContainer}>
+            {user &&
+                <>
+                    <ScrollView style={styles.contentContainer}>
 
-                <View style={styles.nameContainer}>
-                    <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
+                        <View style={styles.nameContainer}>
+                            <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
 
-                    { user && <Text style={styles.name}>{user.name}</Text>}
-                </View>
+                            {user && <Text style={styles.name}>{user.name}</Text>}
+                        </View>
 
-            </ScrollView>
+                    </ScrollView>
 
-            <View style={styles.linkbtn}>
-                <LinkButton title="Start Match" onPress={() => console.log('começou')} iconName="cards-playing" variant="primary" />
-            </View>
+                    <View style={styles.linkbtn}>
+                        <LinkButton
+                            title="Start Match"
+                            onPress={() => console.log('começou')}
+                            iconName="cards-playing"
+                            variant="primary"
+                        />
+                    </View>
+                </>
+            }
 
         </SafeAreaView>
     );
