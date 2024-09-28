@@ -1,6 +1,6 @@
 import { onAuthStateChanged, User as FirebaseUser} from "firebase/auth";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../firebaseConnection";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
 import { doc, getDoc } from "firebase/firestore";
 
 const auth = FIREBASE_AUTH;

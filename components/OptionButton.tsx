@@ -9,8 +9,6 @@ interface Props {
     imageSrc?: string;
 }
 
-//trending-up
-
 export default function OptionButton({ placeholder, onPress ,iconName, imageSrc }: Props) {
 
 

@@ -1,6 +1,8 @@
 interface Colors {
+    baseColor: string;
     backgroundColor: string;
     backgroundLightColor: string;
+    backgroundDarkColor: string;
     textColor: string;
     primaryColor: string;
     primaryDarkColor: string;
@@ -10,8 +12,10 @@ interface Colors {
 }
 
 export const colors: Colors = {
+    baseColor: "#000",
     backgroundColor: "#121212",
     backgroundLightColor: "#101010",
+    backgroundDarkColor: '#0f0f0f',
     textColor: "#f0f0f0",
     primaryColor: "#C61414",
     primaryDarkColor: "#A90800",

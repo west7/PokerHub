@@ -1,35 +1,40 @@
 import React from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ButtonProps, Pressable, StyleSheet, Text, TextStyle, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { primaryButton, variants } from "../interfaces/ButtonVariant";
+import { colors } from "../interfaces/Colors";
 
-interface Props {
+interface Props extends ButtonProps {
     title: string;
-    onPress: () => void;
     backgroundColor?: string;
     textColor?: string;
     isLoading?: boolean;
     disabled?: boolean;
     iconName?: string;
     variant?: "primary" | "outline";
+    size?: "small" | "medium" | "large";
+    textStyles?: TextStyle;
 }
 
 export default function LinkButton({
     title,
-    onPress,
     backgroundColor,
     textColor,
     isLoading = false,
     disabled,
     iconName,
-    variant = "primary" }: Props) {
+    variant = "primary",
+    size = "large",
+    textStyles,
+    ...nativeProps }: Props) {
 
     const buttonVar = variants[variant];
     const buttonStyle = disabled ? buttonVar.disabled : buttonVar.enabled;
+    const styles = size === "large" ? stylesLarge : stylesSmall;
 
     return (
         <Pressable disabled={isLoading || disabled}
-            onPress={onPress}
+            {...nativeProps}
             style={[
                 styles.button,
                 { ...buttonStyle.button },
@@ -51,7 +56,8 @@ export default function LinkButton({
                         <Text style={[
                             styles.text,
                             buttonStyle.title,
-                            textColor ? { color: textColor } : { color: buttonStyle.title.color }
+                            textColor ? { color: textColor } : { color: buttonStyle.title.color },
+                            textStyles
                         ]}
                         >
                             {title}
@@ -63,7 +69,7 @@ export default function LinkButton({
     );
 }
 
-const styles = StyleSheet.create({
+const stylesLarge = StyleSheet.create({
     button: {
         margin: 10,
         borderRadius: 8,
@@ -73,7 +79,27 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 22,
-        color: "#F0F0F0",
+        color: colors.textColor,
+    },
+    content: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+})
+
+const stylesSmall = StyleSheet.create({
+    button: {
+        margin: 10,
+        borderRadius: 5,
+        height: 30,
+        justifyContent: "center",
+        padding: 5,
+        alignItems: "center",
+    },
+    text: {
+        fontSize: 16,
+        color: colors.textColor,
     },
     content: {
         flexDirection: "row",

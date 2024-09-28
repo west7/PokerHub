@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import OptionButton from "../components/OptionButton";
-import LinkButton from "../components/LinkButton";
+import LinkButton from "../../components/LinkButton";
 import { Redirect, router } from 'expo-router';
-import { colors } from "../interfaces/Colors";
-import { AuthContext } from "../context/AuthProvider";
-import LoadingScreen from "../components/LoadingScreen";
+import { colors } from "../../interfaces/Colors";
+import { AuthContext } from "../../context/AuthProvider";
+import LoadingScreen from "../../components/LoadingScreen";
 
 export default function Home() {
     const [userLoading, setUserLoading] = useState(true)
@@ -35,10 +34,18 @@ export default function Home() {
                 <>
                     <ScrollView style={styles.contentContainer}>
 
-                        <View style={styles.nameContainer}>
-                            <Icon name="account-circle" size={40} color={colors.textColor} style={styles.icon} />
+                        <View style={styles.labelContainer}>
+                            <Text style={styles.label}>Last Matches</Text>
+                            {/* MatchCard */}
+                        </View>
 
-                            {user && <Text style={styles.name}>{user.name}</Text>}
+                        <View style={styles.labelContainer}>
+                            <Text style={styles.label}>Featured Players</Text>
+                            {/* PlayerCard or PlayerTabel */}
+                        </View>
+
+                        <View style={styles.labelContainer}>
+                            <Text style={styles.label}>More Information</Text>
                         </View>
 
                     </ScrollView>
@@ -66,24 +73,16 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
     },
-    nameContainer: {
-        marginTop: 20,
-        flexDirection: 'row',
+    labelContainer: {
+        height: "10%",
         justifyContent: 'flex-start',
-        alignItems: 'center',
+        padding: 16,
+        marginTop: 20,
     },
-    name: {
+    label: {
         color: colors.textColor,
         fontSize: 25,
         fontWeight: 'bold',
-    },
-    icon: {
-        marginRight: 10,
-        marginLeft: 30,
-    },
-    buttons: {
-        margin: 10,
-        marginTop: 40,
     },
     linkbtn: {
         position: 'absolute',
@@ -93,9 +92,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    header: {
-        height: "10%",
-        justifyContent: 'flex-start',
-        padding: 16,
-    }
 })

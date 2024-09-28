@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Platform, Pressable, SafeAreaView, KeyboardAvoidingView } from "react-native";
 import { router } from "expo-router";
-import LinkButton from "../components/LinkButton";
-import BackButton from "../components/BackButton";
-import Input from "../components/Input";
+import LinkButton from "../../components/LinkButton";
+import Input from "../../components/Input";
 import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { colors } from "../interfaces/Colors"
+import { colors } from "../../interfaces/Colors"
 interface Errors {
     email?: boolean;
-    senha?: boolean;
+    password?: boolean;
 }
 
 const auth = FIREBASE_AUTH;
 
 export default function Login() {
-    const [errors, setErrors] = useState<Errors>({ email: false, senha: false })
+    const [errors, setErrors] = useState<Errors>({ email: false, password: false })
     const [showErrors, setShowErrors] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -37,7 +36,7 @@ export default function Login() {
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
                 //console.log(response);
-                if (response) router.replace("../private/"); 
+                //if (response) router.replace("../private/"); 
             })
             .catch((e) => {
                 alert(e.message);
@@ -56,7 +55,7 @@ export default function Login() {
             e.email = true
 
         if (!password)
-            e.senha = true
+            e.password = true
 
         setErrors(e)
     }
@@ -99,7 +98,7 @@ export default function Login() {
                             placeholder="Password"
                             iconName={showPassword ? "lock-open-variant" : "lock"}
                             animation
-                            err={showErrors ? errors.senha : false}
+                            err={showErrors ? errors.password : false}
                             value={password}
                             onChangeText={setPassword}
                             iconFunction={handleShowPassword}

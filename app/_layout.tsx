@@ -1,9 +1,7 @@
-import React, { useContext, useEffect } from "react";
-import { router, Stack, useSegments } from "expo-router";
-import AuthProvider, { AuthContext } from "./context/AuthProvider";
-import InsideLayout from "./private/_layout";
-import LoadingScreen from "./components/LoadingScreen";
-import { colors } from "./interfaces/Colors";
+import React from "react";
+import { router, Stack } from "expo-router";
+import AuthProvider from "../context/AuthProvider";
+import { colors } from "../interfaces/Colors";
 
 export default function RootLayout() {
 

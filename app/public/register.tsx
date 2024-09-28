@@ -1,14 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Pressable } from "react-native";
-import Input from "../components/Input";
-import LinkButton from "../components/LinkButton";
+import Input from "../../components/Input";
+import LinkButton from "../../components/LinkButton";
 import { router, } from "expo-router";
-import BackButton from "../components/BackButton";
+import BackButton from "../../components/BackButton";
 import { setDoc, doc } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../../interfaces/Colors";
 import { FirebaseError } from "firebase/app";
 
 interface Errors {
@@ -20,7 +20,7 @@ interface Errors {
 const auth = FIREBASE_AUTH;
 const db = FIREBASE_DB;
 
-export default function Cadatro() {
+export default function Register() {
     const [errors, setErrors] = useState<Errors>({ name: false, email: false, password: false })
     const [showErrors, setShowErrors] = useState(false)
     const [name, setName] = useState("")
@@ -70,7 +70,7 @@ export default function Cadatro() {
                     email: email,
                 })
                     .then(() => {
-                        router.push("../public/login");
+                        //router.push("../public/login");
                     })
                     .catch((e: any) => {
                         const err = e as FirebaseError

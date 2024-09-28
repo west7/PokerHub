@@ -1,11 +1,11 @@
 import 'react-native-gesture-handler';
 import React, { useContext, useEffect } from "react";
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
-import { colors } from "./interfaces/Colors";
+import { colors } from "../interfaces/Colors";
 import Login from "./public/login"
-import { AuthContext } from './context/AuthProvider';
+import { AuthContext } from '../context/AuthProvider';
 import { router } from 'expo-router';
-import LoadingScreen from './components/LoadingScreen';
+import LoadingScreen from '../components/LoadingScreen';
 
 export default function App() {
   const { user, loading } = useContext(AuthContext) ?? (() => { throw new Error("AuthContext not provided") })();
@@ -13,7 +13,7 @@ export default function App() {
   useEffect(() => {
     //console.log('App', user, loading)
     if (!loading && user) {
-      router.replace("private/");
+      router.replace("/private");
     }
   }, [user, loading]);
 
