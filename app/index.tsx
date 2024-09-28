@@ -23,7 +23,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="default" />
+      <StatusBar barStyle='default'/>
       <Login />
     </SafeAreaView >
   )

@@ -1,26 +1,26 @@
-import { router, Stack } from "expo-router";
 import React from "react";
-import { Button } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import GameSettings from ".";
+import CreateGameScreen from "./creategame";
+import { RootStackParamList } from "../../../interfaces/type";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function GameStack() {
     return (
-        <Stack screenOptions={{
-            headerShown: true
+        <Stack.Navigator screenOptions={{
+            headerShown: false
         }}>
             <Stack.Screen
-                name="index"
-                options={{
-                    title: "Game Settings",
-                }}
+                name="GameSettings"
+                component={GameSettings}
             />
 
             <Stack.Screen
-                name="creategame"
-                options={{
-                    presentation: "modal",
-                    title: "Create Game",
-                }}
+                name="CreateGame"
+                component={CreateGameScreen}
+                options={{presentation: 'modal'}}
             />
-        </Stack>
+        </Stack.Navigator>
     );
 }

@@ -11,10 +11,9 @@ import Statistics from "./statistics";
 import { AuthContext } from "../../context/AuthProvider";
 import LoadingScreen from "../../components/LoadingScreen";
 import Icon from 'react-native-vector-icons/Entypo';
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import GameStack from "./gamesettings/_layout";
-import GameSettings from "./gamesettings";
 
 
 const Drawer = createDrawerNavigator();
@@ -81,94 +80,96 @@ export default function InsideLayout() {
 
     return (
 
-
-        <Drawer.Navigator screenOptions={{
-            headerShown: true,
-            headerStyle: {
-                backgroundColor: colors.backgroundDarkColor,
-                borderBottomWidth: 0,
-            },
-            headerTintColor: colors.primaryColor,
-            headerTitle: "",
-            drawerStyle: {
-                backgroundColor: colors.baseColor,
-                paddingTop: 20,
-            },
-            drawerLabelStyle: {
-                marginLeft: -15,
-            },
-            drawerActiveBackgroundColor: colors.primaryColor,
-            drawerActiveTintColor: colors.textColor,
-            drawerInactiveTintColor: colors.textColor,
-            drawerInactiveBackgroundColor: colors.backgroundLightColor,
-        }}
-            drawerContent={(props) => <CustomDrawer {...props} />}
-        >
-            <Drawer.Screen
-                name="Home"
-                component={Home}
-                options={{
-                    drawerIcon: () => (
-                        <Icon2
-                            name="home"
-                            color={colors.textColor}
-                            size={18}
-                        />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="Game Settings"
-                component={GameStack}
-                options={{
-                    drawerIcon: () => (
-                        <Icon2
-                            name="cog"
-                            color={colors.textColor}
-                            size={18}
-                        />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="Players"
-                component={Players}
-                options={{
-                    drawerIcon: () => (
-                        <Icon2
-                            name="account-group"
-                            color={colors.textColor}
-                            size={18}
-                        />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="History"
-                component={History}
-                options={{
-                    drawerIcon: () => (
-                        <Icon2
-                            name="history"
-                            color={colors.textColor}
-                            size={18}
-                        />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="Statistics"
-                component={Statistics}
-                options={{
-                    drawerIcon: () => (
-                        <Icon2
-                            name="trending-up"
-                            color={colors.textColor}
-                            size={18}
-                        />
-                    ),
-                }}
-            />
-        </Drawer.Navigator>
+        <>
+        <StatusBar barStyle="default" />
+            <Drawer.Navigator screenOptions={{
+                headerShown: true,
+                headerStyle: {
+                    backgroundColor: colors.backgroundDarkColor,
+                    borderBottomWidth: 0,
+                },
+                headerTintColor: colors.primaryColor,
+                headerTitle: "",
+                drawerStyle: {
+                    backgroundColor: colors.baseColor,
+                    paddingTop: 20,
+                },
+                drawerLabelStyle: {
+                    marginLeft: -15,
+                },
+                drawerActiveBackgroundColor: colors.primaryColor,
+                drawerActiveTintColor: colors.textColor,
+                drawerInactiveTintColor: colors.textColor,
+                drawerInactiveBackgroundColor: colors.backgroundLightColor,
+            }}
+                drawerContent={(props) => <CustomDrawer {...props} />}
+            >
+                <Drawer.Screen
+                    name="Home"
+                    component={Home}
+                    options={{
+                        drawerIcon: () => (
+                            <Icon2
+                                name="home"
+                                color={colors.textColor}
+                                size={18}
+                            />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="Game Settings"
+                    component={GameStack}
+                    options={{
+                        drawerIcon: () => (
+                            <Icon2
+                                name="cog"
+                                color={colors.textColor}
+                                size={18}
+                            />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="Players"
+                    component={Players}
+                    options={{
+                        drawerIcon: () => (
+                            <Icon2
+                                name="account-group"
+                                color={colors.textColor}
+                                size={18}
+                            />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="History"
+                    component={History}
+                    options={{
+                        drawerIcon: () => (
+                            <Icon2
+                                name="history"
+                                color={colors.textColor}
+                                size={18}
+                            />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="Statistics"
+                    component={Statistics}
+                    options={{
+                        drawerIcon: () => (
+                            <Icon2
+                                name="trending-up"
+                                color={colors.textColor}
+                                size={18}
+                            />
+                        ),
+                    }}
+                />
+            </Drawer.Navigator>
+        </>
     );
 }

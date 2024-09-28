@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, StatusBar } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import LinkButton from "../../components/LinkButton";
 import { Redirect, router } from 'expo-router';
@@ -29,7 +29,6 @@ export default function Home() {
 
     return (
         <SafeAreaView style={styles.container}>
-
             {user &&
                 <>
                     <ScrollView style={styles.contentContainer}>
@@ -47,6 +46,7 @@ export default function Home() {
                         <View style={styles.labelContainer}>
                             <Text style={styles.label}>More Information</Text>
                         </View>
+
 
                     </ScrollView>
 
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     labelContainer: {
-        height: "10%",
         justifyContent: 'flex-start',
         padding: 16,
         marginTop: 20,

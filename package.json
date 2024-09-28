@@ -20,7 +20,8 @@
     "react-native-screens": "3.31.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "undefined": "react-navigation/stack"
   },
   "devDependencies": {
     "@types/react": "~18.2.45",

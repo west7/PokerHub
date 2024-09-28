@@ -3,10 +3,12 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "rea
 import { AuthContext } from "../../../context/AuthProvider";
 import { colors } from "../../../interfaces/Colors";
 import LinkButton from "../../../components/LinkButton";
-import { router } from "expo-router";
+import { NavProps } from "../../../interfaces/type";
+import { useNavigation } from '@react-navigation/native';
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
+    const navigation = useNavigation<NavProps>();
 
     if (!context) {
         throw new Error("User not found");
@@ -21,7 +23,7 @@ export default function GameSettings() {
                 <Text style={styles.text}>My games</Text>
                 <LinkButton
                     title="New Game"
-                    onPress={() => router.push('/private/gamesettings/creategame')}
+                    onPress={() => navigation.navigate("CreateGame")}
                     variant="primary"
                     size="small"
                     iconName="plus"

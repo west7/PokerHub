@@ -2,28 +2,22 @@ import React from "react";
 import { router, Stack } from "expo-router";
 import AuthProvider from "../context/AuthProvider";
 import { colors } from "../interfaces/Colors";
+import { StatusBar } from "react-native";
 
 export default function RootLayout() {
 
     return (
         <AuthProvider>
+            <StatusBar barStyle="default" />
             <Stack screenOptions={{
                 headerShown: false
             }} >
-                <Stack.Screen name="public/login" />
-                <Stack.Screen name="public/register" options={{
-                    headerShown: false,
-                    headerStyle: {
-                        backgroundColor: colors.backgroundColor,
-                    },
-                    title: "Register",
-                    headerTitleStyle: {
-                        fontWeight: "bold",
-                        color: colors.textColor,
-                        fontSize: 30,
-                    },
-                    headerTintColor: colors.textColor
-                }} />
+                <Stack.Screen
+                    name="public/login"
+                />
+                <Stack.Screen
+                    name="public/register"
+                />
             </Stack>
         </AuthProvider>
     );
