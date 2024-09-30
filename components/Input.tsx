@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, TextInput, KeyboardAvoidingView, StyleSheet, Platform, Text, Animated, Keyboard, Easing, TextInputProps, Pressable } from "react-native";
+import { View, TextInput, KeyboardAvoidingView, StyleSheet, Platform, Text, Animated, Keyboard, Easing, TextInputProps, Pressable, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { colors } from "../interfaces/Colors";
 
 interface IProps extends TextInputProps {
     placeholder: string;
@@ -11,6 +12,7 @@ interface IProps extends TextInputProps {
     borderColor?: string;
     err?: boolean;
     iconFunction?: () => void;
+    containerStyle?: ViewStyle;
 }
 
 export default function Input({
@@ -22,6 +24,7 @@ export default function Input({
     borderColor = "#fff",
     err = false,
     iconFunction,
+    containerStyle,
     ...nativeprops }: IProps) {
 
     const [iconAnimation, setIconAnimation] = useState(false)
@@ -94,7 +97,7 @@ export default function Input({
     useEffect(handleErrors, [err]);
 
     return (
-        <Animated.View style={[styles.inputsText, { borderWidth: borderWidth.current, borderColor: animateBorderColor }]}>
+        <Animated.View style={[styles.inputsText, { borderWidth: borderWidth.current, borderColor: animateBorderColor }, containerStyle]}>
             <Animated.View style={[styles.placeholderContainer, { transform: [{ translateY: transY.current }] }]}>
                 {animation && (
 
@@ -106,6 +109,7 @@ export default function Input({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 placeholder={animation ? "" : holder}
+                placeholderTextColor={colors.disabledColor}
                 style={styles.placeholder}
                 underlineColorAndroid="transparent"
             />
@@ -119,11 +123,6 @@ export default function Input({
 }
 
 const styles = StyleSheet.create({
-    avoid: {
-        width: "80%",
-        margin: 10,
-        flex: 1,
-    },
     inputsText: {
         flexDirection: "row",
         justifyContent: "space-between",
