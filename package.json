@@ -5,6 +5,8 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/drawer": "^6.7.2",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/stack": "^6.4.1",
     "expo": "^51.0.0",
     "expo-constants": "~16.0.2",
     "expo-linking": "~6.3.1",
@@ -21,7 +23,7 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
     "typescript": "~5.3.3",
-    "undefined": "react-navigation/stack"
+    "expo-linear-gradient": "~13.0.2"
   },
   "devDependencies": {
     "@types/react": "~18.2.45",
