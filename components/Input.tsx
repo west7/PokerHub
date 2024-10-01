@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
         height: "100%",
         zIndex: 1,
         opacity: 1,
-        marginLeft: 10,
     },
     placeholderContainer: {
         position: 'absolute',

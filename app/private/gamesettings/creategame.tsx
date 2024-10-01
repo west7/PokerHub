@@ -1,16 +1,58 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput } from "react-native";
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, Button, Pressable } from "react-native";
 import { colors } from "../../../interfaces/Colors";
 import BackButton from "../../../components/BackButton";
 import Input from "../../../components/Input";
 import LinkButton from "../../../components/LinkButton";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { LinearGradient } from "expo-linear-gradient";
+
+interface BlindLevel {
+    level: number; // Nível do blind
+    smallBlind: number; // Valor do Small Blind
+    bigBlind: number; // Valor do Big Blind
+}
+
+interface GameSetup {
+    name: string; // Nome do setup
+    numWinners: number; // Quantidade de vencedores
+    prizeDistribution: number[]; // Premiação em porcentagem para cada vencedor
+    blindLevelTime: number; // Tempo de cada blind level em minutos
+    initialBlindLevels: number; // Número inicial de blind levels
+    blindLevels: BlindLevel[]; // Array de blind levels
+}
+
 
 export default function CreateGameScreen() {
-    const [gameName, setGameName] = useState("");
+    const [gameName, setGameName] = useState('');
     const [winnersNumber, setWinnersNumber] = useState('');
     const [prize, setPrize] = useState('');
-    const [blindLevels, setBlindLevels] = useState('');
+    /* const [blindLevels, setBlindLevels] = useState(''); */
     const [timeForLevel, setTimeForLevel] = useState('');
+
+    const [blindLevels, setBlindLevels] = useState([{ level: 1, smallBlind: '', bigBlind: '' }]);
+
+    const [gameSetup, setGameSetup] = useState<GameSetup>({
+        name: "",
+        numWinners: 0,
+        prizeDistribution: [],
+        blindLevelTime: 0,
+        initialBlindLevels: 0,
+        blindLevels: [{ level: 1, smallBlind: 0, bigBlind: 0 }], // Valor inicial
+    });
+
+
+    const addBlindLevel = () => {
+        setBlindLevels([...blindLevels, { level: blindLevels.length + 1, smallBlind: '', bigBlind: '' }]);
+        console.log(blindLevels);
+    };
+
+    const handleBlindChange = (index: number, field: 'smallBlind' | 'bigBlind', value: number) => {
+        const updatedLevels = blindLevels.map((level, i) =>
+            i === index ? { ...level, [field]: value } : level
+        );
+        setBlindLevels(updatedLevels);
+    };
 
     return (
         <View style={styles.container}>
@@ -20,9 +62,9 @@ export default function CreateGameScreen() {
             <KeyboardAvoidingView
                 style={styles.contentContainer}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}/* Teste */ 
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}/* Teste */
             >
-                <ScrollView>
+                <ScrollView style={styles.contentContainer}>
 
                     <View>
                         <Text style={styles.title}>Insert Information</Text>
@@ -38,6 +80,7 @@ export default function CreateGameScreen() {
                     </View>
 
                     <View style={styles.inputContainer}>
+
                         <View style={styles.inputBlock}>
                             <Text style={styles.text}>Number of winners:</Text>
                             <Input
@@ -47,7 +90,7 @@ export default function CreateGameScreen() {
                                 containerStyle={{ padding: 5 }}
                             />
 
-                            <Text style={styles.text}>Number of blind levels:</Text>
+                            <Text style={styles.text}>Number of levels:</Text>
                             <Input
                                 style={styles.input}
                                 placeholder="Ex: 15"
@@ -57,14 +100,14 @@ export default function CreateGameScreen() {
                         </View>
 
                         <View style={styles.inputBlock}>
-                            <Text style={styles.text}>Prize for each winner (%):</Text>
+                            <Text style={styles.text}>Prize for winner (%):</Text>
                             <Input
                                 style={styles.input}
                                 placeholder="Ex: 50, 30, 20"
                                 placeholderTextColor={colors.disabledColor}
                                 containerStyle={{ padding: 5 }}
                             />
-                            <Text style={styles.text}>Time for each level (min):</Text>
+                            <Text style={styles.text}>Time for level (min):</Text>
                             <Input
                                 style={styles.input}
                                 placeholder="Ex: 20"
@@ -72,23 +115,67 @@ export default function CreateGameScreen() {
                                 containerStyle={{ padding: 5 }}
                             />
                         </View>
+
                     </View>
 
                     <View>
                         <Text style={styles.title}>Blind Levels: </Text>
                     </View>
 
-                    {/* Generate Multiple Blind Levels */}
+                    <View>
+                        {blindLevels.map((level, index) => (
+                            <>
+                                <Text style={[styles.text, { padding: 0, marginLeft: 15 }]}>Level {level.level}</Text>
+                                <View key={index} style={styles.inputContainer}>
 
-                    <View style={styles.btn}>
-                        <LinkButton
-                            title="Save"
-                            onPress={() => console.log("Save")}
-                        />
+                                    <View style={styles.inputBlock}>
+                                        <Input
+                                            style={styles.input}
+                                            placeholder="Small Blind"
+                                            value={level.smallBlind}
+                                            onChangeText={(value) => handleBlindChange(index, 'smallBlind', parseInt(value))}
+                                            containerStyle={{ padding: 5 }}
+                                            iconName="poker-chip"
+                                        />
+                                    </View>
+
+                                    <View style={styles.inputBlock}>
+                                        <Input
+                                            style={styles.input}
+                                            placeholder="Big Blind"
+                                            value={level.bigBlind}
+                                            onChangeText={(value) => handleBlindChange(index, 'bigBlind', parseInt(value))}
+                                            containerStyle={{ padding: 5 }}
+                                            iconName="poker-chip"
+                                        />
+                                    </View>
+
+                                </View>
+                            </>
+                        ))}
+
+                        <Pressable onPress={addBlindLevel} style={styles.iconContainer}>
+                            <Icon name="plus-circle-outline" color={colors.disabledColor} size={24} />
+                            <Text style={[styles.text, { color: colors.disabledColor }]}>Add Blind Level</Text>
+                        </Pressable>
                     </View>
+
 
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            <LinearGradient
+                colors={['transparent', '#12121288', '#121212']}
+                style={styles.gradient}
+            >
+            </LinearGradient>
+
+            <View style={styles.btn}>
+                <LinkButton
+                    title="Save"
+                    onPress={() => console.log("Save")}
+                />
+            </View>
 
         </View>
     );
@@ -112,14 +199,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     btn: {
-        alignItems: "center",
+        alignItems: 'center',
+        marginBottom: 30,
+        zIndex: 10,
     },
     text: {
         color: colors.textColor,
         fontSize: 16,
         paddingBottom: 5,
         marginHorizontal: 5,
-        marginTop: 10,
+        marginTop: 7,
     },
     inputContainer: {
         flexDirection: "row",
@@ -134,14 +223,25 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: 16,
-        width: "100%",
         color: colors.textColor,
-        height: "100%",
         zIndex: 1,
         opacity: 1,
         borderWidth: 2,
         borderRadius: 7,
         borderColor: colors.textColor,
-        padding: 5,
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+        marginBottom: 50,
+    },
+    gradient: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 30,
+        height: 120,
     },
 })
