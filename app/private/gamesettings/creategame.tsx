@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, Button, Pressable } from "react-native";
 import { colors } from "../../../interfaces/Colors";
 import BackButton from "../../../components/BackButton";
@@ -6,63 +6,53 @@ import Input from "../../../components/Input";
 import LinkButton from "../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
-
-interface BlindLevel {
-    level: number; // Nível do blind
-    smallBlind: number; // Valor do Small Blind
-    bigBlind: number; // Valor do Big Blind
-}
-
-interface GameSetup {
-    name: string; // Nome do setup
-    numWinners: number; // Quantidade de vencedores
-    prizeDistribution: number[]; // Premiação em porcentagem para cada vencedor
-    blindLevelTime: number; // Tempo de cada blind level em minutos
-    initialBlindLevels: number; // Número inicial de blind levels
-    blindLevels: BlindLevel[]; // Array de blind levels
-}
-
+import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
+import { FormContext } from "../../../context/FormProvider";
 
 export default function CreateGameScreen() {
-    const [gameName, setGameName] = useState('');
-    const [winnersNumber, setWinnersNumber] = useState('');
-    const [prize, setPrize] = useState('');
-    /* const [blindLevels, setBlindLevels] = useState(''); */
-    const [timeForLevel, setTimeForLevel] = useState('');
 
-    const [blindLevels, setBlindLevels] = useState([{ level: 1, smallBlind: '', bigBlind: '' }]);
-
-    const [gameSetup, setGameSetup] = useState<GameSetup>({
+    /*const [gameSetup, setGameSetup] = useState<GameSetup>({
         name: "",
         numWinners: 0,
         prizeDistribution: [],
         blindLevelTime: 0,
         initialBlindLevels: 0,
-        blindLevels: [{ level: 1, smallBlind: 0, bigBlind: 0 }], // Valor inicial
-    });
+        blindLevels: [{ level: 1, smallBlind: 0, bigBlind: 0 }], 
+        }); */
+
+    const formContext = useContext(FormContext);
+    if (!formContext) {
+        throw new Error('formContext must be used within a FormProvider');
+    }
+
+    const { formData, updateFormData, updateBlindLevel } = formContext;
 
 
     const addBlindLevel = () => {
-        setBlindLevels([...blindLevels, { level: blindLevels.length + 1, smallBlind: '', bigBlind: '' }]);
-        console.log(blindLevels);
+        const newLevel : BlindLevel = { level: formData.blindLevels.length + 1, smallBlind: '', bigBlind: '' };
+        updateFormData('blindLevels', [...formData.blindLevels, newLevel]);
     };
 
-    const handleBlindChange = (index: number, field: 'smallBlind' | 'bigBlind', value: number) => {
-        const updatedLevels = blindLevels.map((level, i) =>
+    const handleBlindChange = (index: number, field: 'smallBlind' | 'bigBlind', value: string) => {
+        const updatedBlindLevels = formData.blindLevels.map((level, i) => 
             i === index ? { ...level, [field]: value } : level
         );
-        setBlindLevels(updatedLevels);
+        updateFormData('blindLevels', updatedBlindLevels);
     };
+
+    // TODO: Fazer a verificação dos campos
+    // TODO: Salvar no banco de dados
+    // TODO: Estilizar o modal?
 
     return (
         <View style={styles.container}>
-            <BackButton />
+            <BackButton></BackButton>
             {/* just for web development */}
 
             <KeyboardAvoidingView
                 style={styles.contentContainer}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}/* Teste */
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0}/* Teste */
             >
                 <ScrollView style={styles.contentContainer}>
 
@@ -74,8 +64,9 @@ export default function CreateGameScreen() {
                         <Text style={styles.text}>Name for the game setup:</Text>
                         <Input
                             placeholder="Ex: Tournament 1"
-                            value={gameName}
-                            onChangeText={setGameName}
+                            value={formData.gameName}
+                            onChangeText={(value) => updateFormData('gameName', value)}
+                            inputMode="text"
                         />
                     </View>
 
@@ -84,6 +75,9 @@ export default function CreateGameScreen() {
                         <View style={styles.inputBlock}>
                             <Text style={styles.text}>Number of winners:</Text>
                             <Input
+                                value={formData.numberOfWinners}
+                                onChangeText={(value) => updateFormData('numberOfWinners', value)}
+                                inputMode="numeric"
                                 style={styles.input}
                                 placeholder="Ex: 3"
                                 placeholderTextColor={colors.disabledColor}
@@ -92,6 +86,9 @@ export default function CreateGameScreen() {
 
                             <Text style={styles.text}>Number of levels:</Text>
                             <Input
+                                value={formData.numberOfLevels}
+                                onChangeText={(value) => updateFormData('numberOfLevels', value)}
+                                inputMode="numeric"
                                 style={styles.input}
                                 placeholder="Ex: 15"
                                 placeholderTextColor={colors.disabledColor}
@@ -102,6 +99,8 @@ export default function CreateGameScreen() {
                         <View style={styles.inputBlock}>
                             <Text style={styles.text}>Prize for winner (%):</Text>
                             <Input
+                                value={formData.prizeDistribution}
+                                onChangeText={(value) => updateFormData('prizeDistribution', value)}
                                 style={styles.input}
                                 placeholder="Ex: 50, 30, 20"
                                 placeholderTextColor={colors.disabledColor}
@@ -109,6 +108,9 @@ export default function CreateGameScreen() {
                             />
                             <Text style={styles.text}>Time for level (min):</Text>
                             <Input
+                                value={formData.timeForLevel}
+                                onChangeText={(value) => updateFormData('timeForLevel', value)}
+                                inputMode="numeric"
                                 style={styles.input}
                                 placeholder="Ex: 20"
                                 placeholderTextColor={colors.disabledColor}
@@ -123,17 +125,18 @@ export default function CreateGameScreen() {
                     </View>
 
                     <View>
-                        {blindLevels.map((level, index) => (
-                            <>
+                        {formData.blindLevels.map((level, index) => (
+                            <React.Fragment key={index}>
                                 <Text style={[styles.text, { padding: 0, marginLeft: 15 }]}>Level {level.level}</Text>
-                                <View key={index} style={styles.inputContainer}>
+                                <View style={styles.inputContainer}>
 
                                     <View style={styles.inputBlock}>
                                         <Input
                                             style={styles.input}
                                             placeholder="Small Blind"
+                                            inputMode="numeric"
                                             value={level.smallBlind}
-                                            onChangeText={(value) => handleBlindChange(index, 'smallBlind', parseInt(value))}
+                                            onChangeText={(value) => handleBlindChange(index, 'smallBlind', value)}
                                             containerStyle={{ padding: 5 }}
                                             iconName="poker-chip"
                                         />
@@ -143,15 +146,16 @@ export default function CreateGameScreen() {
                                         <Input
                                             style={styles.input}
                                             placeholder="Big Blind"
+                                            inputMode="numeric"
                                             value={level.bigBlind}
-                                            onChangeText={(value) => handleBlindChange(index, 'bigBlind', parseInt(value))}
+                                            onChangeText={(value) => handleBlindChange(index, 'bigBlind', value)}
                                             containerStyle={{ padding: 5 }}
                                             iconName="poker-chip"
                                         />
                                     </View>
 
                                 </View>
-                            </>
+                            </React.Fragment>
                         ))}
 
                         <Pressable onPress={addBlindLevel} style={styles.iconContainer}>
@@ -165,7 +169,7 @@ export default function CreateGameScreen() {
             </KeyboardAvoidingView>
 
             <LinearGradient
-                colors={['transparent', '#12121288', '#121212']}
+                colors={['transparent', '#12121299', colors.backgroundColor]}
                 style={styles.gradient}
             >
             </LinearGradient>
@@ -202,10 +206,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 30,
         zIndex: 10,
+        backgroundColor: 'transparent',
+        color: 'transparent',
     },
     text: {
         color: colors.textColor,
         fontSize: 16,
+        fontWeight: '700',
         paddingBottom: 5,
         marginHorizontal: 5,
         marginTop: 7,
@@ -234,7 +241,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 10,
         marginBottom: 50,
     },
     gradient: {
@@ -242,6 +248,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 30,
-        height: 120,
+        height: 110,
     },
 })
