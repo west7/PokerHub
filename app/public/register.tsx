@@ -112,6 +112,7 @@ export default function Register() {
                         <View style={styles.input}>
                             <Input
                                 placeholder="Name"
+                                inputMode="text"
                                 animation
                                 err={showErrors ? errors.name : false}
                                 value={name}
@@ -123,7 +124,7 @@ export default function Register() {
                         <View style={styles.input}>
                             <Input
                                 placeholder="Insert email"
-                                keyboardType="email-address"
+                                inputMode="email"
                                 autoComplete="email"
                                 autoCapitalize="none"    
                                 animation
