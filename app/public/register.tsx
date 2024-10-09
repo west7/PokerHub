@@ -69,9 +69,6 @@ export default function Register() {
                     name: name,
                     email: email,
                 })
-                    .then(() => {
-                        //router.push("../public/login");
-                    })
                     .catch((e: any) => {
                         const err = e as FirebaseError
                         alert(err.message);
