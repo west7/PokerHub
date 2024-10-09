@@ -27,7 +27,7 @@ export default function FormProvider({ children }: FormProviderProps) {
         gameName: '',
         numberOfWinners: '',
         prizeDistribution: '',
-        numberOfLevels: '',
+        numberOfLevels: '1',
         timeForLevel: '',
         blindLevels: [{ level: 1, smallBlind: '', bigBlind: '' }],
     })
