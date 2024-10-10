@@ -1,21 +1,11 @@
 import React, { createContext, useContext, useState } from "react";
 import { BlindLevel } from "../interfaces/game.interface";
-
+import { GameSetup } from "../interfaces/game.interface";
 interface FormProviderProps {
     children: React.ReactNode;
 }
-
-interface FormData {
-    gameName: string;
-    numberOfWinners: string;
-    prizeDistribution: string;
-    numberOfLevels: string;
-    timeForLevel: string;
-    blindLevels: BlindLevel[];
-}
-
 interface FormContextProps {
-    formData: FormData;
+    formData: GameSetup;
     updateFormData: (field: string, value: string | BlindLevel[]) => void;
     updateBlindLevel: (index: number, field: 'smallBlind' | 'bigBlind', value: string) => void;
 }
@@ -23,7 +13,7 @@ interface FormContextProps {
 export const FormContext = createContext<FormContextProps | undefined>(undefined);
 
 export default function FormProvider({ children }: FormProviderProps) {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<GameSetup>({
         gameName: '',
         numberOfWinners: '',
         prizeDistribution: '',

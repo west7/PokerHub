@@ -20,8 +20,8 @@ export default function Input({
     iconName,
     animation = false,
     duration = 100,
-    textColor = "#f0f0f0",
-    borderColor = "#fff",
+    textColor = colors.textColor,
+    borderColor = colors.textColor,
     err = false,
     iconFunction,
     containerStyle,
@@ -78,13 +78,13 @@ export default function Input({
 
     const animateBorderColor = borderWidth.current.interpolate({
         inputRange: [1, 2],
-        outputRange: [err ? errColor : "#f0f0f0", err ? errColor : borderColor],
+        outputRange: [err ? errColor : colors.textColor, err ? errColor : borderColor],
         extrapolate: "clamp"
     })
 
     const animateTextColor = borderWidth.current.interpolate({
         inputRange: [1, 2],
-        outputRange: [err ? errColor : "#f0f0f0", err ? errColor : textColor],
+        outputRange: [err ? errColor : colors.textColor, err ? errColor : textColor],
         extrapolate: "clamp",
     })
 
@@ -101,7 +101,7 @@ export default function Input({
             <Animated.View style={[styles.placeholderContainer, { transform: [{ translateY: transY.current }] }]}>
                 {animation && (
 
-                    <Animated.Text style={{ color: animateTextColor, backgroundColor: "#121212", fontSize: 16, opacity: animateTextOpacity, padding: 3 }}>{holder}</Animated.Text>
+                    <Animated.Text style={{ color: animateTextColor, backgroundColor: colors.backgroundColor, fontSize: 16, opacity: animateTextOpacity, padding: 3 }}>{holder}</Animated.Text>
                 )}
             </Animated.View>
             <TextInput
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     placeholder: {
         fontSize: 16,
         width: "90%",
-        color: "#fff",
+        color: colors.textColor,
         height: "100%",
         zIndex: 1,
         opacity: 1,

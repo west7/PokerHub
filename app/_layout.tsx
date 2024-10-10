@@ -1,7 +1,6 @@
 import React from "react";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import AuthProvider from "../context/AuthProvider";
-import { colors } from "../interfaces/Colors";
 import { StatusBar } from "react-native";
 
 export default function RootLayout() {

@@ -175,9 +175,8 @@ export default function Register() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: colors.backgroundColor,
-        height: "100%",
-        width: "100%",
     },
     title: {
         fontSize: 40,

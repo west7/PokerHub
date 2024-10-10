@@ -5,10 +5,10 @@ export interface BlindLevel {
 }
 
 export interface GameSetup {
-    name: string; 
-    numWinners: number; 
-    prizeDistribution: number[]; 
-    blindLevelTime: number; 
-    initialBlindLevels: number; 
-    blindLevels: BlindLevel[]; 
+    gameName: string;
+    numberOfWinners: string;
+    prizeDistribution: string;
+    numberOfLevels: string;
+    timeForLevel: string;
+    blindLevels: BlindLevel[];
 }

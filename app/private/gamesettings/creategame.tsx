@@ -6,7 +6,7 @@ import Input from "../../../components/Input";
 import LinkButton from "../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
+import { BlindLevel } from "../../../interfaces/game.interface";
 import { FormContext } from "../../../context/FormProvider";
 
 interface Errors {

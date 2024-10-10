@@ -25,10 +25,10 @@ export const primaryButton: ButtonVariant = {
             backgroundColor: colors.primaryColor,
         },
         title:{
-            color: colors.textColor,
+            color: colors.buttonText,
         },
         icon:{
-            color: colors.textColor,  
+            color: colors.buttonText,  
         }
     },
     disabled:{
@@ -36,10 +36,10 @@ export const primaryButton: ButtonVariant = {
             backgroundColor: colors.disabledColor,
         },
         title:{
-            color: colors.textColor,
+            color: colors.buttonText,
         },
         icon:{
-            color: colors.textColor,  
+            color: colors.buttonText,  
         }
     },
 }
