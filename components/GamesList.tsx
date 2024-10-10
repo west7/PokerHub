@@ -2,27 +2,32 @@ import React, { useState } from "react";
 import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import { GameSetup } from "../interfaces/game.interface";
 import { colors } from "../interfaces/Colors";
+import SwipeListItem from "./SwipeListItem";
 
 interface GamesListProps {
+    onEdit: (gameName: string) => void;
+    onDelete: (gameName: string) => void;
     gamesList: GameSetup[];
     loading: boolean;
 }
 
-export default function GamesList({ gamesList, loading }: GamesListProps) {
+export default function GamesList({ gamesList, loading, onEdit, onDelete }: GamesListProps) {
 
     const gameCard = ({ item }: { item: GameSetup }) => {
         return (
-            <Pressable
-                style={styles.gameCard}
-                onPress={() => console.log('Jogo:', item.gameName)}
-            >
-                <Text style={styles.title}>{item.gameName}</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={styles.text}>Time for level: {item.timeForLevel} min</Text>
-                    <Text style={styles.text}>Levels: {item.blindLevels.length}</Text>
-                </View>
-                <Text style={styles.text}>Initial Blinds: {item.blindLevels[0].smallBlind} | {item.blindLevels[0].bigBlind}</Text>
-            </Pressable>
+                <SwipeListItem onEdit={() => onEdit(item.gameName)} onDelete={() => onDelete(item.gameName)}>
+                    <Pressable
+                        style={styles.gameCard}
+                        onPress={() => console.log('Jogo:', item.gameName)}
+                    >
+                        <Text style={styles.title}>{item.gameName}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={styles.text}>Time for level: {item.timeForLevel} min</Text>
+                            <Text style={styles.text}>Levels: {item.blindLevels.length}</Text>
+                        </View>
+                        <Text style={styles.text}>Initial Blinds: {item.blindLevels[0].smallBlind} | {item.blindLevels[0].bigBlind}</Text>
+                    </Pressable>
+                </SwipeListItem>
         );
     }
 
@@ -65,6 +70,11 @@ const styles = StyleSheet.create({
         backgroundColor: colors.backgroundColor,
         padding: 10,
         marginVertical: 5,
-        borderRadius: 5,
+        borderRadius: 8,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     }
 });

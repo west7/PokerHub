@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, Alert, Platform } from "react-native";
 import { AuthContext } from "../../../context/AuthProvider";
 import { colors } from "../../../interfaces/Colors";
 import LinkButton from "../../../components/LinkButton";
@@ -7,14 +7,18 @@ import { NavProps } from "../../../interfaces/type";
 import { useNavigation } from '@react-navigation/native';
 import { GameSetup } from "../../../interfaces/game.interface";
 import GamesList from "../../../components/GamesList";
-import { getUserGames } from "../../../services/game.services";
-
+import { deleteGame, getUserGames } from "../../../services/game.services";
+import ConfirmationModal from "../../../components/ConfirmationModal";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
     const navigation = useNavigation<NavProps>();
     const [gameSetups, setGameSetups] = useState<GameSetup[]>([]);
     const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [gameToDelete, setGameToDelete] = useState<string | null>(null);
+
 
     if (!context) {
         throw new Error("User not found");
@@ -22,7 +26,7 @@ export default function GameSettings() {
 
     const { user } = context;
 
-    const handleGetUserGames = (userId: string) => {
+    const loadgames = (userId: string) => {
         setLoading(true);
         getUserGames(userId)
             .then((games) => {
@@ -36,11 +40,50 @@ export default function GameSettings() {
             });
     }
 
-    useEffect(() => {
-        if (user) {
-            handleGetUserGames(user.uid);
-        }
-    }, []);
+    const handleEdit = () => {
+        console.log('Editar');
+        // Abrir no creategame.tsx
+    }
+
+    const handleDelete = (gameName: string) => {
+        Platform.OS === 'web' ?
+            (setModalVisible(true))
+                :
+            (Alert.alert(
+                "Delete Game",
+                "Are you sure you want to delete this game?",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Delete",
+                        onPress: () => {
+                            if (user?.uid) {
+                                setLoading(true);
+                                deleteGame(user.uid, gameName);
+                                loadgames(user.uid); 
+                                setLoading(false);
+                            } else {
+                                console.error("User ID is undefined");
+                            }
+                        },
+                        style: "destructive"
+                    }
+                ]
+            ))
+        setGameToDelete(gameName);
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            if (user) {
+                loadgames(user.uid);
+            }
+        }, [user])
+    );
+
 
     return (
         <View style={styles.container}>
@@ -57,8 +100,22 @@ export default function GameSettings() {
                 />
             </View>
 
-            <GamesList gamesList={gameSetups} loading={loading} />
+            <GamesList gamesList={gameSetups} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
 
+            <ConfirmationModal
+                visible={modalVisible}
+                message="Are you sure you want to delete this game?"
+                onCancel={() => setModalVisible(false)}
+                onConfirm={() => {
+                    setLoading(true);
+                    if (user?.uid && gameToDelete) {
+                        deleteGame(user.uid, gameToDelete);
+                        loadgames(user.uid);
+                    }
+                    setLoading(false);
+                    setModalVisible(false); 
+                }}
+            />
         </View>
     );
 }
