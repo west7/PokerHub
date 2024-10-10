@@ -7,14 +7,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
 import { FormContext } from "../../../context/FormProvider";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConnection";
 import { AuthContext } from "../../../context/AuthProvider";
 import { router } from "expo-router";
 import { createGame } from "../../../services/game.services";
-
-const db = FIREBASE_DB;
-const auth = FIREBASE_AUTH;
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
