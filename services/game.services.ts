@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { GameSetup } from "../interfaces/game.interface";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
 
@@ -34,5 +34,26 @@ export async function createGame(userId: string, gameSetup: GameSetup) {
         await setDoc(gameSettingsRef, gameSetup);
     } catch (e) {
         console.error('Error saving game setup:', e);
+    }
+}
+
+export async function deleteGame(userId: string, gameName: string) {
+    try {
+        const gameDocRef = doc(db, 'users', userId, 'gameSettings', gameName);
+        await deleteDoc(gameDocRef);
+    }
+    catch (err) {
+        console.error('Error deleting game', err);
+    }
+    
+}
+
+export async function updateGame(userId: string, updatedData: GameSetup) {
+    try {
+        const gameDocRef = doc(db, 'users', userId, 'gameSettings', updatedData.gameName);
+        await setDoc(gameDocRef, { ...updatedData });
+    }
+    catch (err) {
+        console.error('Error updating game', err);
     }
 }
