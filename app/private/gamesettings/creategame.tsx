@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, Button, Pressable } from "react-native";
 import { colors } from "../../../interfaces/Colors";
-import BackButton from "../../../components/BackButton";
 import Input from "../../../components/Input";
 import LinkButton from "../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlindLevel } from "../../../interfaces/game.interface";
+import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
 import { FormContext } from "../../../context/FormProvider";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConnection";
+import { AuthContext } from "../../../context/AuthProvider";
+import { router } from "expo-router";
 
+const db = FIREBASE_DB;
+const auth = FIREBASE_AUTH;
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
@@ -19,6 +24,14 @@ interface Errors {
 }
 
 export default function CreateGameScreen() {
+    const context = useContext(AuthContext);
+
+    if (!context) {
+        throw new Error("User not found");
+    }
+
+    const { user } = context;
+
     const [errors, setErrors] = useState<Errors>({
         gameName: false,
         numberOfWinners: false,
@@ -68,7 +81,7 @@ export default function CreateGameScreen() {
     }
 
     const validateBlindLevels = () => {
-        const e: Errors = {blindLevels: errors.blindLevels};
+        const e: Errors = { blindLevels: errors.blindLevels };
 
         formData.blindLevels.forEach((level, index) => {
             const smallBlindError = level.smallBlind === '' || isNaN(parseInt(level.smallBlind, 10));
@@ -94,12 +107,12 @@ export default function CreateGameScreen() {
     }
 
     const handleErrors = () => {
-        const e: Errors = {blindLevels: errors.blindLevels};
+        const e: Errors = { blindLevels: errors.blindLevels };
 
         if (formData.gameName === '') {
             //console.error('Game name cannot be empty');
             e.gameName = true;
-        } 
+        }
 
         const numberOfWinners = parseInt(formData.numberOfWinners, 10);
         const prizeDistribution = formData.prizeDistribution.split(',').map(Number);
@@ -120,6 +133,11 @@ export default function CreateGameScreen() {
                 //console.error(`Prize distribution must have exactly ${numberOfWinners} values and must be separated by commas`);
                 e.prizeDistribution = true;
             }
+
+            if (prizeDistribution.reduce((acc, value) => acc + value, 0) !== 100) {
+                //console.error('Prize distribution must sum up to 100');
+                e.prizeDistribution = true; 
+            }
         }
 
         const numberOfLevels = parseInt(formData.numberOfLevels, 10);
@@ -127,10 +145,12 @@ export default function CreateGameScreen() {
         if (formData.numberOfLevels === '') {
             //console.error('Number of levels cannot be empty');
             e.numberOfLevels = true;
-        } else if (isNaN(numberOfLevels) || numberOfLevels <= 0) {
+        }
+        if (isNaN(numberOfLevels) || numberOfLevels <= 0) {
             //console.error('Number of levels must be a valid number greater than 0');
             e.numberOfLevels = true;
-        } else if (numberOfLevels !== formData.blindLevels.length) {
+        }
+        if (numberOfLevels !== formData.blindLevels.length) {
             //console.error('Number of levels must match the number of blind levels');
             e.numberOfLevels = true;
         }
@@ -140,10 +160,12 @@ export default function CreateGameScreen() {
         if (formData.timeForLevel === '') {
             //console.error('Time for level cannot be empty');
             e.timeForLevel = true;
-        } else if (isNaN(timeForLevel) || timeForLevel <= 0) {
+        } 
+        if (isNaN(timeForLevel) || timeForLevel <= 0) {
             //console.error('Time for level must be a valid number greater than 0');
             e.timeForLevel = true;
-        } else if (!Number.isInteger(timeForLevel)) {
+        } 
+        if (!Number.isInteger(timeForLevel)) {
             //console.error('Time for level must be an integer number');
             e.timeForLevel = true
         }
@@ -155,21 +177,50 @@ export default function CreateGameScreen() {
         setErrors(e);
     }
 
-    const saveGameSetup = () => {
-        if (Object.keys(errors).length > 0) {
+    const saveGameSetup = async (userId: string, gameSetup: GameSetup) => {
+        const otherErrors = Object.keys(errors).filter(key => key !== 'blindLevels').length > 0;
+        const blindLevelsHasErrors = Object.keys(errors.blindLevels).length > 0;
+
+        if (otherErrors || blindLevelsHasErrors) {
             setShowErrors(true);
             return;
         }
-        console.log('Saving game setup:', formData);
+
+        try {
+            const userRef = doc(db, 'users', userId);
+            const gameSettingsRef = doc(userRef, 'gameSettings', gameSetup.gameName);
+
+            const existingDoc = await getDoc(gameSettingsRef);
+            if (existingDoc.exists()) {
+                console.error('Game setup with this name already exists!');
+                return; // Abortar a operação se já existir um jogo com o mesmo nome
+            }
+
+            await setDoc(gameSettingsRef, gameSetup);
+            console.log('Game setup saved successfully');
+            router.back();
+            //Mensagem de OK
+            //router.back();
+        } catch (e) {
+            console.error('Error saving game setup:', e);
+        }
+    }
+
+    const handleSave = () => {
+        if (user?.uid) {
+            saveGameSetup(user.uid, formData);
+        }
+        else {
+            console.error('User not found');
+        }
     }
 
     useEffect(handleErrors, [formData]);
 
-    // TODO: Salvar no banco de dados
+    // TODO: MENSAGENS DE ERRO
 
     return (
         <View style={styles.container}>
-            {/* just for web development */}
             <View style={styles.modalBar} />
 
             <KeyboardAvoidingView
@@ -223,7 +274,7 @@ export default function CreateGameScreen() {
                         </View>
 
                         <View style={styles.inputBlock}>
-                            <Text style={styles.text}>Prize for winner (%):</Text>
+                            <Text style={styles.text}>Prize for winner(%):</Text>
                             <Input
                                 value={formData.prizeDistribution}
                                 onChangeText={(value) => updateFormData('prizeDistribution', value)}
@@ -307,7 +358,7 @@ export default function CreateGameScreen() {
             <View style={styles.btn}>
                 <LinkButton
                     title="Save"
-                    onPress={saveGameSetup}
+                    onPress={handleSave}
                 />
             </View>
 
