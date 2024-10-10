@@ -11,6 +11,7 @@ import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConnection";
 import { AuthContext } from "../../../context/AuthProvider";
 import { router } from "expo-router";
+import { createGame } from "../../../services/game.services";
 
 const db = FIREBASE_DB;
 const auth = FIREBASE_AUTH;
@@ -24,6 +25,7 @@ interface Errors {
 }
 
 export default function CreateGameScreen() {
+    const [loading, setLoading] = useState(false);
     const context = useContext(AuthContext);
 
     if (!context) {
@@ -75,6 +77,14 @@ export default function CreateGameScreen() {
             }
         } else if (numberOfLevels < updatedBlindLevels.length) {
             updatedBlindLevels = updatedBlindLevels.slice(0, numberOfLevels);
+
+            const updatedErrors = { ...errors };
+            Object.keys(updatedErrors.blindLevels).forEach((key) => {
+                if (parseInt(key, 10) >= numberOfLevels) {
+                    delete updatedErrors.blindLevels[parseInt(key, 10)];
+                }
+            });
+            setErrors(updatedErrors);
         }
 
         updateFormData('blindLevels', updatedBlindLevels);
@@ -136,7 +146,7 @@ export default function CreateGameScreen() {
 
             if (prizeDistribution.reduce((acc, value) => acc + value, 0) !== 100) {
                 //console.error('Prize distribution must sum up to 100');
-                e.prizeDistribution = true; 
+                e.prizeDistribution = true;
             }
         }
 
@@ -160,11 +170,11 @@ export default function CreateGameScreen() {
         if (formData.timeForLevel === '') {
             //console.error('Time for level cannot be empty');
             e.timeForLevel = true;
-        } 
+        }
         if (isNaN(timeForLevel) || timeForLevel <= 0) {
             //console.error('Time for level must be a valid number greater than 0');
             e.timeForLevel = true;
-        } 
+        }
         if (!Number.isInteger(timeForLevel)) {
             //console.error('Time for level must be an integer number');
             e.timeForLevel = true
@@ -177,33 +187,28 @@ export default function CreateGameScreen() {
         setErrors(e);
     }
 
-    const saveGameSetup = async (userId: string, gameSetup: GameSetup) => {
+    const saveGameSetup = (userId: string, gameSetup: GameSetup) => {
         const otherErrors = Object.keys(errors).filter(key => key !== 'blindLevels').length > 0;
         const blindLevelsHasErrors = Object.keys(errors.blindLevels).length > 0;
-
+        
         if (otherErrors || blindLevelsHasErrors) {
             setShowErrors(true);
             return;
         }
+        setLoading(true);
+        setShowErrors(false);
 
-        try {
-            const userRef = doc(db, 'users', userId);
-            const gameSettingsRef = doc(userRef, 'gameSettings', gameSetup.gameName);
-
-            const existingDoc = await getDoc(gameSettingsRef);
-            if (existingDoc.exists()) {
-                console.error('Game setup with this name already exists!');
-                return; // Abortar a operação se já existir um jogo com o mesmo nome
-            }
-
-            await setDoc(gameSettingsRef, gameSetup);
-            console.log('Game setup saved successfully');
-            router.back();
-            //Mensagem de OK
-            //router.back();
-        } catch (e) {
-            console.error('Error saving game setup:', e);
-        }
+        createGame(userId, gameSetup)
+            .then(() => {
+                console.log('Game setup saved successfully');
+                router.back();
+            })
+            .catch((err) => { 
+                console.error('Error saving game setup:', err) 
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
 
     const handleSave = () => {
@@ -274,7 +279,7 @@ export default function CreateGameScreen() {
                         </View>
 
                         <View style={styles.inputBlock}>
-                            <Text style={styles.text}>Prize for winner(%):</Text>
+                            <Text style={styles.text}>Prize for winner (%):</Text>
                             <Input
                                 value={formData.prizeDistribution}
                                 onChangeText={(value) => updateFormData('prizeDistribution', value)}
@@ -359,6 +364,7 @@ export default function CreateGameScreen() {
                 <LinkButton
                     title="Save"
                     onPress={handleSave}
+                    isLoading={loading}
                 />
             </View>
 
@@ -392,7 +398,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: colors.textColor,
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '700',
         paddingBottom: 5,
         marginHorizontal: 5,

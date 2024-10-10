@@ -30,7 +30,6 @@ export default function AuthProvider({ children } : AuthProviderProps) {
 
     const getUser = () => {
         onAuthStateChanged(auth, async (authUser: FirebaseUser | null) => {
-            console.log(authUser)
             if (authUser) {
                 const userDoc = await getDoc(doc(db, 'users', authUser.uid));
                 if (userDoc.exists()) {

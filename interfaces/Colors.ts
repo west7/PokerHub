@@ -29,7 +29,7 @@ export const light: Colors = {
 export const colors: Colors = {
     baseColor: "#000",
     backgroundColor: "#121212",
-    backgroundLightColor: "#101010",
+    backgroundLightColor: "#1c1c1c",
     backgroundDarkColor: '#0f0f0f',
     textColor: "#f0f0f0",
     primaryColor: "#C61414",

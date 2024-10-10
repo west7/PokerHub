@@ -1,22 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from "react-native";
 import { AuthContext } from "../../../context/AuthProvider";
 import { colors } from "../../../interfaces/Colors";
 import LinkButton from "../../../components/LinkButton";
 import { NavProps } from "../../../interfaces/type";
 import { useNavigation } from '@react-navigation/native';
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConnection";
-import { collection, getDocs } from "firebase/firestore";
 import { GameSetup } from "../../../interfaces/game.interface";
+import GamesList from "../../../components/GamesList";
+import { getUserGames } from "../../../services/game.services";
 
-const db = FIREBASE_DB;
-const auth = FIREBASE_AUTH;
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
     const navigation = useNavigation<NavProps>();
     const [gameSetups, setGameSetups] = useState<GameSetup[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     if (!context) {
         throw new Error("User not found");
@@ -24,18 +22,25 @@ export default function GameSettings() {
 
     const { user } = context;
 
-    const getUserGames = async (userId: string) => {
-        try {
-            const gameSettingsRef = collection(db, "users", userId, "gamesettings");
-            const query = await getDocs(gameSettingsRef);
-
-            const games: GameSetup[] = query.docs.map(doc => doc.data() as GameSetup)
-            return games;
-        } catch (err) {
-            console.error('Error fetching games',err);
-            return [];
-        }
+    const handleGetUserGames = (userId: string) => {
+        setLoading(true);
+        getUserGames(userId)
+            .then((games) => {
+                setGameSetups(games);
+            })
+            .catch((err) => {
+                console.error('Error fetching games', err);
+            })
+            .finally(() => {
+                setLoading(false)
+            });
     }
+
+    useEffect(() => {
+        if (user) {
+            handleGetUserGames(user.uid);
+        }
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -52,7 +57,7 @@ export default function GameSettings() {
                 />
             </View>
 
-            <Text style={styles.text}>Games List</Text>
+            <GamesList gamesList={gameSetups} loading={loading} />
 
         </View>
     );
