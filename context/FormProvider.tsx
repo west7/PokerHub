@@ -8,19 +8,22 @@ interface FormContextProps {
     formData: GameSetup;
     updateFormData: (field: string, value: string | BlindLevel[]) => void;
     updateBlindLevel: (index: number, field: 'smallBlind' | 'bigBlind', value: string) => void;
+    resetFormData: () => void;
 }
 
 export const FormContext = createContext<FormContextProps | undefined>(undefined);
 
 export default function FormProvider({ children }: FormProviderProps) {
-    const [formData, setFormData] = useState<GameSetup>({
+    const initialFormData: GameSetup = {
         gameName: '',
         numberOfWinners: '',
         prizeDistribution: '',
         numberOfLevels: '1',
         timeForLevel: '',
         blindLevels: [{ level: 1, smallBlind: '', bigBlind: '' }],
-    })
+    };
+
+    const [formData, setFormData] = useState<GameSetup>(initialFormData);
 
     const updateFormData = (field: string, value: string | BlindLevel[]) => {
         setFormData((prev) => ({...prev, [field]: value}));
@@ -42,8 +45,12 @@ export default function FormProvider({ children }: FormProviderProps) {
         });
     };
 
+    const resetFormData = () => {
+        setFormData(initialFormData);
+    };
+
     return (
-        <FormContext.Provider value={{formData, updateFormData, updateBlindLevel}}>
+        <FormContext.Provider value={{formData, updateFormData, updateBlindLevel, resetFormData}}>
             {children}
         </FormContext.Provider>
     );

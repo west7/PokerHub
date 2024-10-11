@@ -9,7 +9,7 @@ import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
 import { FormContext } from "../../../context/FormProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { router } from "expo-router";
-import { createGame } from "../../../services/game.services";
+import { createGame, updateGame } from "../../../services/game.services";
 import { useRoute } from "@react-navigation/native";
 interface Errors {
     gameName?: boolean;
@@ -23,14 +23,12 @@ interface Errors {
 export default function CreateGameScreen() {
     const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const { gameSetup } = route.params as { gameSetup: GameSetup } || {};
+    const { gameSetup } = route.params as { gameSetup: GameSetup } || {}; // Quando o formulário for usado para editar um jogo, o parâmetro gameSetup será passado
 
     const context = useContext(AuthContext);
-
     if (!context) {
         throw new Error("User not found");
     }
-
     const { user } = context;
 
     const [errors, setErrors] = useState<Errors>({
@@ -47,8 +45,7 @@ export default function CreateGameScreen() {
     if (!formContext) {
         throw new Error('formContext must be used within a FormProvider');
     }
-
-    const { formData, updateFormData, updateBlindLevel } = formContext;
+    const { formData, updateFormData, resetFormData } = formContext;
 
     const addBlindLevel = () => {
         const newLevel: BlindLevel = { level: formData.blindLevels.length + 1, smallBlind: '', bigBlind: '' };
@@ -188,7 +185,7 @@ export default function CreateGameScreen() {
         setErrors(e);
     }
 
-    const saveGameSetup = (userId: string, gameSetup: GameSetup) => {
+    const saveGameSetup = (userId: string, gameData: GameSetup) => {
         const otherErrors = Object.keys(errors).filter(key => key !== 'blindLevels').length > 0;
         const blindLevelsHasErrors = Object.keys(errors.blindLevels).length > 0;
 
@@ -199,7 +196,22 @@ export default function CreateGameScreen() {
         setLoading(true);
         setShowErrors(false);
 
-        createGame(userId, gameSetup)
+        if (gameSetup) {
+            updateGame(userId, gameData)
+                .then(() => {
+                    console.log('Game setup updated successfully');
+                    router.back();
+                })
+                .catch((err) => {
+                    console.error('Error updating game setup:', err)
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+                return;
+        }
+
+        createGame(userId, gameData)
             .then(() => {
                 console.log('Game setup saved successfully');
                 router.back();
@@ -239,9 +251,16 @@ export default function CreateGameScreen() {
                 })));
             }
             
-        } else {
+        } /* else {
             console.log('gameSetup está indefinido:', gameSetup);
+        } */
+
+        return () => {
+            if (gameSetup) {
+                resetFormData();  // Limpa o formulário ao sair da tela em modo de edição
+            }
         }
+            
     }, [gameSetup]);
 
 
