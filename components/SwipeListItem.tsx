@@ -25,13 +25,12 @@ export default function SwipeListItem({ onEdit, onDelete, children }: SwipeListI
                 <Icon name="pencil" size={20} color={colors.buttonText} />
             </Pressable>
 
-            <View style={styles.divider} />
 
             <Pressable
                 style={({ pressed }) => [
                     styles.actionButton,
                     pressed && styles.actionButtonPressed,
-                    { backgroundColor: 'red' }
+                    { backgroundColor: colors.primaryColor }
                 ]}
                 onPress={onDelete}
             >

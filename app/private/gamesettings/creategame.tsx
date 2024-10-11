@@ -23,7 +23,7 @@ interface Errors {
 export default function CreateGameScreen() {
     const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const gameSetup = route.params as GameSetup;
+    const { gameSetup } = route.params as { gameSetup: GameSetup } || {};
 
     const context = useContext(AuthContext);
 
@@ -48,8 +48,7 @@ export default function CreateGameScreen() {
         throw new Error('formContext must be used within a FormProvider');
     }
 
-    const { formData, updateFormData } = formContext;
-
+    const { formData, updateFormData, updateBlindLevel } = formContext;
 
     const addBlindLevel = () => {
         const newLevel: BlindLevel = { level: formData.blindLevels.length + 1, smallBlind: '', bigBlind: '' };
@@ -124,7 +123,10 @@ export default function CreateGameScreen() {
         }
 
         const numberOfWinners = parseInt(formData.numberOfWinners, 10);
-        const prizeDistribution = formData.prizeDistribution.split(',').map(Number);
+
+        const prizeDistribution = formData.prizeDistribution
+            ? formData.prizeDistribution.split(',').map(Number)
+            : [];
 
         if (formData.numberOfWinners !== '' || formData.prizeDistribution !== '') {
 
@@ -220,6 +222,27 @@ export default function CreateGameScreen() {
     }
 
     useEffect(handleErrors, [formData]);
+
+    useEffect(() => {
+        if (gameSetup) {
+            updateFormData('gameName', gameSetup.gameName);
+            updateFormData('numberOfWinners', gameSetup.numberOfWinners);
+            updateFormData('prizeDistribution', gameSetup.prizeDistribution);
+            updateFormData('numberOfLevels', gameSetup.numberOfLevels);
+            updateFormData('timeForLevel', gameSetup.timeForLevel);
+
+            if (gameSetup.blindLevels && gameSetup.blindLevels.length > 0) {
+                updateFormData('blindLevels', gameSetup.blindLevels.map((blindLevel, index) => ({
+                    level: index + 1,
+                    smallBlind: blindLevel.smallBlind || '',
+                    bigBlind: blindLevel.bigBlind || ''
+                })));
+            }
+            
+        } else {
+            console.log('gameSetup está indefinido:', gameSetup);
+        }
+    }, [gameSetup]);
 
 
     // TODO: MENSAGENS DE ERRO
