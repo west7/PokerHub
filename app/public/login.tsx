@@ -6,6 +6,7 @@ import Input from "../../components/Input";
 import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../interfaces/Colors"
+import { signIn } from "../../services/user.services";
 interface Errors {
     email?: boolean;
     password?: boolean;
@@ -25,7 +26,7 @@ export default function Login() {
     //TODO: Implementar recuperação de senha
     //TODO: Implementar Notificações internas no app?
 
-    const signIn = () => {
+    const login = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
             return
@@ -33,17 +34,8 @@ export default function Login() {
         setShowErrors(false)
         setLoading(true)
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((response) => {
-                //console.log(response);
-                //if (response) router.replace("../private/"); 
-            })
-            .catch((e) => {
-                alert(e.message);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        signIn(email, password)
+            .finally(() => setLoading(false))
     }
 
     const handleErrors = () => {
@@ -110,7 +102,7 @@ export default function Login() {
                 <View style={styles.btn}>
                     <LinkButton
                         title="Sign in"
-                        onPress={signIn}
+                        onPress={login}
                         isLoading={loading}
                     />
 

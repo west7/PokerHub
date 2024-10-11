@@ -2,8 +2,6 @@ import React, { ReactNode, useContext, useState } from "react";
 import { Redirect, router, Stack } from "expo-router";
 import { createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
 import Home from './index'
-import { FIREBASE_AUTH } from "../../firebaseConnection";
-import { signOut } from "firebase/auth";
 import { colors } from "../../interfaces/Colors";
 import Players from "./players";
 import History from "./history";
@@ -14,10 +12,10 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import GameStack from "./gamesettings/_layout";
+import { signOut } from "../../services/user.services";
 
 
 const Drawer = createDrawerNavigator();
-const auth = FIREBASE_AUTH;
 
 
 export default function InsideLayout() {
@@ -30,14 +28,10 @@ export default function InsideLayout() {
     const { signed, user, loading, logout } = context;
 
     const handleLogout = async () => {
-        try {
-            await signOut(auth);
+        signOut()
+        .then(() => {
             logout();
-            //router.replace("../public/login")
-        }
-        catch (err) {
-            console.log(err);
-        }
+        })
     }
 
     if (loading) {
@@ -73,7 +67,7 @@ export default function InsideLayout() {
                         />
                     )}
                 />
-
+                
             </DrawerContentScrollView>
         );
     }

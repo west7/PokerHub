@@ -5,7 +5,7 @@ import { colors } from "../interfaces/Colors";
 import SwipeListItem from "./SwipeListItem";
 
 interface GamesListProps {
-    onEdit: (gameName: string) => void;
+    onEdit: (gameSetup: GameSetup) => void;
     onDelete: (gameName: string) => void;
     gamesList: GameSetup[];
     loading: boolean;
@@ -15,7 +15,7 @@ export default function GamesList({ gamesList, loading, onEdit, onDelete }: Game
 
     const gameCard = ({ item }: { item: GameSetup }) => {
         return (
-                <SwipeListItem onEdit={() => onEdit(item.gameName)} onDelete={() => onDelete(item.gameName)}>
+                <SwipeListItem onEdit={() => onEdit(item)} onDelete={() => onDelete(item.gameName)}>
                     <Pressable
                         style={styles.gameCard}
                         onPress={() => console.log('Jogo:', item.gameName)}

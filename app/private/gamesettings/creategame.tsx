@@ -10,6 +10,7 @@ import { FormContext } from "../../../context/FormProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { router } from "expo-router";
 import { createGame } from "../../../services/game.services";
+import { useRoute } from "@react-navigation/native";
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
@@ -21,6 +22,9 @@ interface Errors {
 
 export default function CreateGameScreen() {
     const [loading, setLoading] = useState(false);
+    const route = useRoute();
+    const gameSetup = route.params as GameSetup;
+
     const context = useContext(AuthContext);
 
     if (!context) {
@@ -185,7 +189,7 @@ export default function CreateGameScreen() {
     const saveGameSetup = (userId: string, gameSetup: GameSetup) => {
         const otherErrors = Object.keys(errors).filter(key => key !== 'blindLevels').length > 0;
         const blindLevelsHasErrors = Object.keys(errors.blindLevels).length > 0;
-        
+
         if (otherErrors || blindLevelsHasErrors) {
             setShowErrors(true);
             return;
@@ -198,8 +202,8 @@ export default function CreateGameScreen() {
                 console.log('Game setup saved successfully');
                 router.back();
             })
-            .catch((err) => { 
-                console.error('Error saving game setup:', err) 
+            .catch((err) => {
+                console.error('Error saving game setup:', err)
             })
             .finally(() => {
                 setLoading(false);
@@ -216,6 +220,7 @@ export default function CreateGameScreen() {
     }
 
     useEffect(handleErrors, [formData]);
+
 
     // TODO: MENSAGENS DE ERRO
 
@@ -438,6 +443,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
         borderRadius: 2.5,
         alignSelf: 'center',
-        marginVertical: 10, // Ajusta o espaço acima/abaixo da barra
+        marginVertical: 10,
     },
 })

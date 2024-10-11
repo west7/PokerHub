@@ -10,6 +10,7 @@ import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../interfaces/Colors";
 import { FirebaseError } from "firebase/app";
+import { signUp } from "../../services/user.services";
 
 interface Errors {
     name?: boolean;
@@ -54,7 +55,7 @@ export default function Register() {
 
     useEffect(handleErrors, [name, email, password, confirmPassword])
 
-    const signUp = () => {
+    const register = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
             return
@@ -62,25 +63,8 @@ export default function Register() {
         setShowErrors(false)
         setLoading(true)
 
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(async (response) => {
-                const user = response.user;
-                await setDoc(doc(db, "users", user.uid), {
-                    name: name,
-                    email: email,
-                })
-                    .catch((e: any) => {
-                        const err = e as FirebaseError
-                        alert(err.message);
-                    })
-            })
-            .catch((e: any) => {
-                const err = e as FirebaseError
-                alert(err.message);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        signUp(email, password, name)
+            .finally(() => setLoading(false))
     }
 
     const handleShowPassword = () => {
@@ -162,7 +146,7 @@ export default function Register() {
                 </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-                    <LinkButton title="Sign up" onPress={signUp} variant="outline" isLoading={loading} />
+                    <LinkButton title="Sign up" onPress={register} variant="outline" isLoading={loading} />
                     <Pressable onPress={() => router.push('../public/login')}>
                         <Text style={styles.text}>Already have an account? Log in</Text>
                     </Pressable>

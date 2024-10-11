@@ -1,4 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { GameSetup } from "./game.interface";
 
 export type RootStackParamList = {
     Home: undefined;
@@ -6,7 +7,7 @@ export type RootStackParamList = {
     Players: undefined;
     History: undefined;
     Statistics: undefined;
-    CreateGame: undefined; // Adicione a rota de criação de jogo aqui
+    CreateGame?: {gameSetup: GameSetup}; // Adicione a rota de criação de jogo aqui
 };
 
 export type NavProps = NativeStackNavigationProp<RootStackParamList, 'GameSettings'>;

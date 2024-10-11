@@ -10,6 +10,7 @@ import GamesList from "../../../components/GamesList";
 import { deleteGame, getUserGames } from "../../../services/game.services";
 import ConfirmationModal from "../../../components/ConfirmationModal";
 import { useFocusEffect } from "@react-navigation/native";
+import { router } from "expo-router";
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
@@ -40,15 +41,14 @@ export default function GameSettings() {
             });
     }
 
-    const handleEdit = () => {
-        console.log('Editar');
-        // Abrir no creategame.tsx
+    const handleEdit = (gameSetup: GameSetup) => {
+        navigation.navigate("CreateGame", { gameSetup });
     }
 
     const handleDelete = (gameName: string) => {
         Platform.OS === 'web' ?
             (setModalVisible(true))
-                :
+            :
             (Alert.alert(
                 "Delete Game",
                 "Are you sure you want to delete this game?",
@@ -63,7 +63,7 @@ export default function GameSettings() {
                             if (user?.uid) {
                                 setLoading(true);
                                 deleteGame(user.uid, gameName);
-                                loadgames(user.uid); 
+                                loadgames(user.uid);
                                 setLoading(false);
                             } else {
                                 console.error("User ID is undefined");
@@ -113,7 +113,7 @@ export default function GameSettings() {
                         loadgames(user.uid);
                     }
                     setLoading(false);
-                    setModalVisible(false); 
+                    setModalVisible(false);
                 }}
             />
         </View>
