@@ -10,14 +10,15 @@ import LoadingScreen from '../components/LoadingScreen';
 export default function App() {
   const { user, loading } = useContext(AuthContext) ?? (() => { throw new Error("AuthContext not provided") })();
 
+  console.log('index.tsx', user, loading);  
+
   useEffect(() => {
-    //console.log('App', user, loading)
     if (!loading && user) {
       router.replace("/private");
     }
   }, [user, loading]);
 
-  if (loading || (user && !loading)) {
+  if (loading) {
     return <LoadingScreen />
   }
 

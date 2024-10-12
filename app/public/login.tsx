@@ -7,12 +7,12 @@ import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../interfaces/Colors"
 import { signIn } from "../../services/user.services";
+import Toast from "react-native-toast-message";
+import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";
 interface Errors {
     email?: boolean;
     password?: boolean;
 }
-
-const auth = FIREBASE_AUTH;
 
 export default function Login() {
     const [errors, setErrors] = useState<Errors>({ email: false, password: false })
@@ -26,6 +26,7 @@ export default function Login() {
     //TODO: Implementar recuperação de senha
     //TODO: Implementar Notificações internas no app?
 
+
     const login = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
@@ -35,6 +36,20 @@ export default function Login() {
         setLoading(true)
 
         signIn(email, password)
+            .then(() => {
+                /* Toast.show({
+                    type: "success",
+                    text1: "Bem Vindo!",
+                }) */
+            })
+            .catch(error => {
+                const message = FirebaseErrorCustomMessage(error);
+                Toast.show({
+                    type: "error",
+                    text1: "Erro!",
+                    text2: message,
+                });
+            })
             .finally(() => setLoading(false))
     }
 
@@ -61,7 +76,6 @@ export default function Login() {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <BackButton /> */}
             <ScrollView style={styles.contentContainer}>
 
                 <Text style={styles.title}>Poker App</Text>

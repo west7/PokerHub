@@ -11,15 +11,14 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../interfaces/Colors";
 import { FirebaseError } from "firebase/app";
 import { signUp } from "../../services/user.services";
+import Toast from "react-native-toast-message";
+import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";
 
 interface Errors {
     name?: boolean;
     email?: boolean;
     password?: boolean;
 }
-
-const auth = FIREBASE_AUTH;
-const db = FIREBASE_DB;
 
 export default function Register() {
     const [errors, setErrors] = useState<Errors>({ name: false, email: false, password: false })
@@ -31,39 +30,77 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [errMessage, setErrMessage] = useState<string | null>(null)
+    const [showToast, setShowToast] = useState(false)
 
     const handleErrors = () => {
         const e: Errors = {}
 
-        if (!name)
+        if (!name) {
             e.name = true
+            setErrMessage("Nome é obrigatório")
+        }
 
-        if (!email)
+        if (!email) {
             e.email = true
-        else if (!/\S+@\S+\.\S+/.test(email))
+            setErrMessage("Email é obrigatório")
+        }
+        else if (!/\S+@\S+\.\S+/.test(email)) {
             e.email = true
+            setErrMessage("Email inválido")
+        }
 
-        if (!password)
+        if (!password) {
             e.password = true
-        else if (password.length < 6)
+            setErrMessage("Senha é obrigatória")
+        }
+        else if (password !== confirmPassword) {
             e.password = true
-        else if (password !== confirmPassword)
-            e.password = true
+            setErrMessage("Senhas são diferentes")
+        }
 
         setErrors(e)
     }
 
     useEffect(handleErrors, [name, email, password, confirmPassword])
 
+    useEffect(() => {
+        if (errMessage && showToast) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erro!',
+                text2: errMessage,
+            });
+        }
+    }, [errMessage, showToast]);
+
+
     const register = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
+            setShowToast(true)
             return
         }
         setShowErrors(false)
         setLoading(true)
 
         signUp(email, password, name)
+            .then(() => {
+                router.replace('/private')
+                Toast.show({
+                    type: "success",
+                    text1: "Sucesso!",
+                    text2: "Usuário criado com sucesso!",
+                });
+            })
+            .catch((error) => {
+                const message = FirebaseErrorCustomMessage(error);
+                Toast.show({
+                    type: "error",
+                    text1: "Erro!",
+                    text2: message,
+                });
+            })
             .finally(() => setLoading(false))
     }
 
@@ -107,7 +144,7 @@ export default function Register() {
                                 placeholder="Insert email"
                                 inputMode="email"
                                 autoComplete="email"
-                                autoCapitalize="none"    
+                                autoCapitalize="none"
                                 animation
                                 err={showErrors ? errors.email : false}
                                 value={email}

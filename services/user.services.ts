@@ -1,39 +1,32 @@
-import React from "react";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as FirebaseSignOut} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as FirebaseSignOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { FirebaseError } from "firebase/app";
 
 const auth = FIREBASE_AUTH;
 const db = FIREBASE_DB;
 
-export async function signIn(email: string, password: string) {
+export async function signIn(email: string, password: string): Promise<string | void> {
     try {
         await signInWithEmailAndPassword(auth, email, password)
     }
     catch (e) {
-        const error = e as FirebaseError;
-        alert(`Error signing in: ${error.message}`);
+        throw e;
     }
 }
 
 export async function signUp(email: string, password: string, name: string) {
-    createUserWithEmailAndPassword(auth, email, password)
-        .then(async (response) => {
-            const user = response.user;
-            await setDoc(doc(db, "users", user.uid), {
-                name: name,
-                email: email,
-            })
-                .catch((e: any) => {
-                    const err = e as FirebaseError
-                    alert(err.message);
-                })
-        })
-        .catch((e: any) => {
-            const err = e as FirebaseError
-            alert(err.message);
-        })
+    try {
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        const user = response.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+            name: name,
+            email: email,
+        });
+
+    } catch (e) {
+        throw e;
+    }
 }
 
 export async function signOut() {
@@ -41,7 +34,6 @@ export async function signOut() {
         await FirebaseSignOut(auth);
     }
     catch (err) {
-        signOut
         console.log(err);
     }
 }
