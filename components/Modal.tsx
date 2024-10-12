@@ -1,19 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, Modal, StyleSheet } from "react-native";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
+import Input from "./Input";
 
+interface InputModelProps {
+    value: string;
+    onChangeText: (text: string) => void;
+}
 interface ConfirmationModalProps {
     visible: boolean;
     message: string;
     onConfirm: () => void;
     onCancel: () => void;
+    input?: InputModelProps;
 }
 
 export default function ConfirmationModal({
     visible,
     message,
     onConfirm,
-    onCancel }: ConfirmationModalProps) {
+    onCancel,
+    input }: ConfirmationModalProps) {
+    const [inputValue, setInputValue] = useState(input?.value || '');
+
+    useEffect(() => {
+        if (!visible) {
+            setInputValue('');
+        }
+    }, [visible]);
 
     return (
         <Modal
@@ -25,6 +39,25 @@ export default function ConfirmationModal({
             <View style={styles.modalContainer}>
                 <View style={styles.modalView}>
                     <Text style={styles.messageText}>{message}</Text>
+
+                    {input && (
+                        <View style={styles.inputContainer}>
+                            <Input
+                                clearButtonMode="while-editing"
+                                autoCapitalize="words"
+                                inputMode="text"
+                                style={styles.input}
+                                placeholder={inputValue}
+                                value={inputValue}
+                                onChangeText={(text) => {
+                                    setInputValue(text);
+                                    input.onChangeText(text);
+                                }}
+                                containerStyle={{ padding: 5 }}
+                            />
+                        </View>
+                    )}
+
                     <View style={styles.buttonContainer}>
 
                         <Pressable style={[styles.button, { backgroundColor: colors.disabledColor }]} onPress={onCancel}>
@@ -65,8 +98,8 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     messageText: {
-        fontSize: 16,
-        marginBottom: 20,
+        fontSize: 18,
+        marginBottom: 16,
         textAlign: 'center',
         color: colors.textColor,
     },
@@ -81,5 +114,19 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: colors.buttonText,
+    },
+    inputContainer: {
+        padding: 16,
+        width: '112%',
+    },
+    input: {
+        flex: 1,
+        fontSize: 16,
+        color: colors.textColor,
+        zIndex: 1,
+        opacity: 1,
+        borderWidth: 2,
+        borderRadius: 7,
+        borderColor: colors.textColor,
     }
 });

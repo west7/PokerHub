@@ -5,7 +5,7 @@ import LinkButton from "../../components/LinkButton";
 import Input from "../../components/Input";
 import { FIREBASE_AUTH } from "../../firebaseConnection";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { colors } from "../../interfaces/Colors"
+import { colors } from "../../theme/theme"
 import { signIn } from "../../services/user.services";
 import Toast from "react-native-toast-message";
 import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";

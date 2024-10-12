@@ -2,7 +2,7 @@ import React from "react";
 import { ActivityIndicator, ButtonProps, Pressable, StyleSheet, Text, TextStyle, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { primaryButton, variants } from "../interfaces/ButtonVariant";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 
 interface Props extends ButtonProps {
     title: string;

@@ -7,7 +7,7 @@ export type RootStackParamList = {
     Players: undefined;
     History: undefined;
     Statistics: undefined;
-    CreateGame?: {gameSetup: GameSetup}; // Adicione a rota de criação de jogo aqui
+    CreateGame?: {gameSetup: GameSetup}; 
 };
 
 export type NavProps = NativeStackNavigationProp<RootStackParamList, 'GameSettings'>;

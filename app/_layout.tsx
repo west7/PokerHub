@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import AuthProvider from "../context/AuthProvider";
 import { StatusBar } from "react-native";
 import Toast, { BaseToast, BaseToastProps, ErrorToast } from 'react-native-toast-message';
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 
 export default function RootLayout() {
 

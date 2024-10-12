@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface SwipeListItemProps {

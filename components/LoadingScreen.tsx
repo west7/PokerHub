@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 
 export default function LoadingScreen() {
     return (

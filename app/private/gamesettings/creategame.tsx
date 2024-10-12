@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, Button, Pressable } from "react-native";
-import { colors } from "../../../interfaces/Colors";
+import { colors } from "../../../theme/theme";
 import Input from "../../../components/Input";
 import LinkButton from "../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";

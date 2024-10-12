@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useContext, useEffect } from "react";
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 import Login from "./public/login"
 import { AuthContext } from '../context/AuthProvider';
 import { router } from 'expo-router';

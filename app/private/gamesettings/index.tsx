@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, Alert, Platform } from "react-native";
 import { AuthContext } from "../../../context/AuthProvider";
-import { colors } from "../../../interfaces/Colors";
+import { colors } from "../../../theme/theme";
 import LinkButton from "../../../components/LinkButton";
 import { NavProps } from "../../../interfaces/type";
 import { useNavigation } from '@react-navigation/native';
 import { GameSetup } from "../../../interfaces/game.interface";
 import GamesList from "../../../components/GamesList";
 import { deleteGame, getUserGames } from "../../../services/game.services";
-import ConfirmationModal from "../../../components/ConfirmationModal";
+import ConfirmationModal from "../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
-import { router } from "expo-router";
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
@@ -76,6 +75,16 @@ export default function GameSettings() {
         setGameToDelete(gameName);
     }
 
+    const handleConfirm = () => {
+        setLoading(true);
+        if (user?.uid && gameToDelete) {
+            deleteGame(user.uid, gameToDelete);
+            loadgames(user.uid);
+        }
+        setLoading(false);
+        setModalVisible(false);
+    }
+
     useFocusEffect(
         React.useCallback(() => {
             if (user) {
@@ -106,15 +115,7 @@ export default function GameSettings() {
                 visible={modalVisible}
                 message="Are you sure you want to delete this game?"
                 onCancel={() => setModalVisible(false)}
-                onConfirm={() => {
-                    setLoading(true);
-                    if (user?.uid && gameToDelete) {
-                        deleteGame(user.uid, gameToDelete);
-                        loadgames(user.uid);
-                    }
-                    setLoading(false);
-                    setModalVisible(false);
-                }}
+                onConfirm={handleConfirm}
             />
         </View>
     );

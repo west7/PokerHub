@@ -1,4 +1,4 @@
-import { colors } from "./Colors";
+import { colors } from "../theme/theme";
 
 export interface ButtonStyles {
     button:{

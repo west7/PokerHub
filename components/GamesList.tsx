@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import { GameSetup } from "../interfaces/game.interface";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 import SwipeListItem from "./SwipeListItem";
+import { Player } from "../interfaces/player.interface";
 
 interface GamesListProps {
     onEdit: (gameSetup: GameSetup) => void;
@@ -10,6 +11,12 @@ interface GamesListProps {
     gamesList: GameSetup[];
     loading: boolean;
 }
+
+interface PlayerListProps {
+    playerList: Player[];
+    loading: boolean;
+}
+
 
 export default function GamesList({ gamesList, loading, onEdit, onDelete }: GamesListProps) {
 
@@ -30,6 +37,8 @@ export default function GamesList({ gamesList, loading, onEdit, onDelete }: Game
                 </SwipeListItem>
         );
     }
+
+    const playerCard = ({ item }: { item: Player }) => {}
 
     if (loading) {
         return <ActivityIndicator size="small" color={colors.primaryColor} />;

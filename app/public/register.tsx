@@ -8,7 +8,7 @@ import BackButton from "../../components/BackButton";
 import { setDoc, doc } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { colors } from "../../interfaces/Colors";
+import { colors } from "../../theme/theme";
 import { FirebaseError } from "firebase/app";
 import { signUp } from "../../services/user.services";
 import Toast from "react-native-toast-message";

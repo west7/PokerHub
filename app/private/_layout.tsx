@@ -2,7 +2,7 @@ import React, { ReactNode, useContext, useState } from "react";
 import { Redirect, router, Stack } from "expo-router";
 import { createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
 import Home from './index'
-import { colors } from "../../interfaces/Colors";
+import { colors } from "../../theme/theme";
 import Players from "./players";
 import History from "./history";
 import Statistics from "./statistics";

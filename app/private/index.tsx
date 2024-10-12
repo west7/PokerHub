@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, StatusBar 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import LinkButton from "../../components/LinkButton";
 import { Redirect, router } from 'expo-router';
-import { colors } from "../../interfaces/Colors";
+import { colors } from "../../theme/theme";
 import { AuthContext } from "../../context/AuthProvider";
 import LoadingScreen from "../../components/LoadingScreen";
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { colors, Colors } from "../interfaces/Colors";
+import { colors, Colors } from "../theme/theme";
 
 interface ThemeProviderProps {
     children: React.ReactNode;

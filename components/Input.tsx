@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, TextInput, KeyboardAvoidingView, StyleSheet, Platform, Text, Animated, Keyboard, Easing, TextInputProps, Pressable, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors } from "../interfaces/Colors";
+import { colors } from "../theme/theme";
 
 interface IProps extends TextInputProps {
     placeholder: string;
