@@ -6,6 +6,7 @@ import Input from "./Input";
 interface InputModelProps {
     value: string;
     onChangeText: (text: string) => void;
+    iconName?: string;
 }
 interface ConfirmationModalProps {
     visible: boolean;
@@ -54,6 +55,7 @@ export default function ConfirmationModal({
                                     input.onChangeText(text);
                                 }}
                                 containerStyle={{ padding: 5 }}
+                                iconName={input.iconName}
                             />
                         </View>
                     )}

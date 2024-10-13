@@ -2,17 +2,12 @@ import { onAuthStateChanged, User as FirebaseUser} from "firebase/auth";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
 import { doc, getDoc } from "firebase/firestore";
+import { User } from "../interfaces/user.interface";
 
 const auth = FIREBASE_AUTH;
 const db = FIREBASE_DB;
 interface AuthProviderProps {
     children: ReactNode;
-}
-
-interface User {
-    name: string;
-    email: string;
-    uid: string;
 }
 
 interface UserContextProps {

@@ -6,7 +6,7 @@ import LinkButton from "../../../components/LinkButton";
 import { NavProps } from "../../../interfaces/type";
 import { useNavigation } from '@react-navigation/native';
 import { GameSetup } from "../../../interfaces/game.interface";
-import GamesList from "../../../components/GamesList";
+import GamesList from "../../../components/List";
 import { deleteGame, getUserGames } from "../../../services/game.services";
 import ConfirmationModal from "../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
@@ -109,7 +109,7 @@ export default function GameSettings() {
                 />
             </View>
 
-            <GamesList gamesList={gameSetups} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+            <GamesList data={gameSetups} loading={loading} onEditGame={handleEdit} onDeleteGame={handleDelete} onDeletePlayer={() => { }} onEditPlayer={() => { }} />
 
             <ConfirmationModal
                 visible={modalVisible}

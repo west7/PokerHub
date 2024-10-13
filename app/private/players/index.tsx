@@ -1,45 +1,109 @@
 import React, { useContext, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, Alert, Button, Platform } from "react-native";
+import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { colors } from "../../../theme/theme";
 import LinkButton from "../../../components/LinkButton";
 import { AuthContext } from "../../../context/AuthProvider";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NavProps } from "../../../interfaces/type";
-import ConfirmationModal from "../../../components/Modal";
+import Modal from "../../../components/Modal";
+import { Player } from "../../../interfaces/player.interface";
+import { createPlayer, getUserPlayers } from "../../../services/players.services";
+import PlayerList from "../../../components/List";
+
+const inititalPlayer: Player = {
+    uid: '',
+    name: '',
+    totalBalance: 0,
+    gamesPlayed: 0,
+    gamesWon: 0,
+    lastTransaction: null,
+}
 
 export default function Players() {
     const context = useContext(AuthContext);
-    const navigation = useNavigation<NavProps>();
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [players, setPlayers] = useState<Player[]>([]);
     const [playerName, setPlayerName] = useState('');
+    const [playerData, setPlayerData] = useState(inititalPlayer);
 
     if (!context) {
         throw new Error("User not found");
     }
     const { user } = context;
 
-    const showAlert = () => {
+    const handleNewPlayer = () => {
         if (Platform.OS === 'ios') {
-            Alert.prompt("Player Name", "Enter the player's name", (text) => console.log(text));
+            Alert.prompt("Player name", "Enter the player's name", (player) => {
+                if (player) {
+                    handleCreatePlayer({
+                        ...playerData,
+                        name: player,
+                    });
+                }
+            });
         } else {
             setModalVisible(true);
         }
     }
 
+    const handleCreatePlayer = (playerData: Player) => {
+        if (!playerData) {
+            return;
+        }
+
+        setLoading(true);
+        if (user) {
+            createPlayer(user.uid, playerData)
+                .then(() => {
+                    console.log('Player created');
+                    loadPlayers(user.uid);
+                })
+                .catch((err) => {
+                    console.error('Error creating player', err);
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+    }
+
+
     const handleConfirm = () => {
-        console.log(playerName);
+        handleCreatePlayer({ ...playerData, name: playerName });
         setModalVisible(false);
     }
+
+    const loadPlayers = (userId: string) => {
+        setLoading(true);
+        getUserPlayers(userId)
+            .then((players) => {
+                setPlayers(players);
+            })
+            .catch((err) => {
+                console.error('Error fetching players', err);
+            })
+            .finally(() => {
+                setLoading(false)
+            });
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            if (user) {
+                loadPlayers(user.uid);
+            }
+        }, [user])
+    );
 
     return (
         <View style={styles.container}>
 
             <View style={styles.headerContainer}>
-                <Text style={styles.text}>Players Registered</Text>
+                <Text style={styles.text}>Players</Text>
                 <LinkButton
                     title="New Player"
-                    onPress={showAlert}
+                    onPress={handleNewPlayer}
                     variant="primary"
                     size="small"
                     iconName="plus"
@@ -48,14 +112,14 @@ export default function Players() {
             </View>
 
 
-            {/* <PlayerList /> */}
+            <PlayerList data={players} loading={loading} onDeleteGame={() => { }} onEditGame={() => { }} onDeletePlayer={() => { }} onEditPlayer={() => { }} />
 
-            <ConfirmationModal
+            <Modal
                 visible={modalVisible}
                 message="Enter the player's name:"
                 onCancel={() => setModalVisible(false)}
                 onConfirm={handleConfirm}
-                input={{ value: playerName , onChangeText: setPlayerName }}
+                input={{ value: playerName, onChangeText: setPlayerName, iconName: 'account-plus' }}
             />
 
         </View>
