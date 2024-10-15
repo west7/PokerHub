@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { GameSetup } from "../../../interfaces/game.interface";
 import GamesList from "../../../components/List";
 import { deleteGame, getUserGames } from "../../../services/game.services";
-import ConfirmationModal from "../../../components/Modal";
+import Modal from "../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function GameSettings() {
@@ -45,6 +45,7 @@ export default function GameSettings() {
     }
 
     const handleDelete = (gameName: string) => {
+        setLoading(true);
         Platform.OS === 'web' ?
             (setModalVisible(true))
             :
@@ -73,6 +74,7 @@ export default function GameSettings() {
                 ]
             ))
         setGameToDelete(gameName);
+        setLoading(false);
     }
 
     const handleConfirm = () => {
@@ -109,9 +111,9 @@ export default function GameSettings() {
                 />
             </View>
 
-            <GamesList data={gameSetups} loading={loading} onEditGame={handleEdit} onDeleteGame={handleDelete} onDeletePlayer={() => { }} onEditPlayer={() => { }} />
+            <GamesList data={gameSetups} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
 
-            <ConfirmationModal
+            <Modal
                 visible={modalVisible}
                 message="Are you sure you want to delete this game?"
                 onCancel={() => setModalVisible(false)}

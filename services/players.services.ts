@@ -11,31 +11,37 @@ export async function getUserPlayers(userId: string) {
         const playersRef = collection(db, "users", userId, "players");
         const query = await getDocs(playersRef);
 
-        const players: Player[] = query.docs.map(doc => doc.data() as Player)
+        const players: Player[] = query.docs.map((doc) => ({
+            ...doc.data() as Player,
+            playerId: doc.id,
+        }));
 
         return players;
+
     } catch (err) {
         console.error('Error fetching games', err);
         return [];
     }
 }
 
-export async function createPlayer(userId: string, player: Player) {
+export async function createPlayer(userId: string, player: Player): Promise<string | null> {
     const userRef = doc(db, 'users', userId);
     const playersCollectionRef = collection(userRef, 'players');
 
     try {
-        // Usando addDoc para criar um novo jogador com um ID gerado automaticamente
-        await addDoc(playersCollectionRef, {
+        const playerRef = await addDoc(playersCollectionRef, {
             name: player.name,
             totalBalance: player.totalBalance,
             gamesPlayed: player.gamesPlayed,
             gamesWon: player.gamesWon,
-            lastTransaction: player.lastTransaction,
+            lastTransaction: null,
         });
+
+        return playerRef.id;
     }
     catch (e) {
         console.error('Error saving player:', e);
+        return null;
     }
 }
 

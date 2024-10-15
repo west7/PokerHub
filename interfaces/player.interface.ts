@@ -4,7 +4,7 @@ export interface Balance {
     date: Date;
 }
 export interface Player {
-    uid: string;
+    playerId: string;
     name: string;
     totalBalance: number;
     gamesPlayed: number;

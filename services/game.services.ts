@@ -22,18 +22,15 @@ export async function getUserGames(userId: string) {
 export async function createGame(userId: string, gameSetup: GameSetup) {
     const userRef = doc(db, 'users', userId);
     const gameSettingsRef = doc(userRef, 'gameSettings', gameSetup.gameName);
-    console.log('Saving game setup...');
 
     try {
         const existingDoc = await getDoc(gameSettingsRef);
         if (existingDoc.exists()) {
-            console.error('Game setup with this name already exists!');
-            return; // Abortar a operação se já existir um jogo com o mesmo nome
+            throw new  Error('Game setup with this name already exists!');
         }
-
         await setDoc(gameSettingsRef, gameSetup);
     } catch (e) {
-        console.error('Error saving game setup:', e);
+        console.error('Error saving game setup:');
     }
 }
 

@@ -3,17 +3,16 @@ import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { colors } from "../../../theme/theme";
 import LinkButton from "../../../components/LinkButton";
 import { AuthContext } from "../../../context/AuthProvider";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { NavProps } from "../../../interfaces/type";
+import { useFocusEffect } from "@react-navigation/native";
 import Modal from "../../../components/Modal";
 import { Player } from "../../../interfaces/player.interface";
-import { createPlayer, getUserPlayers } from "../../../services/players.services";
+import { createPlayer, deletePlayer, getUserPlayers } from "../../../services/players.services";
 import PlayerList from "../../../components/List";
 
 const inititalPlayer: Player = {
-    uid: '',
+    playerId: '',
     name: '',
-    totalBalance: 0,
+    totalBalance: 100,
     gamesPlayed: 0,
     gamesWon: 0,
     lastTransaction: null,
@@ -26,6 +25,8 @@ export default function Players() {
     const [players, setPlayers] = useState<Player[]>([]);
     const [playerName, setPlayerName] = useState('');
     const [playerData, setPlayerData] = useState(inititalPlayer);
+    const [modalConfirmationVisible, setModalConfirmationVisible] = useState(false);
+    const [playerToDelete, setPlayerToDelete] = useState<string | null>(null);
 
     if (!context) {
         throw new Error("User not found");
@@ -34,11 +35,11 @@ export default function Players() {
 
     const handleNewPlayer = () => {
         if (Platform.OS === 'ios') {
-            Alert.prompt("Player name", "Enter the player's name", (player) => {
-                if (player) {
+            Alert.prompt("Player name", "Enter the player's name", (playerName) => {
+                if (playerName) {
                     handleCreatePlayer({
                         ...playerData,
-                        name: player,
+                        name: playerName,
                     });
                 }
             });
@@ -55,8 +56,14 @@ export default function Players() {
         setLoading(true);
         if (user) {
             createPlayer(user.uid, playerData)
-                .then(() => {
-                    console.log('Player created');
+                .then((playerId) => {
+                    if (!playerId) {
+                        throw new Error('Player ID is undefined');
+                    }
+
+                    const newPlayer = { ...playerData, playerId: playerId};
+                    setPlayers((prev) => [...prev, newPlayer]);
+
                     loadPlayers(user.uid);
                 })
                 .catch((err) => {
@@ -68,10 +75,58 @@ export default function Players() {
         }
     }
 
+    const handleEditPlayer = (playerId: Player) => {
+
+    }
+
+    const handleDeletePlayer = (playerId: string) => {
+        setLoading(true);
+        Platform.OS === 'web' ?
+            (setModalConfirmationVisible(true))
+            :
+            (Alert.alert(
+                "Delete Game",
+                "Are you sure you want to delete this game?",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Delete",
+                        onPress: () => {
+                            if (user?.uid) {
+                                setLoading(true);
+                                deletePlayer(user.uid, playerId);
+                                loadPlayers(user.uid);
+                                setLoading(false);
+                            } else {
+                                console.error("User ID is undefined");
+                            }
+                        },
+                        style: "destructive"
+                    }
+                ]
+            ))
+        setPlayerToDelete(playerId);
+        setLoading(false);
+    }
+
 
     const handleConfirm = () => {
+        console.log(playerData);
         handleCreatePlayer({ ...playerData, name: playerName });
         setModalVisible(false);
+    }
+
+    const handleConfirmDelete = () => {
+        setLoading(true);
+        if (user?.uid && playerToDelete) {
+            deletePlayer(user.uid, playerToDelete);
+            loadPlayers(user.uid);
+        }
+        setLoading(false);
+        setModalConfirmationVisible(false);
     }
 
     const loadPlayers = (userId: string) => {
@@ -111,8 +166,9 @@ export default function Players() {
                 />
             </View>
 
+            {/* Ajustar estilos do Player Card e ver o que é possível fazer sobre essas funções inúteis */}
 
-            <PlayerList data={players} loading={loading} onDeleteGame={() => { }} onEditGame={() => { }} onDeletePlayer={() => { }} onEditPlayer={() => { }} />
+            <PlayerList data={players} loading={loading} onDelete={handleDeletePlayer} onEdit={handleEditPlayer} />
 
             <Modal
                 visible={modalVisible}
@@ -120,6 +176,13 @@ export default function Players() {
                 onCancel={() => setModalVisible(false)}
                 onConfirm={handleConfirm}
                 input={{ value: playerName, onChangeText: setPlayerName, iconName: 'account-plus' }}
+            />
+
+            <Modal
+                visible={modalConfirmationVisible}
+                message="Are you sure you want to delete this player?"
+                onCancel={() => setModalConfirmationVisible(false)}
+                onConfirm={handleConfirmDelete}
             />
 
         </View>
