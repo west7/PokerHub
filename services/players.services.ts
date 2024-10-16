@@ -1,6 +1,6 @@
 // Funções para salvar, editar e deletar jogadores
 
-import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { Player } from "../interfaces/player.interface";
 import { FIREBASE_DB } from "../firebaseConnection";
 
@@ -37,6 +37,8 @@ export async function createPlayer(userId: string, player: Player): Promise<stri
             lastTransaction: null,
         });
 
+        await updateDoc(playerRef, { playerId: playerRef.id });
+
         return playerRef.id;
     }
     catch (e) {
@@ -56,5 +58,15 @@ export async function deletePlayer(userId: string, playerId: string) {
 
 }
 
-export async function updatePlayer(userId: string, playerName: string) {
+export async function updatePlayer(userId: string, player: Player) {
+    try {
+        console.log('Updating player:', player.playerId);
+        const playerDocRef = doc(db, 'users', userId, 'players', player.playerId);
+        await setDoc(playerDocRef, {
+            name: player.name,
+        }, {merge: true});
+    }
+    catch (err) {
+        console.error('Error updating game', err);
+    }
 }    

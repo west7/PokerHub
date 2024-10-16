@@ -17,22 +17,22 @@ export default function PlayerCard({ item, onEdit, onDelete }: PlayerCardProps
         <SwipeListItem onEdit={() => onEdit(item)} onDelete={() => onDelete(item.playerId)}>
             <Pressable style={styles.playerCard} onPress={() => console.log('Player:', item.name, item.playerId)}>
 
-                <Text style={styles.title}>{item.name}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding: 5 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 5 }}>
+                    <Text style={styles.title}>{item.name}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '22%'}}>
                         {
                             item.totalBalance > 0 ?
-                                <Icon name="chevron-double-up" size={24} color={'#19ff19'} />
+                                <Icon name="chevron-up" size={24} color={'#19ff19'} />
                                 :
                                 (
                                     item.totalBalance < 0 ?
-                                        <Icon name="chevron-double-down" size={24} color={'red'} />
+                                        <Icon name="chevron-down" size={24} color={'red'} />
                                         :
                                         <Icon name="minus" size={24} color={'white'} />
                                 )
                         }
+                        <Text style={styles.text}> {item.totalBalance} </Text>
 
-                        <Text style={styles.text}> 1530 </Text>
                     </View>
                 </View>
 
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontWeight: 'bold',
         alignSelf: 'center',
+        paddingTop: 6,
     },
     playerCard: {
         backgroundColor: colors.backgroundColor,

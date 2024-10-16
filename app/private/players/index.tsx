@@ -6,13 +6,13 @@ import { AuthContext } from "../../../context/AuthProvider";
 import { useFocusEffect } from "@react-navigation/native";
 import Modal from "../../../components/Modal";
 import { Player } from "../../../interfaces/player.interface";
-import { createPlayer, deletePlayer, getUserPlayers } from "../../../services/players.services";
+import { createPlayer, deletePlayer, getUserPlayers, updatePlayer } from "../../../services/players.services";
 import PlayerList from "../../../components/List";
 
 const inititalPlayer: Player = {
     playerId: '',
     name: '',
-    totalBalance: 100,
+    totalBalance: 0,
     gamesPlayed: 0,
     gamesWon: 0,
     lastTransaction: null,
@@ -24,9 +24,11 @@ export default function Players() {
     const [loading, setLoading] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
     const [playerName, setPlayerName] = useState('');
-    const [playerData, setPlayerData] = useState(inititalPlayer);
+    const [newPlayer] = useState(inititalPlayer);
     const [modalConfirmationVisible, setModalConfirmationVisible] = useState(false);
     const [playerToDelete, setPlayerToDelete] = useState<string | null>(null);
+    const [modalEditVisible, setModalEditVisible] = useState(false);
+    const [playerToEdit, setPlayerToEdit] = useState<Player | null>(null);
 
     if (!context) {
         throw new Error("User not found");
@@ -38,7 +40,7 @@ export default function Players() {
             Alert.prompt("Player name", "Enter the player's name", (playerName) => {
                 if (playerName) {
                     handleCreatePlayer({
-                        ...playerData,
+                        ...newPlayer,
                         name: playerName,
                     });
                 }
@@ -61,7 +63,7 @@ export default function Players() {
                         throw new Error('Player ID is undefined');
                     }
 
-                    const newPlayer = { ...playerData, playerId: playerId};
+                    const newPlayer = { ...playerData, playerId: playerId };
                     setPlayers((prev) => [...prev, newPlayer]);
 
                     loadPlayers(user.uid);
@@ -75,8 +77,36 @@ export default function Players() {
         }
     }
 
-    const handleEditPlayer = (playerId: Player) => {
+    const handleEditPlayer = (player: Player) => {
+        setLoading(true);
+        if (Platform.OS === 'ios') {
+            Alert.alert( "Edit Player", "What is the new player name?",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Edit",
+                        onPress: () => {
+                            if (user?.uid) {
+                                setLoading(true);
+                                updatePlayer(user.uid, player)
+                                loadPlayers(user.uid);
+                                setLoading(false);
+                            } else {
+                                console.error("User ID is undefined");
+                            }
+                        },
+                    }
+                ]
+            )
+        } else {
+            setPlayerToEdit(player); 
+            setModalEditVisible(true);
+        }
 
+        setLoading(false);
     }
 
     const handleDeletePlayer = (playerId: string) => {
@@ -85,8 +115,8 @@ export default function Players() {
             (setModalConfirmationVisible(true))
             :
             (Alert.alert(
-                "Delete Game",
-                "Are you sure you want to delete this game?",
+                "Delete Player",
+                "Are you sure you want to delete this player?",
                 [
                     {
                         text: "Cancel",
@@ -113,10 +143,28 @@ export default function Players() {
     }
 
 
-    const handleConfirm = () => {
-        console.log(playerData);
-        handleCreatePlayer({ ...playerData, name: playerName });
+    const handleConfirmCreate = () => {
+        handleCreatePlayer({ ...newPlayer, name: playerName });
         setModalVisible(false);
+    }
+
+    const handleConfirmEdit = () => {
+        setLoading(true);
+        console.log(playerToEdit);
+        if (user?.uid && playerToEdit?.playerId) {
+            updatePlayer(user?.uid, { ...playerToEdit, name: playerName })
+            .then(() => {
+                loadPlayers(user.uid);
+            })
+            .catch((err) => {
+                console.error('Error updating player', err);
+            })
+        } else {
+            console.error('User ID or Player ID is missing');
+        }
+
+        setModalEditVisible(false);
+        setLoading(false);
     }
 
     const handleConfirmDelete = () => {
@@ -166,16 +214,22 @@ export default function Players() {
                 />
             </View>
 
-            {/* Ajustar estilos do Player Card e ver o que é possível fazer sobre essas funções inúteis */}
-
             <PlayerList data={players} loading={loading} onDelete={handleDeletePlayer} onEdit={handleEditPlayer} />
 
             <Modal
                 visible={modalVisible}
                 message="Enter the player's name:"
                 onCancel={() => setModalVisible(false)}
-                onConfirm={handleConfirm}
+                onConfirm={handleConfirmCreate}
                 input={{ value: playerName, onChangeText: setPlayerName, iconName: 'account-plus' }}
+            />
+
+            <Modal
+                visible={modalEditVisible}
+                message="What the new player's name:"
+                onCancel={() => setModalEditVisible(false)}
+                onConfirm={handleConfirmEdit}
+                input={{ value: playerName, onChangeText: setPlayerName }}
             />
 
             <Modal
