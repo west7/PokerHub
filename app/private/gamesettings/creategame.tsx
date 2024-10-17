@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
         color: 'transparent',
     },
     text: {
-        color: colors.textColor,
+        color: "#aaa",
         fontSize: 14,
         fontWeight: '700',
         paddingBottom: 5,

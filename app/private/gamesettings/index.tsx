@@ -100,7 +100,7 @@ export default function GameSettings() {
         <View style={styles.container}>
 
             <View style={styles.headerContainer}>
-                <Text style={styles.text}>My games</Text>
+                <Text style={styles.text}>Games</Text>
                 <LinkButton
                     title="New Game"
                     onPress={() => navigation.navigate("CreateGame")}
@@ -111,7 +111,13 @@ export default function GameSettings() {
                 />
             </View>
 
-            <GamesList data={gameSetups} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+            <GamesList
+                data={gameSetups}
+                loading={loading}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                containerStyle={{ padding: 0, flexGrow: 0, backgroundColor: colors.backgroundColor, borderRadius: 10, borderWidth: 1, borderColor: colors.backgroundLightColor }}
+            />
 
             <Modal
                 visible={modalVisible}

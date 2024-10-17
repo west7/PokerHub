@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { Pressable, View, Text, StyleSheet, ViewStyle } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { colors } from "../theme/theme";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -8,9 +8,10 @@ interface SwipeListItemProps {
     onEdit: () => void;
     onDelete: () => void;
     children: React.ReactNode;
+    containerStyle?: ViewStyle;
 }
 
-export default function SwipeListItem({ onEdit, onDelete, children }: SwipeListItemProps) {
+export default function SwipeListItem({ onEdit, onDelete, children, containerStyle }: SwipeListItemProps) {
 
     const renderRightActions = () => (
         <View style={styles.container}>
@@ -43,6 +44,7 @@ export default function SwipeListItem({ onEdit, onDelete, children }: SwipeListI
         <Swipeable
             renderRightActions={renderRightActions}
             overshootRight={false}
+            containerStyle={containerStyle}
         >
             {children}
         </Swipeable>
@@ -52,9 +54,7 @@ export default function SwipeListItem({ onEdit, onDelete, children }: SwipeListI
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: colors.backgroundColor,
         alignItems: 'center',
-        marginVertical: 6,
         overflow: 'hidden',
         borderEndEndRadius: 8,
         borderTopRightRadius: 8,

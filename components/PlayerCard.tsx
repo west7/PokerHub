@@ -14,23 +14,23 @@ interface PlayerCardProps {
 export default function PlayerCard({ item, onEdit, onDelete }: PlayerCardProps
 ) {
     return (
-        <SwipeListItem onEdit={() => onEdit(item)} onDelete={() => onDelete(item.playerId)}>
-            <Pressable style={styles.playerCard} onPress={() => console.log('Player:', item.name, item.playerId)}>
+        <SwipeListItem
+            onEdit={() => onEdit(item)}
+            onDelete={() => onDelete(item.playerId)}
+        >
+            <Pressable style={styles.playerCard} onPress={() => console.log('Player:', item.name, item.playerId)} onLongPress={() => { }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 5 }}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '22%'}}>
-                        {
-                            item.totalBalance > 0 ?
-                                <Icon name="chevron-up" size={24} color={'#19ff19'} />
-                                :
-                                (
-                                    item.totalBalance < 0 ?
-                                        <Icon name="chevron-down" size={24} color={'red'} />
-                                        :
-                                        <Icon name="minus" size={24} color={'white'} />
-                                )
-                        }
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '22%' }}>
+
+                        {item.totalBalance > 0 ? (
+                            <Icon name="chevron-up" size={24} color={'#19ff19'} />
+                        ) : item.totalBalance < 0 ? (
+                            <Icon name="chevron-down" size={24} color={'red'} />
+                        ) : (
+                            <Icon name="minus" size={24} color={'white'} />
+                        )}
                         <Text style={styles.text}> {item.totalBalance} </Text>
 
                     </View>
@@ -43,19 +43,17 @@ export default function PlayerCard({ item, onEdit, onDelete }: PlayerCardProps
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.backgroundLightColor,
         borderRadius: 10,
-        padding: 10,
     },
     title: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         color: colors.textColor,
         marginBottom: 5,
         margin: 5,
     },
     text: {
-        color: colors.textColor,
+        color: "#ccc",
         fontSize: 15,
         marginBottom: 5,
         fontWeight: 'bold',
@@ -63,10 +61,10 @@ const styles = StyleSheet.create({
         paddingTop: 6,
     },
     playerCard: {
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: colors.backgroundDarkColor,
         padding: 10,
-        marginVertical: 5,
-        borderRadius: 8,
+        borderColor: colors.backgroundLightColor,
+        borderWidth: 1,
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

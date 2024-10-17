@@ -80,29 +80,16 @@ export default function Players() {
     const handleEditPlayer = (player: Player) => {
         setLoading(true);
         if (Platform.OS === 'ios') {
-            Alert.alert( "Edit Player", "What is the new player name?",
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Edit",
-                        onPress: () => {
-                            if (user?.uid) {
-                                setLoading(true);
-                                updatePlayer(user.uid, player)
-                                loadPlayers(user.uid);
-                                setLoading(false);
-                            } else {
-                                console.error("User ID is undefined");
-                            }
-                        },
-                    }
-                ]
+            Alert.prompt("Edit Player", "What is the new player name?", (playerName) => {
+                if (playerName) {
+                    setPlayerName(playerName);
+                    setPlayerToEdit({ ...player, name: playerName });
+                    handleConfirmEditPrompt(player, playerName);
+                }
+            }
             )
         } else {
-            setPlayerToEdit(player); 
+            setPlayerToEdit(player);
             setModalEditVisible(true);
         }
 
@@ -150,20 +137,36 @@ export default function Players() {
 
     const handleConfirmEdit = () => {
         setLoading(true);
-        console.log(playerToEdit);
         if (user?.uid && playerToEdit?.playerId) {
             updatePlayer(user?.uid, { ...playerToEdit, name: playerName })
-            .then(() => {
-                loadPlayers(user.uid);
-            })
-            .catch((err) => {
-                console.error('Error updating player', err);
-            })
+                .then(() => {
+                    loadPlayers(user.uid);
+                })
+                .catch((err) => {
+                    console.error('Error updating player', err);
+                })
         } else {
             console.error('User ID or Player ID is missing');
         }
 
         setModalEditVisible(false);
+        setLoading(false);
+    }
+
+    const handleConfirmEditPrompt = (player: Player, newName: string) => {
+        setLoading(true);
+        if (user?.uid && player?.playerId) {
+            updatePlayer(user?.uid, { ...player, name: newName })
+                .then(() => {
+                    loadPlayers(user.uid);
+                })
+                .catch((err) => {
+                    console.error('Error updating player', err);
+                })
+        } else {
+            console.error('User ID or Player ID is missing');
+        }
+
         setLoading(false);
     }
 
@@ -214,7 +217,13 @@ export default function Players() {
                 />
             </View>
 
-            <PlayerList data={players} loading={loading} onDelete={handleDeletePlayer} onEdit={handleEditPlayer} />
+            <PlayerList
+                data={players}
+                loading={loading}
+                onDelete={handleDeletePlayer}
+                onEdit={handleEditPlayer}
+                containerStyle={{ padding: 0, flexGrow: 0, backgroundColor: colors.backgroundColor, borderRadius: 10, borderWidth: 1, borderColor: colors.backgroundLightColor }}
+            />
 
             <Modal
                 visible={modalVisible}

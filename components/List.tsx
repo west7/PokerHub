@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet } from "react-native";
+import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet, ViewStyle } from "react-native";
 import { GameSetup } from "../interfaces/game.interface";
 import { colors } from "../theme/theme";
 import { Player } from "../interfaces/player.interface";
@@ -19,6 +19,7 @@ interface ListProps<T extends GameSetup | Player> {
     loading: boolean;
     onEdit: (item: T) => void;
     onDelete: (id: string) => void;
+    containerStyle?: ViewStyle;
 }
 
 export default function List<T extends GameSetup | Player>({
@@ -26,6 +27,7 @@ export default function List<T extends GameSetup | Player>({
     loading,
     onEdit,
     onDelete,
+    containerStyle,
 }: ListProps<T>) {
 
     const renderItem = ({ item }: { item: T }) => {
@@ -43,7 +45,7 @@ export default function List<T extends GameSetup | Player>({
 
     return (
         <FlatList
-            style={styles.container}
+            style={[styles.container, containerStyle]}
             data={data}
             keyExtractor={(item) => (isGameSetup(item) ? item.gameName : item.playerId)}
             renderItem={renderItem}
@@ -56,9 +58,7 @@ export default function List<T extends GameSetup | Player>({
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.backgroundLightColor,
-        borderRadius: 10,
-        padding: 10,
+        marginTop: 20,
     },
     title: {
         fontSize: 16,
