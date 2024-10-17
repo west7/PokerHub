@@ -30,11 +30,34 @@ export default function List<T extends GameSetup | Player>({
     containerStyle,
 }: ListProps<T>) {
 
-    const renderItem = ({ item }: { item: T }) => {
+    const renderItem = ({ item, index }: { item: T, index: number }) => {
+        const isFirstItem = index === 0;
+        const isLastItem = index === data.length - 1;
+
         if (isGameSetup(item)) {
-            return <GameCard item={item} onEdit={() => onEdit(item)} onDelete={onDelete} />;
+            return (
+                <GameCard
+                    item={item}
+                    onEdit={() => onEdit(item)}
+                    onDelete={onDelete}
+                    cardStyle={[
+                        isFirstItem && { borderTopLeftRadius: 10, borderTopRightRadius: 10 },
+                        isLastItem && { borderBottomLeftRadius: 10, borderBottomRightRadius: 10 },
+                    ]}
+                />
+            );
         } else if (isPlayer(item)) {
-            return <PlayerCard item={item} onEdit={() => onEdit(item)} onDelete={onDelete} />;
+            return (
+                <PlayerCard
+                    item={item}
+                    onEdit={() => onEdit(item)}
+                    onDelete={onDelete}
+                    cardStyle={[
+                        isFirstItem && { borderTopLeftRadius: 10, borderTopRightRadius: 10 },
+                        isLastItem && { borderBottomLeftRadius: 10, borderBottomRightRadius: 10 },
+                    ]}
+                />
+            );
         }
         return null;
     };
@@ -50,7 +73,7 @@ export default function List<T extends GameSetup | Player>({
             keyExtractor={(item) => (isGameSetup(item) ? item.gameName : item.playerId)}
             renderItem={renderItem}
             ListEmptyComponent={
-                <Text style={styles.title}>No items found</Text>
+                <Text style={styles.emptyText}>No items found</Text>
             }
         />
     );
@@ -59,6 +82,7 @@ export default function List<T extends GameSetup | Player>({
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,
+        overflow: 'visible',
     },
     title: {
         fontSize: 16,
@@ -72,4 +96,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontWeight: 'semibold',
     },
+    emptyText: {
+        color: colors.textColor,
+        fontSize: 16,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+    }
 });

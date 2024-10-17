@@ -116,7 +116,7 @@ export default function GameSettings() {
                 loading={loading}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
-                containerStyle={{ padding: 0, flexGrow: 0, backgroundColor: colors.backgroundColor, borderRadius: 10, borderWidth: 1, borderColor: colors.backgroundLightColor }}
+                containerStyle={styles.gameList}
             />
 
             <Modal
@@ -151,5 +151,11 @@ const styles = StyleSheet.create({
         color: colors.textColor,
         fontWeight: "bold",
         padding: 16,
-    }
+    },
+    gameList: {
+        padding: 0,
+        flexGrow: 0,
+        backgroundColor: colors.backgroundColor,
+        borderRadius: 10,
+    },
 });

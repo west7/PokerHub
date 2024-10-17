@@ -1,6 +1,6 @@
 import React from "react";
 import SwipeListItem from "./SwipeListItem";
-import { Pressable, Text, View, StyleSheet } from "react-native";
+import { Pressable, Text, View, StyleSheet, ViewStyle } from "react-native";
 import { colors } from "../theme/theme";
 import { Player } from "../interfaces/player.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -9,16 +9,19 @@ interface PlayerCardProps {
     item: Player;
     onEdit: (item: Player) => void;
     onDelete: (id: string) => void;
+    cardStyle?: any;
 }
 
-export default function PlayerCard({ item, onEdit, onDelete }: PlayerCardProps
+export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: PlayerCardProps
 ) {
+    
     return (
         <SwipeListItem
             onEdit={() => onEdit(item)}
             onDelete={() => onDelete(item.playerId)}
+            containerStyle={cardStyle}
         >
-            <Pressable style={styles.playerCard} onPress={() => console.log('Player:', item.name, item.playerId)} onLongPress={() => { }}>
+            <Pressable style={[styles.playerCard, cardStyle]} onPress={() => console.log('Player:', item.name, item.playerId)} onLongPress={() => { }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 5 }}>
                     <Text style={styles.title}>{item.name}</Text>
@@ -27,7 +30,7 @@ export default function PlayerCard({ item, onEdit, onDelete }: PlayerCardProps
                         {item.totalBalance > 0 ? (
                             <Icon name="chevron-up" size={24} color={'#19ff19'} />
                         ) : item.totalBalance < 0 ? (
-                            <Icon name="chevron-down" size={24} color={'red'} />
+                                <Icon name="chevron-down" size={24} color={'#cc0000'} />
                         ) : (
                             <Icon name="minus" size={24} color={'white'} />
                         )}

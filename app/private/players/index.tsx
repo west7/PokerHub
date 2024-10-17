@@ -222,7 +222,7 @@ export default function Players() {
                 loading={loading}
                 onDelete={handleDeletePlayer}
                 onEdit={handleEditPlayer}
-                containerStyle={{ padding: 0, flexGrow: 0, backgroundColor: colors.backgroundColor, borderRadius: 10, borderWidth: 1, borderColor: colors.backgroundLightColor }}
+                containerStyle={styles.playerList}
             />
 
             <Modal
@@ -274,5 +274,10 @@ const styles = StyleSheet.create({
         color: colors.textColor,
         fontWeight: "bold",
         padding: 16,
+    },
+    playerList: {
+        padding: 0,
+        flexGrow: 0,
+        backgroundColor: colors.backgroundColor,
     }
 });

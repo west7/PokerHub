@@ -8,18 +8,19 @@ interface GameCardProps {
     item: GameSetup;
     onEdit: (item: GameSetup) => void;
     onDelete: (id: string) => void;
+    cardStyle?: any;
 }
 
-export default function GameCard({ item, onEdit, onDelete }: GameCardProps
+export default function GameCard({ item, onEdit, onDelete, cardStyle }: GameCardProps
 ) {
     return (
         <SwipeListItem
             onEdit={() => onEdit(item)}
             onDelete={() => onDelete(item.gameName)}
-            containerStyle={{flex: 1}}
+            containerStyle={cardStyle}
         >
             <Pressable
-                style={styles.gameCard}
+                style={[styles.gameCard, cardStyle]}
                 onPress={() => console.log('Jogo:', item.gameName)}
             >
 

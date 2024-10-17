@@ -8,13 +8,13 @@ interface SwipeListItemProps {
     onEdit: () => void;
     onDelete: () => void;
     children: React.ReactNode;
-    containerStyle?: ViewStyle;
+    containerStyle?: any;
 }
 
 export default function SwipeListItem({ onEdit, onDelete, children, containerStyle }: SwipeListItemProps) {
 
     const renderRightActions = () => (
-        <View style={styles.container}>
+        <View style={[containerStyle, styles.container]}>
             <Pressable
                 style={({ pressed }) => [
                     styles.actionButton,
@@ -31,7 +31,7 @@ export default function SwipeListItem({ onEdit, onDelete, children, containerSty
                 style={({ pressed }) => [
                     styles.actionButton,
                     pressed && styles.actionButtonPressed,
-                    { backgroundColor: colors.primaryColor }
+                    { backgroundColor: "#cc0000" }
                 ]}
                 onPress={onDelete}
             >
@@ -44,7 +44,6 @@ export default function SwipeListItem({ onEdit, onDelete, children, containerSty
         <Swipeable
             renderRightActions={renderRightActions}
             overshootRight={false}
-            containerStyle={containerStyle}
         >
             {children}
         </Swipeable>
@@ -56,8 +55,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         overflow: 'hidden',
-        borderEndEndRadius: 8,
-        borderTopRightRadius: 8,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
     },
     actionButton: {
         justifyContent: 'center',
