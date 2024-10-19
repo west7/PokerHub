@@ -59,10 +59,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: colors.backgroundLightColor,
         borderWidth: 1,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        
     },
 })

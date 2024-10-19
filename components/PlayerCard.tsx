@@ -1,6 +1,6 @@
 import React from "react";
 import SwipeListItem from "./SwipeListItem";
-import { Pressable, Text, View, StyleSheet, ViewStyle } from "react-native";
+import { Pressable, Text, View, StyleSheet } from "react-native";
 import { colors } from "../theme/theme";
 import { Player } from "../interfaces/player.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -12,9 +12,13 @@ interface PlayerCardProps {
     cardStyle?: any;
 }
 
-export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: PlayerCardProps
-) {
+export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: PlayerCardProps) {
     
+    const formatBalance = (balance: number) => {
+        const balanceStr = Math.abs(balance).toString();
+        return balanceStr.length > 6 ? `${balanceStr.slice(0, 5)}...` : balanceStr;
+    };
+
     return (
         <SwipeListItem
             onEdit={() => onEdit(item)}
@@ -25,7 +29,7 @@ export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: Player
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 5 }}>
                     <Text style={styles.title}>{item.name}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '22%' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '30%' }}>
 
                         {item.totalBalance > 0 ? (
                             <Icon name="chevron-up" size={24} color={'#19ff19'} />
@@ -34,7 +38,7 @@ export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: Player
                         ) : (
                             <Icon name="minus" size={24} color={'white'} />
                         )}
-                        <Text style={styles.text}> {item.totalBalance} </Text>
+                        <Text style={styles.text}> {formatBalance(item.totalBalance)} </Text>
 
                     </View>
                 </View>
@@ -68,10 +72,5 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: colors.backgroundLightColor,
         borderWidth: 1,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
     },
 })

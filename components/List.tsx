@@ -72,17 +72,15 @@ export default function List<T extends GameSetup | Player>({
             data={data}
             keyExtractor={(item) => (isGameSetup(item) ? item.gameName : item.playerId)}
             renderItem={renderItem}
-            ListEmptyComponent={
-                <Text style={styles.emptyText}>No items found</Text>
-            }
+            ListEmptyComponent={ <Text style={styles.emptyText}>No items found</Text> }
+            showsVerticalScrollIndicator={false}
         />
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 20,
-        overflow: 'visible',
+        overflow: 'hidden',
     },
     title: {
         fontSize: 16,
