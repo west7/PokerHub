@@ -15,7 +15,7 @@ const inititalPlayer: Player = {
     totalBalance: 0,
     gamesPlayed: 0,
     gamesWon: 0,
-    lastTransaction: null,
+    lastTransaction: 0,
 }
 
 export default function Players() {
