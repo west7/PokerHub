@@ -1,19 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, Alert, Platform } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { AuthContext } from "../../../context/AuthProvider";
 import { colors } from "../../../theme/theme";
 import LinkButton from "../../../components/LinkButton";
-import { NavProps } from "../../../interfaces/type";
-import { useNavigation } from '@react-navigation/native';
 import { GameSetup } from "../../../interfaces/game.interface";
 import GamesList from "../../../components/List";
 import { deleteGame, getUserGames } from "../../../services/game.services";
 import Modal from "../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
+import { router } from "expo-router";
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
-    const navigation = useNavigation<NavProps>();
     const [gameSetups, setGameSetups] = useState<GameSetup[]>([]);
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -41,7 +39,10 @@ export default function GameSettings() {
     }
 
     const handleEdit = (gameSetup: GameSetup) => {
-        navigation.navigate("CreateGame", { gameSetup });
+        router.push({
+            pathname: "/private/gamesettings/creategame",
+            params: { gameSetup: JSON.stringify(gameSetup) }
+        });
     }
 
     const handleDelete = (gameName: string) => {
@@ -103,7 +104,7 @@ export default function GameSettings() {
                 <Text style={styles.text}>Games</Text>
                 <LinkButton
                     title="New Game"
-                    onPress={() => navigation.navigate("CreateGame")}
+                    onPress={() => router.push("/private/gamesettings/creategame")}
                     variant="primary"
                     size="small"
                     iconName="plus"

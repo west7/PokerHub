@@ -1,22 +1,14 @@
-import React, { ReactNode, useContext, useState } from "react";
-import { Redirect, router, Stack } from "expo-router";
-import { createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
-import Home from './index'
+import React, { useContext } from "react";
+import { Redirect } from "expo-router";
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
 import { colors } from "../../theme/theme";
-import Players from "./players";
-import History from "./history";
-import Statistics from "./statistics";
 import { AuthContext } from "../../context/AuthProvider";
 import LoadingScreen from "../../components/LoadingScreen";
 import Icon from 'react-native-vector-icons/Entypo';
 import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import GameStack from "./gamesettings/_layout";
 import { signOut } from "../../services/user.services";
-
-
-const Drawer = createDrawerNavigator();
-
+import { Drawer } from 'expo-router/drawer'
 
 export default function InsideLayout() {
     const context = useContext(AuthContext);
@@ -29,9 +21,9 @@ export default function InsideLayout() {
 
     const handleLogout = async () => {
         signOut()
-        .then(() => {
-            logout();
-        })
+            .then(() => {
+                logout();
+            })
     }
 
     if (loading) {
@@ -67,7 +59,7 @@ export default function InsideLayout() {
                         />
                     )}
                 />
-                
+
             </DrawerContentScrollView>
         );
     }
@@ -75,8 +67,9 @@ export default function InsideLayout() {
     return (
 
         <>
-        <StatusBar barStyle="default" />
-            <Drawer.Navigator screenOptions={{
+            <StatusBar barStyle="default" />
+            <Drawer
+             screenOptions={{
                 headerShown: true,
                 headerStyle: {
                     backgroundColor: colors.backgroundDarkColor,
@@ -99,9 +92,9 @@ export default function InsideLayout() {
                 drawerContent={(props) => <CustomDrawer {...props} />}
             >
                 <Drawer.Screen
-                    name="Home"
-                    component={Home}
+                    name="index"
                     options={{
+                        drawerLabel: "Home",
                         drawerIcon: () => (
                             <Icon2
                                 name="home"
@@ -112,9 +105,9 @@ export default function InsideLayout() {
                     }}
                 />
                 <Drawer.Screen
-                    name="Game Settings"
-                    component={GameStack}
+                    name="gamesettings"
                     options={{
+                        drawerLabel: "Game Settings",
                         drawerIcon: () => (
                             <Icon2
                                 name="cog"
@@ -125,9 +118,9 @@ export default function InsideLayout() {
                     }}
                 />
                 <Drawer.Screen
-                    name="Players"
-                    component={Players}
+                    name="players"
                     options={{
+                        drawerLabel: "Players",
                         drawerIcon: () => (
                             <Icon2
                                 name="account-group"
@@ -138,9 +131,9 @@ export default function InsideLayout() {
                     }}
                 />
                 <Drawer.Screen
-                    name="History"
-                    component={History}
+                    name="history"
                     options={{
+                        drawerLabel: "History",
                         drawerIcon: () => (
                             <Icon2
                                 name="history"
@@ -151,9 +144,9 @@ export default function InsideLayout() {
                     }}
                 />
                 <Drawer.Screen
-                    name="Statistics"
-                    component={Statistics}
+                    name="statistics"
                     options={{
+                        drawerLabel: "Statistics",
                         drawerIcon: () => (
                             <Icon2
                                 name="trending-up"
@@ -163,7 +156,14 @@ export default function InsideLayout() {
                         ),
                     }}
                 />
-            </Drawer.Navigator>
+                <Drawer.Screen
+                    name= "match"
+                    options={{
+                        drawerLabel: "Match",
+                        drawerItemStyle: { display: "none" },
+                    }}
+                />
+            </Drawer>
         </>
     );
 }

@@ -8,9 +8,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
 import { FormContext } from "../../../context/FormProvider";
 import { AuthContext } from "../../../context/AuthProvider";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { createGame, updateGame } from "../../../services/game.services";
-import { useRoute } from "@react-navigation/native";
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
@@ -22,8 +21,10 @@ interface Errors {
 
 export default function CreateGameScreen() {
     const [loading, setLoading] = useState(false);
-    const route = useRoute();
-    const { gameSetup } = route.params as { gameSetup: GameSetup } || {}; // Quando o formulário for usado para editar um jogo, o parâmetro gameSetup será passado
+    const { gameSetup } = useLocalSearchParams();
+
+    //const route = useRoute();
+    //const { gameSetup } = route.params as { gameSetup: GameSetup } || {}; // Quando o formulário for usado para editar um jogo, o parâmetro gameSetup será passado
 
     const context = useContext(AuthContext);
     if (!context) {
@@ -208,7 +209,7 @@ export default function CreateGameScreen() {
                 .finally(() => {
                     setLoading(false);
                 });
-                return;
+            return;
         }
 
         createGame(userId, gameData)
@@ -237,20 +238,24 @@ export default function CreateGameScreen() {
 
     useEffect(() => {
         if (gameSetup) {
-            updateFormData('gameName', gameSetup.gameName);
-            updateFormData('numberOfWinners', gameSetup.numberOfWinners);
-            updateFormData('prizeDistribution', gameSetup.prizeDistribution);
-            updateFormData('numberOfLevels', gameSetup.numberOfLevels);
-            updateFormData('timeForLevel', gameSetup.timeForLevel);
 
-            if (gameSetup.blindLevels && gameSetup.blindLevels.length > 0) {
-                updateFormData('blindLevels', gameSetup.blindLevels.map((blindLevel, index) => ({
+            const gameSetupString = Array.isArray(gameSetup) ? gameSetup[0] : gameSetup;
+            const parsedGameSetup = JSON.parse(gameSetupString) as GameSetup;
+
+            updateFormData('gameName', parsedGameSetup.gameName);
+            updateFormData('numberOfWinners', parsedGameSetup.numberOfWinners);
+            updateFormData('prizeDistribution', parsedGameSetup.prizeDistribution);
+            updateFormData('numberOfLevels', parsedGameSetup.numberOfLevels);
+            updateFormData('timeForLevel', parsedGameSetup.timeForLevel);
+
+            if (parsedGameSetup.blindLevels && parsedGameSetup.blindLevels.length > 0) {
+                updateFormData('blindLevels', parsedGameSetup.blindLevels.map((blindLevel, index) => ({
                     level: index + 1,
                     smallBlind: blindLevel.smallBlind || '',
                     bigBlind: blindLevel.bigBlind || ''
                 })));
             }
-            
+
         } /* else {
             console.log('gameSetup está indefinido:', gameSetup);
         } */
@@ -260,7 +265,7 @@ export default function CreateGameScreen() {
                 resetFormData();  // Limpa o formulário ao sair da tela em modo de edição
             }
         }
-            
+
     }, [gameSetup]);
 
 

@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, StatusBar } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import LinkButton from "../../components/LinkButton";
-import { Redirect, router } from 'expo-router';
 import { colors } from "../../theme/theme";
 import { AuthContext } from "../../context/AuthProvider";
 import LoadingScreen from "../../components/LoadingScreen";
+import { router } from "expo-router";
 
 export default function Home() {
     const [userLoading, setUserLoading] = useState(true)
@@ -26,6 +25,10 @@ export default function Home() {
     if (loading || userLoading) {
         return <LoadingScreen />
     }
+
+    const handleStartMatch = () => {
+        router.push('/private/match');
+    }    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -53,7 +56,7 @@ export default function Home() {
                     <View style={styles.linkbtn}>
                         <LinkButton
                             title="Start Match"
-                            onPress={() => console.log('começou')}
+                            onPress={handleStartMatch}
                             iconName="cards-playing"
                             variant="primary"
                         />
