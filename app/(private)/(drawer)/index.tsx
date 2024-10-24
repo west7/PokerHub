@@ -1,20 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
-import LinkButton from "../../components/LinkButton";
-import { colors } from "../../theme/theme";
-import { AuthContext } from "../../context/AuthProvider";
-import LoadingScreen from "../../components/LoadingScreen";
+import LinkButton from "../../../components/LinkButton";
+import { colors } from "../../../theme/theme";
+import { useAuth } from "../../../context/AuthProvider";
+import LoadingScreen from "../../../components/LoadingScreen";
 import { router } from "expo-router";
 
 export default function Home() {
     const [userLoading, setUserLoading] = useState(true)
-    const context = useContext(AuthContext);
-
-    if (!context) {
-        throw new Error("User not found");
-    }
-
-    const { user, loading } = context;
+    const { user, isLoading } = useAuth();
 
     useEffect(() => {
         if (user) {
@@ -22,13 +16,13 @@ export default function Home() {
         }
     }, [user]);
 
-    if (loading || userLoading) {
+    if (isLoading || userLoading) {
         return <LoadingScreen />
     }
 
     const handleStartMatch = () => {
-        router.push('/private/match');
-    }    
+        router.push('/(private)/match'); // Ao entrar na tela de partida, o Drawer não deve ser exibido, uma nova Stack deve ser criada
+    }
 
     return (
         <SafeAreaView style={styles.container}>

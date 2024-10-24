@@ -1,6 +1,6 @@
 import React from "react";
 import { Stack } from "expo-router";
-import FormProvider from "../../../context/FormProvider";
+import FormProvider from "../../../../context/FormProvider";
 
 
 export default function GameStack() {

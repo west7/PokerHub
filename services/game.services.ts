@@ -1,9 +1,8 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { GameSetup } from "../interfaces/game.interface";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
+import { FIREBASE_DB } from "../firebaseConnection";
 
 const db = FIREBASE_DB;
-const auth = FIREBASE_AUTH;
 
 export async function getUserGames(userId: string) {
     try {

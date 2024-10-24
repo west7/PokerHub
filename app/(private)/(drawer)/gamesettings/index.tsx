@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
-import { AuthContext } from "../../../context/AuthProvider";
-import { colors } from "../../../theme/theme";
-import LinkButton from "../../../components/LinkButton";
-import { GameSetup } from "../../../interfaces/game.interface";
-import GamesList from "../../../components/List";
-import { deleteGame, getUserGames } from "../../../services/game.services";
-import Modal from "../../../components/Modal";
+import { AuthContext } from "../../../../context/AuthProvider";
+import { colors } from "../../../../theme/theme";
+import LinkButton from "../../../../components/LinkButton";
+import { GameSetup } from "../../../../interfaces/game.interface";
+import GamesList from "../../../../components/List";
+import { deleteGame, getUserGames } from "../../../../services/game.services";
+import Modal from "../../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 

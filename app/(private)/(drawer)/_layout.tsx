@@ -1,37 +1,23 @@
-import React, { useContext } from "react";
-import { Redirect } from "expo-router";
+import React from "react";
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
-import { colors } from "../../theme/theme";
-import { AuthContext } from "../../context/AuthProvider";
-import LoadingScreen from "../../components/LoadingScreen";
+import { colors } from "../../../theme/theme";
+import { useAuth } from "../../../context/AuthProvider";
+import LoadingScreen from "../../../components/LoadingScreen";
 import Icon from 'react-native-vector-icons/Entypo';
 import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import { signOut } from "../../services/user.services";
 import { Drawer } from 'expo-router/drawer'
 
 export default function InsideLayout() {
-    const context = useContext(AuthContext);
 
-    if (!context) {
-        throw new Error("User not found");
-    }
-
-    const { signed, user, loading, logout } = context;
+    const { user, isLoading, signOut } = useAuth();
 
     const handleLogout = async () => {
-        signOut()
-            .then(() => {
-                logout();
-            })
+        signOut();
     }
 
-    if (loading) {
+    if (isLoading) {
         return <LoadingScreen />
-    }
-
-    if (!signed || !user) {
-        return <Redirect href="" />
     }
 
     const CustomDrawer = (props: DrawerContentComponentProps) => {
@@ -39,7 +25,7 @@ export default function InsideLayout() {
             <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
 
                 <TouchableOpacity style={{ backgroundColor: colors.baseColor, padding: 20 }} activeOpacity={0.5}>
-                    <Text style={{ color: colors.textColor, fontSize: 20, fontWeight: "bold" }}>{user.name}</Text>
+                    <Text style={{ color: colors.textColor, fontSize: 20, fontWeight: "bold" }}>{user?.name}</Text>
                 </TouchableOpacity>
 
                 <View style={{ flex: 1 }}>
@@ -69,26 +55,26 @@ export default function InsideLayout() {
         <>
             <StatusBar barStyle="default" />
             <Drawer
-             screenOptions={{
-                headerShown: true,
-                headerStyle: {
-                    backgroundColor: colors.backgroundDarkColor,
-                    borderBottomWidth: 0,
-                },
-                headerTintColor: colors.primaryColor,
-                headerTitle: "",
-                drawerStyle: {
-                    backgroundColor: colors.baseColor,
-                    paddingTop: 20,
-                },
-                drawerLabelStyle: {
-                    marginLeft: -15,
-                },
-                drawerActiveBackgroundColor: colors.primaryColor,
-                drawerActiveTintColor: colors.textColor,
-                drawerInactiveTintColor: colors.textColor,
-                drawerInactiveBackgroundColor: colors.backgroundLightColor,
-            }}
+                screenOptions={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colors.backgroundDarkColor,
+                        borderBottomWidth: 0,
+                    },
+                    headerTintColor: colors.primaryColor,
+                    headerTitle: "",
+                    drawerStyle: {
+                        backgroundColor: colors.baseColor,
+                        paddingTop: 20,
+                    },
+                    drawerLabelStyle: {
+                        marginLeft: -15,
+                    },
+                    drawerActiveBackgroundColor: colors.primaryColor,
+                    drawerActiveTintColor: colors.textColor,
+                    drawerInactiveTintColor: colors.textColor,
+                    drawerInactiveBackgroundColor: colors.backgroundLightColor,
+                }}
                 drawerContent={(props) => <CustomDrawer {...props} />}
             >
                 <Drawer.Screen
@@ -154,13 +140,6 @@ export default function InsideLayout() {
                                 size={18}
                             />
                         ),
-                    }}
-                />
-                <Drawer.Screen
-                    name= "match"
-                    options={{
-                        drawerLabel: "Match",
-                        drawerItemStyle: { display: "none" },
                     }}
                 />
             </Drawer>

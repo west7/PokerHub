@@ -21,6 +21,6 @@ export function FirebaseErrorCustomMessage (e: FirebaseError) : string {
         case 'auth/weak-password':
             return 'Senha precisa de ao menos 6 caracteres.'
         default:
-            return 'Ocorreu um erro. Tente novamente.'
+            return e.message;
     }
 }

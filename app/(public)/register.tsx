@@ -9,10 +9,9 @@ import { setDoc, doc } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../theme/theme";
-import { FirebaseError } from "firebase/app";
-import { signUp } from "../../services/user.services";
 import Toast from "react-native-toast-message";
 import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";
+import { useAuth } from "../../context/AuthProvider";
 
 interface Errors {
     name?: boolean;
@@ -29,9 +28,10 @@ export default function Register() {
     const [showPassword, setShowPassword] = useState(false)
     const [confirmPassword, setConfirmPassword] = useState("")
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [loading, setLoading] = useState(false)
     const [errMessage, setErrMessage] = useState<string | null>(null)
     const [showToast, setShowToast] = useState(false)
+
+    const { signUp, isLoading } = useAuth();
 
     const handleErrors = () => {
         const e: Errors = {}
@@ -75,33 +75,15 @@ export default function Register() {
     }, [errMessage, showToast]);
 
 
-    const register = () => {
+    const handleSignUp = () => {
         if (Object.keys(errors).length > 0) {
             setShowErrors(true)
             setShowToast(true)
             return
         }
         setShowErrors(false)
-        setLoading(true)
 
         signUp(email, password, name)
-            .then(() => {
-                router.replace('/private')
-                Toast.show({
-                    type: "success",
-                    text1: "Sucesso!",
-                    text2: "Usuário criado com sucesso!",
-                });
-            })
-            .catch((error) => {
-                const message = FirebaseErrorCustomMessage(error);
-                Toast.show({
-                    type: "error",
-                    text1: "Erro!",
-                    text2: message,
-                });
-            })
-            .finally(() => setLoading(false))
     }
 
     const handleShowPassword = () => {
@@ -183,8 +165,13 @@ export default function Register() {
                 </KeyboardAvoidingView>
 
                 <View style={styles.btn}>
-                    <LinkButton title="Sign up" onPress={register} variant="outline" isLoading={loading} />
-                    <Pressable onPress={() => router.push('../public/login')}>
+                    <LinkButton
+                        title="Sign up"
+                        onPress={handleSignUp}
+                        variant="outline"
+                        isLoading={isLoading}
+                    />
+                    <Pressable onPress={() => router.push('../(public)/login')}>
                         <Text style={styles.text}>Already have an account? Log in</Text>
                     </Pressable>
                 </View>

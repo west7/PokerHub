@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, Button, Pressable } from "react-native";
-import { colors } from "../../../theme/theme";
-import Input from "../../../components/Input";
-import LinkButton from "../../../components/LinkButton";
+import { colors } from "../../../../theme/theme";
+import Input from "../../../../components/Input";
+import LinkButton from "../../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlindLevel, GameSetup } from "../../../interfaces/game.interface";
-import { FormContext } from "../../../context/FormProvider";
-import { AuthContext } from "../../../context/AuthProvider";
+import { BlindLevel, GameSetup } from "../../../../interfaces/game.interface";
+import { FormContext } from "../../../../context/FormProvider";
+import { AuthContext } from "../../../../context/AuthProvider";
 import { router, useLocalSearchParams } from "expo-router";
-import { createGame, updateGame } from "../../../services/game.services";
+import { createGame, updateGame } from "../../../../services/game.services";
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;

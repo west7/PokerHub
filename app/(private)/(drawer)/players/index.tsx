@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
-import { colors } from "../../../theme/theme";
-import LinkButton from "../../../components/LinkButton";
-import { AuthContext } from "../../../context/AuthProvider";
+import { colors } from "../../../../theme/theme";
+import LinkButton from "../../../../components/LinkButton";
+import { AuthContext } from "../../../../context/AuthProvider";
 import { useFocusEffect } from "@react-navigation/native";
-import Modal from "../../../components/Modal";
-import { Player } from "../../../interfaces/player.interface";
-import { createPlayer, deletePlayer, getUserPlayers, updatePlayer } from "../../../services/players.services";
-import PlayerList from "../../../components/List";
+import Modal from "../../../../components/Modal";
+import { Player } from "../../../../interfaces/player.interface";
+import { createPlayer, deletePlayer, getUserPlayers, updatePlayer } from "../../../../services/players.services";
+import PlayerList from "../../../../components/List";
 
 const inititalPlayer: Player = {
     playerId: '',

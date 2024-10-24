@@ -1,5 +1,3 @@
-// Funções para salvar, editar e deletar jogadores
-
 import { addDoc, collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { Player } from "../interfaces/player.interface";
 import { FIREBASE_DB } from "../firebaseConnection";

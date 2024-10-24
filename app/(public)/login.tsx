@@ -3,12 +3,9 @@ import { View, Text, StyleSheet, ScrollView, Platform, Pressable, SafeAreaView, 
 import { router } from "expo-router";
 import LinkButton from "../../components/LinkButton";
 import Input from "../../components/Input";
-import { FIREBASE_AUTH } from "../../firebaseConnection";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../theme/theme"
-import { signIn } from "../../services/user.services";
-import Toast from "react-native-toast-message";
-import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";
+import { useAuth } from "../../context/AuthProvider";
+
 interface Errors {
     email?: boolean;
     password?: boolean;
@@ -19,39 +16,21 @@ export default function Login() {
     const [showErrors, setShowErrors] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
 
-    //TODO: Implementar o erro de login
     //TODO: Implementar recuperação de senha
-    //TODO: Implementar Notificações internas no app?
 
+    const { signIn, isLoading } = useAuth()
 
-    const login = () => {
+    const handleLogin = () => {
         if (Object.keys(errors).length > 0) {
-            setShowErrors(true)
-            return
+            setShowErrors(true);
+            return;
         }
-        setShowErrors(false)
-        setLoading(true)
+        setShowErrors(false);
 
         signIn(email, password)
-            .then(() => {
-                /* Toast.show({
-                    type: "success",
-                    text1: "Bem Vindo!",
-                }) */
-            })
-            .catch(error => {
-                const message = FirebaseErrorCustomMessage(error);
-                Toast.show({
-                    type: "error",
-                    text1: "Erro!",
-                    text2: message,
-                });
-            })
-            .finally(() => setLoading(false))
-    }
+    };
 
     const handleErrors = () => {
         const e: Errors = {}
@@ -72,7 +51,6 @@ export default function Login() {
     }
 
     useEffect(handleErrors, [email, password])
-
 
     return (
         <SafeAreaView style={styles.container}>
@@ -116,11 +94,11 @@ export default function Login() {
                 <View style={styles.btn}>
                     <LinkButton
                         title="Sign in"
-                        onPress={login}
-                        isLoading={loading}
+                        onPress={handleLogin}
+                        isLoading={isLoading}
                     />
 
-                    <Pressable onPress={() => router.push("../public/register")}>
+                    <Pressable onPress={() => router.push("../(public)/register")}>
                         <Text style={styles.text}>Don't have an account? Register</Text>
                     </Pressable>
 
