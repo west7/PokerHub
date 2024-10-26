@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { router, Stack } from "expo-router";
+import { router, Slot, Stack } from "expo-router";
 import AuthProvider, { useAuth } from "../context/AuthProvider";
 import { StatusBar } from "react-native";
 import Toast, { BaseToast, BaseToastProps, ErrorToast } from 'react-native-toast-message';
@@ -57,16 +57,7 @@ export default function RootLayout() {
         }
 
         return (
-            <Stack screenOptions={{
-                headerShown: false
-            }} >
-                <Stack.Screen
-                    name="(public)/login"
-                />
-                <Stack.Screen
-                    name="(public)/register"
-                />
-            </Stack>
+            <Slot />
         );
     }
 

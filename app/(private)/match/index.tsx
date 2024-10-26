@@ -2,14 +2,15 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { colors } from "../../../theme/theme";
 import BackButton from "../../../components/BackButton";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function Match() {
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <BackButton />
             <Text style={styles.title}>Select the Game Setup</Text>
-        </View>
+        </SafeAreaView>
     );
 }
 

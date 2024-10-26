@@ -7,9 +7,10 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlindLevel, GameSetup } from "../../../../interfaces/game.interface";
 import { FormContext } from "../../../../context/FormProvider";
-import { AuthContext } from "../../../../context/AuthProvider";
+import { useAuth } from "../../../../context/AuthProvider";
 import { router, useLocalSearchParams } from "expo-router";
 import { createGame, updateGame } from "../../../../services/game.services";
+import BackButton from "../../../../components/BackButton";
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
@@ -23,14 +24,7 @@ export default function CreateGameScreen() {
     const [loading, setLoading] = useState(false);
     const { gameSetup } = useLocalSearchParams();
 
-    //const route = useRoute();
-    //const { gameSetup } = route.params as { gameSetup: GameSetup } || {}; // Quando o formulário for usado para editar um jogo, o parâmetro gameSetup será passado
-
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("User not found");
-    }
-    const { user } = context;
+    const { user } = useAuth();
 
     const [errors, setErrors] = useState<Errors>({
         gameName: false,
@@ -265,7 +259,6 @@ export default function CreateGameScreen() {
                 resetFormData();  // Limpa o formulário ao sair da tela em modo de edição
             }
         }
-
     }, [gameSetup]);
 
 
@@ -273,7 +266,13 @@ export default function CreateGameScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.modalBar} />
+
+            {Platform.OS === 'ios'
+                ?
+                <View style={styles.modalBar} />
+                    :
+                <BackButton/>
+            }
 
             <KeyboardAvoidingView
                 style={styles.contentContainer}

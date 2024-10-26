@@ -40,7 +40,7 @@ export default function GameSettings() {
 
     const handleEdit = (gameSetup: GameSetup) => {
         router.push({
-            pathname: "/private/gamesettings/creategame",
+            pathname: "/(private)/(drawer)/gamesettings/creategame",
             params: { gameSetup: JSON.stringify(gameSetup) }
         });
     }
@@ -104,7 +104,7 @@ export default function GameSettings() {
                 <Text style={styles.text}>Games</Text>
                 <LinkButton
                     title="New Game"
-                    onPress={() => router.push("/private/gamesettings/creategame")}
+                    onPress={() => router.push("/(private)/(drawer)/gamesettings/creategame")}
                     variant="primary"
                     size="small"
                     iconName="plus"

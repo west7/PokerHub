@@ -7,7 +7,8 @@ export default function GameStack() {
     return (
         <FormProvider>
             <Stack screenOptions={{
-                headerShown: false
+                headerShown: false,
+                presentation: 'modal'
             }}>
                 <Stack.Screen
                     name="index"
