@@ -23,7 +23,7 @@ export default function SwipeListItem({ onEdit, onDelete, children, containerSty
                 ]}
                 onPress={onEdit}
             >
-                <Icon name="pencil" size={20} color={colors.buttonText} />
+                <Icon name="pencil" size={18} color={colors.buttonText} />
             </Pressable>
 
 
@@ -31,11 +31,11 @@ export default function SwipeListItem({ onEdit, onDelete, children, containerSty
                 style={({ pressed }) => [
                     styles.actionButton,
                     pressed && styles.actionButtonPressed,
-                    { backgroundColor: "#cc0000" }
+                    { backgroundColor: colors.primaryLightColor }
                 ]}
                 onPress={onDelete}
             >
-                <Icon name="delete" size={20} color={colors.buttonText} />
+                <Icon name="delete" size={18} color={colors.buttonText} />
             </Pressable>
         </View>
     );

@@ -5,25 +5,25 @@ export interface Colors {
     backgroundDarkColor: string;
     textColor: string;
     primaryColor: string;
+    primaryLightColor: string;
     primaryDarkColor: string;
-    secondaryColor: string;
-    secondaryDarkColor: string;
     disabledColor: string;
     buttonText: string;
+    borderColor: string;
 }
 
-export const light: Colors = {
+export const lcolors: Colors = {
     baseColor: "#fff",
-    backgroundColor: "#f0f0f0",
-    backgroundLightColor: "#f8f8f8",
-    backgroundDarkColor: '#e8e8e8',
-    textColor: "#000",
-    primaryColor: "#C61414",
+    backgroundColor: "#fafafa",
+    backgroundLightColor: "#f0f0f0",
+    backgroundDarkColor: '#fff',
+    textColor: "#1f1f1f",
+    primaryColor: "#FA2D1E",
+    primaryLightColor: "#FA2D1E",
     primaryDarkColor: "#A90800",
-    secondaryColor: "#0E4916",
-    secondaryDarkColor: "#0A3A11",
     disabledColor: "#5a5a5a",
-    buttonText: "#f0f0f0"
+    buttonText: "#f0f0f0",
+    borderColor: "#1f1f1f"
 }
 
 export const colors: Colors = {
@@ -32,11 +32,11 @@ export const colors: Colors = {
     backgroundLightColor: "#1c1c1c",
     backgroundDarkColor: '#0f0f0f',
     textColor: "#f0f0f0",
-    primaryColor: "#C61414",
+    primaryColor: "#FA2D1E",
+    primaryLightColor: "#FA2D1E",
     primaryDarkColor: "#A90800",
-    secondaryColor: "#0E4916",
-    secondaryDarkColor: "#0A3A11",
     disabledColor: "#5a5a5a",
-    buttonText: "#f0f0f0"
+    buttonText: "#f0f0f0",
+    borderColor: "#c0c0c0",
 }
 

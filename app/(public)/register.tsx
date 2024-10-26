@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import Input from "../../components/Input";
 import LinkButton from "../../components/LinkButton";
 import { router, } from "expo-router";
@@ -12,6 +12,7 @@ import { colors } from "../../theme/theme";
 import Toast from "react-native-toast-message";
 import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";
 import { useAuth } from "../../context/AuthProvider";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Errors {
     name?: boolean;

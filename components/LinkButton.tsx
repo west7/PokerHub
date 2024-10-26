@@ -47,7 +47,7 @@ export default function LinkButton({
                     <View style={styles.content}>
                         {iconName && (
                             <Icon
-                                style={{ marginRight: 12 }}
+                                style={{ marginRight: 10 }}
                                 size={20}
                                 color={textColor ? textColor : buttonStyle.icon.color}
                                 name={iconName}
@@ -84,7 +84,7 @@ const stylesLarge = StyleSheet.create({
     content: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
 })
 
@@ -94,8 +94,7 @@ const stylesSmall = StyleSheet.create({
         borderRadius: 5,
         height: 30,
         justifyContent: "center",
-        padding: 5,
-        alignItems: "center",
+        paddingHorizontal: 10,
     },
     text: {
         fontSize: 16,
@@ -104,6 +103,6 @@ const stylesSmall = StyleSheet.create({
     content: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
 })

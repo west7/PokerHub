@@ -9,6 +9,7 @@ import { deleteGame, getUserGames } from "../../../../services/game.services";
 import Modal from "../../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 export default function GameSettings() {
     const context = useContext(AuthContext);
@@ -31,7 +32,11 @@ export default function GameSettings() {
                 setGameSetups(games);
             })
             .catch((err) => {
-                console.error('Error fetching games', err);
+                Toast.show({
+                    type: "error",
+                    text1: "Error!",
+                    text2: "Erro ao buscar jogos: " + err.message,
+                });
             })
             .finally(() => {
                 setLoading(false)

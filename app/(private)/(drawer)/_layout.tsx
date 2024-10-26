@@ -59,19 +59,23 @@ export default function InsideLayout() {
                     headerShown: true,
                     headerStyle: {
                         backgroundColor: colors.backgroundDarkColor,
-                        borderBottomWidth: 0,
+                        shadowColor: "#000", // Use a dark color for a subtle shadow
+                        elevation: 10,        // Android shadow depth, adjust to increase/decrease shadow
+                        shadowOffset: {
+                            width: 0,
+                            height: 4,       // Higher height for more pronounced shadow
+                        },
+                        shadowOpacity: 0.25, // Adjust opacity for lighter or darker shadow
+                        shadowRadius: 5,    // Blur effect for shadow smoothness
                     },
-                    headerTintColor: colors.primaryColor,
+                    headerTintColor: colors.primaryLightColor,
                     headerTitle: "",
                     drawerStyle: {
                         backgroundColor: colors.baseColor,
                         paddingTop: 20,
                     },
-                    drawerLabelStyle: {
-                        marginLeft: -15,
-                    },
-                    drawerActiveBackgroundColor: colors.primaryColor,
-                    drawerActiveTintColor: colors.textColor,
+                    drawerActiveBackgroundColor: colors.primaryLightColor,
+                    drawerActiveTintColor: colors.buttonText,
                     drawerInactiveTintColor: colors.textColor,
                     drawerInactiveBackgroundColor: colors.backgroundLightColor,
                 }}
@@ -81,10 +85,10 @@ export default function InsideLayout() {
                     name="index"
                     options={{
                         drawerLabel: "Home",
-                        drawerIcon: () => (
+                        drawerIcon: ({ focused }) => (
                             <Icon2
                                 name="home"
-                                color={colors.textColor}
+                                color={focused ? colors.buttonText : colors.textColor}
                                 size={18}
                             />
                         ),
@@ -94,10 +98,10 @@ export default function InsideLayout() {
                     name="gamesettings"
                     options={{
                         drawerLabel: "Game Settings",
-                        drawerIcon: () => (
+                        drawerIcon: ({focused}) => (
                             <Icon2
                                 name="cog"
-                                color={colors.textColor}
+                                color={focused ? colors.buttonText : colors.textColor}
                                 size={18}
                             />
                         ),
@@ -107,10 +111,10 @@ export default function InsideLayout() {
                     name="players"
                     options={{
                         drawerLabel: "Players",
-                        drawerIcon: () => (
+                        drawerIcon: ({focused}) => (
                             <Icon2
                                 name="account-group"
-                                color={colors.textColor}
+                                color={focused ? colors.buttonText : colors.textColor}
                                 size={18}
                             />
                         ),
@@ -120,10 +124,10 @@ export default function InsideLayout() {
                     name="history"
                     options={{
                         drawerLabel: "History",
-                        drawerIcon: () => (
+                        drawerIcon: ({focused}) => (
                             <Icon2
                                 name="history"
-                                color={colors.textColor}
+                                color={focused ? colors.buttonText : colors.textColor}
                                 size={18}
                             />
                         ),
@@ -133,10 +137,10 @@ export default function InsideLayout() {
                     name="statistics"
                     options={{
                         drawerLabel: "Statistics",
-                        drawerIcon: () => (
+                        drawerIcon: ({focused}) => (
                             <Icon2
                                 name="trending-up"
-                                color={colors.textColor}
+                                color={focused ? colors.buttonText : colors.textColor}
                                 size={18}
                             />
                         ),

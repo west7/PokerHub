@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
         color: colors.textColor,
         textDecorationLine: "underline",
         textDecorationColor: colors.primaryColor,
-
     },
     subtitle: {
         fontWeight: "bold",

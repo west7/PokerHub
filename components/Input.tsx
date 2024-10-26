@@ -20,19 +20,19 @@ export default function Input({
     iconName,
     animation = false,
     duration = 100,
-    textColor = colors.textColor,
-    borderColor = colors.textColor,
+    textColor = colors.borderColor,
+    borderColor = colors.borderColor,
     err = false,
     iconFunction,
     containerStyle,
     ...nativeprops }: IProps) {
 
     const [iconAnimation, setIconAnimation] = useState(false)
-    const [errColor, setErrColor] = useState("#FF0000")
+    const [errColor, setErrColor] = useState("#CC0000")
     const [holder, setPlaceHolder] = useState(placeholder)
 
     const transY = useRef(new Animated.Value(0))
-    const borderWidth = useRef(new Animated.Value(1))
+    const borderWidth = useRef(new Animated.Value(2))
 
     const handleErrors = () => {
         if (err) {
@@ -45,7 +45,7 @@ export default function Input({
     const handleFocus = () => {
         if (animation) {
             Animated.timing(transY.current, {
-                toValue: -20,
+                toValue: -25,
                 duration,
                 useNativeDriver: true,
             }).start()
@@ -63,7 +63,7 @@ export default function Input({
             useNativeDriver: true,
         }).start();
         Keyboard.dismiss();
-        animateBorderWidth(1);
+        animateBorderWidth(2);
         setIconAnimation(false)
     }
 
@@ -78,7 +78,7 @@ export default function Input({
 
     const animateBorderColor = borderWidth.current.interpolate({
         inputRange: [1, 2],
-        outputRange: [err ? errColor : colors.textColor, err ? errColor : borderColor],
+        outputRange: [err ? errColor : borderColor, err ? errColor : borderColor],
         extrapolate: "clamp"
     })
 
@@ -115,7 +115,7 @@ export default function Input({
             />
             {iconName && (
                 <Pressable onPress={iconFunction}>
-                    <Icon name={iconName} color={err ? errColor : (iconAnimation ? textColor : "#f0f0f0")} size={16} style={[styles.icon, { opacity: iconAnimation ? 1 : 0.7 }]} />
+                    <Icon name={iconName} color={err ? errColor : (iconAnimation ? textColor : textColor)} size={16} style={[styles.icon, { opacity: iconAnimation ? 1 : 1}]} />
                 </Pressable>
             )}
         </Animated.View>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         padding: 10,
         width: "100%",
         borderWidth: 2,
-        borderRadius: 7,
+        borderRadius: 5,
     },
     icon: {
         marginRight: 10,

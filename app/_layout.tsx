@@ -12,7 +12,7 @@ export default function RootLayout() {
         success: (props: React.JSX.IntrinsicAttributes & BaseToastProps) => (
             <BaseToast
                 {...props}
-                style={{ borderLeftColor: 'green', backgroundColor: colors.backgroundLightColor }}
+                style={{ borderLeftColor: '#19ff19', backgroundColor: colors.backgroundLightColor }}
                 text1Style={{
                     fontSize: 16,
                     color: colors.textColor
@@ -25,7 +25,7 @@ export default function RootLayout() {
         error: (props: React.JSX.IntrinsicAttributes & BaseToastProps) => (
             <ErrorToast
                 {...props}
-                style={{ borderLeftColor: 'red', backgroundColor: colors.backgroundLightColor }}
+                style={{ borderLeftColor: '#FA2D1E', backgroundColor: colors.backgroundLightColor }}
                 text1Style={{
                     fontSize: 16,
                     color: colors.textColor

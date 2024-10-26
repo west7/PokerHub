@@ -8,6 +8,7 @@ import Modal from "../../../../components/Modal";
 import { Player } from "../../../../interfaces/player.interface";
 import { createPlayer, deletePlayer, getUserPlayers, updatePlayer } from "../../../../services/players.services";
 import PlayerList from "../../../../components/List";
+import Toast from "react-native-toast-message";
 
 const inititalPlayer: Player = {
     playerId: '',
@@ -187,7 +188,11 @@ export default function Players() {
                 setPlayers(players);
             })
             .catch((err) => {
-                console.error('Error fetching players', err);
+                Toast.show({
+                    type: "error",
+                    text1: "Error!",
+                    text2: "Erro ao buscar jogadores: " + err.message,
+                });
             })
             .finally(() => {
                 setLoading(false)

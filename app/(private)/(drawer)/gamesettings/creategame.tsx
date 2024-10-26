@@ -489,6 +489,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
         borderRadius: 2.5,
         alignSelf: 'center',
-        marginVertical: 10,
+        marginVertical: 15,
     },
 })
