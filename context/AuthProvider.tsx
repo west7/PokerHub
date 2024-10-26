@@ -42,7 +42,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const [initialLoading, setIniitialLoading] = useState(true);
 
     useEffect(() => {
-        const subscribe = onAuthStateChanged(auth, async (authUser: FirebaseUser | null) => {
+        const unsubscribe = onAuthStateChanged(auth, async (authUser: FirebaseUser | null) => {
             if (authUser) {
                 const userDoc = await getDoc(doc(db, 'users', authUser.uid));
                 if (userDoc.exists()) {
@@ -56,7 +56,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             setIniitialLoading(false);
         });
 
-        return subscribe;
+        return unsubscribe;
     }, []);
 
     const signIn = async (email: string, password: string) => {
