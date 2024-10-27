@@ -10,7 +10,7 @@ import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { colors } from "../../theme/theme";
 import Toast from "react-native-toast-message";
-import { FirebaseErrorCustomMessage } from "../../helpers/firebaseerror.helper";
+import { FirebaseErrorCustomMessage } from "../../utils/firebaseerror.helper";
 import { useAuth } from "../../context/AuthProvider";
 import { SafeAreaView } from "react-native-safe-area-context";
 

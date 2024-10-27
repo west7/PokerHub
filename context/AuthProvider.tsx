@@ -3,7 +3,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { User } from "../interfaces/user.interface";
-import { FirebaseErrorCustomMessage } from "../helpers/firebaseerror.helper";
+import { FirebaseErrorCustomMessage } from "../utils/firebaseerror.helper";
 import Toast from "react-native-toast-message";
 import { FirebaseError } from "firebase/app";
 
