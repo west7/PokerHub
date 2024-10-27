@@ -13,6 +13,14 @@ interface FormContextProps {
 
 export const FormContext = createContext<FormContextProps | undefined>(undefined);
 
+export function useForm() {
+    const formContext = useContext(FormContext);
+    if (!formContext) {
+        throw new Error('formContext must be used within a FormProvider');
+    }
+    return formContext;
+}
+
 export default function FormProvider({ children }: FormProviderProps) {
     const initialFormData: GameSetup = {
         gameName: '',

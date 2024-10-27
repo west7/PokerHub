@@ -6,11 +6,12 @@ import LinkButton from "../../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlindLevel, GameSetup } from "../../../../interfaces/game.interface";
-import { FormContext } from "../../../../context/FormProvider";
+import { FormContext, useForm } from "../../../../context/FormProvider";
 import { useAuth } from "../../../../context/AuthProvider";
 import { router, useLocalSearchParams } from "expo-router";
 import { createGame, updateGame } from "../../../../services/game.services";
 import BackButton from "../../../../components/BackButton";
+import Toast from "react-native-toast-message";
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
@@ -23,9 +24,6 @@ interface Errors {
 export default function CreateGameScreen() {
     const [loading, setLoading] = useState(false);
     const { gameSetup } = useLocalSearchParams();
-
-    const { user } = useAuth();
-
     const [errors, setErrors] = useState<Errors>({
         gameName: false,
         numberOfWinners: false,
@@ -35,12 +33,11 @@ export default function CreateGameScreen() {
         blindLevels: {}
     });
     const [showErrors, setShowErrors] = useState(false);
+    const [errMessage, setErrMessage] = useState('');
+    const [showToast, setShowToast] = useState(false);
 
-    const formContext = useContext(FormContext);
-    if (!formContext) {
-        throw new Error('formContext must be used within a FormProvider');
-    }
-    const { formData, updateFormData, resetFormData } = formContext;
+    const { user } = useAuth();
+    const { formData, updateFormData, resetFormData } = useForm();
 
     const addBlindLevel = () => {
         const newLevel: BlindLevel = { level: formData.blindLevels.length + 1, smallBlind: '', bigBlind: '' };
@@ -110,7 +107,7 @@ export default function CreateGameScreen() {
         const e: Errors = { blindLevels: errors.blindLevels };
 
         if (formData.gameName === '') {
-            //console.error('Game name cannot be empty');
+            setErrMessage('O nome do jogo não pode estar vazio');
             e.gameName = true;
         }
 
@@ -123,22 +120,22 @@ export default function CreateGameScreen() {
         if (formData.numberOfWinners !== '' || formData.prizeDistribution !== '') {
 
             if (isNaN(numberOfWinners) || numberOfWinners <= 0) {
-                //console.error('Number of winners must be a valid number greater than 0');
+                setErrMessage('O número de vencedores deve ser um número válido maior que 0');
                 e.numberOfWinners = true;
             }
 
             if (prizeDistribution.length === 0) {
-                //console.error('Prize distribution cannot be empty');
+                setErrMessage('A distribuição de prêmios não pode estar vazia');
                 e.prizeDistribution = true;
             }
 
             if (prizeDistribution.length !== numberOfWinners) {
-                //console.error(`Prize distribution must have exactly ${numberOfWinners} values and must be separated by commas`);
+                setErrMessage(`A distribuição de prêmios deve ter exatamente ${numberOfWinners} valores e deve ser separada por vírgulas`);
                 e.prizeDistribution = true;
             }
 
             if (prizeDistribution.reduce((acc, value) => acc + value, 0) !== 100) {
-                //console.error('Prize distribution must sum up to 100');
+                setErrMessage('A distribuição de prêmios deve somar 100');
                 e.prizeDistribution = true;
             }
         }
@@ -146,35 +143,35 @@ export default function CreateGameScreen() {
         const numberOfLevels = parseInt(formData.numberOfLevels, 10);
 
         if (formData.numberOfLevels === '') {
-            //console.error('Number of levels cannot be empty');
+            setErrMessage('O número de níveis não pode estar vazio');
             e.numberOfLevels = true;
         }
         if (isNaN(numberOfLevels) || numberOfLevels <= 0) {
-            //console.error('Number of levels must be a valid number greater than 0');
+            setErrMessage('O número de níveis deve ser um número válido maior que 0');
             e.numberOfLevels = true;
         }
         if (numberOfLevels !== formData.blindLevels.length) {
-            //console.error('Number of levels must match the number of blind levels');
+            setErrMessage('O número de níveis deve corresponder ao número de níveis de blind');
             e.numberOfLevels = true;
         }
 
         const timeForLevel = parseInt(formData.timeForLevel, 10);
 
         if (formData.timeForLevel === '') {
-            //console.error('Time for level cannot be empty');
+            setErrMessage('O tempo para cada nível não pode estar vazio');
             e.timeForLevel = true;
         }
         if (isNaN(timeForLevel) || timeForLevel <= 0) {
-            //console.error('Time for level must be a valid number greater than 0');
+            setErrMessage('O tempo para cada nível deve ser um número válido maior que 0');
             e.timeForLevel = true;
         }
         if (!Number.isInteger(timeForLevel)) {
-            //console.error('Time for level must be an integer number');
-            e.timeForLevel = true
+            setErrMessage('O tempo para cada nível deve ser um número inteiro');
+            e.timeForLevel = true;
         }
 
         if (!validateBlindLevels()) {
-            //console.error('Blind levels have invalid values');
+            setErrMessage('Os níveis de blind têm valores inválidos');
         }
 
         setErrors(e);
@@ -186,6 +183,7 @@ export default function CreateGameScreen() {
 
         if (otherErrors || blindLevelsHasErrors) {
             setShowErrors(true);
+            setShowToast(true);
             return;
         }
         setLoading(true);
@@ -194,11 +192,19 @@ export default function CreateGameScreen() {
         if (gameSetup) {
             updateGame(userId, gameData)
                 .then(() => {
-                    console.log('Game setup updated successfully');
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Success!',
+                        text2: 'Game Setup editado com sucesso!',
+                    });
                     router.back();
                 })
                 .catch((err) => {
-                    console.error('Error updating game setup:', err)
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Erro!',
+                        text2: err.message
+                    });
                 })
                 .finally(() => {
                     setLoading(false);
@@ -208,11 +214,19 @@ export default function CreateGameScreen() {
 
         createGame(userId, gameData)
             .then(() => {
-                console.log('Game setup saved successfully');
+                Toast.show({
+                    type: 'success',
+                    text1: 'Success!',
+                    text2: 'Game Setup salvo com sucesso!',
+                });
                 router.back();
             })
             .catch((err) => {
-                console.error('Error saving game setup:', err)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Erro!',
+                    text2: err.message
+                });
             })
             .finally(() => {
                 setLoading(false);
@@ -224,11 +238,25 @@ export default function CreateGameScreen() {
             saveGameSetup(user.uid, formData);
         }
         else {
-            console.error('User not found');
+            Toast.show({
+                type: 'error',
+                text1: 'Erro!',
+                text2: 'O ID do usuário não foi encontrado',
+            });
         }
     }
 
     useEffect(handleErrors, [formData]);
+
+    useEffect(() => {
+        if (errMessage && showToast) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erro!',
+                text2: errMessage,
+            });
+        }
+    }, [errMessage, showToast]);
 
     useEffect(() => {
         if (gameSetup) {
@@ -249,10 +277,7 @@ export default function CreateGameScreen() {
                     bigBlind: blindLevel.bigBlind || ''
                 })));
             }
-
-        } /* else {
-            console.log('gameSetup está indefinido:', gameSetup);
-        } */
+        }
 
         return () => {
             if (gameSetup) {
@@ -262,21 +287,19 @@ export default function CreateGameScreen() {
     }, [gameSetup]);
 
 
-    // TODO: MENSAGENS DE ERRO
-
     return (
         <View style={styles.container}>
 
             {Platform.OS === 'ios'
                 ?
                 <View style={styles.modalBar} />
-                    :
-                <BackButton/>
+                :
+                <BackButton />
             }
 
             <KeyboardAvoidingView
                 style={styles.contentContainer}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0}/* Teste */
             >
                 <ScrollView style={styles.contentContainer}>
@@ -400,11 +423,7 @@ export default function CreateGameScreen() {
                 </ScrollView>
             </KeyboardAvoidingView>
 
-            <LinearGradient
-                colors={['transparent', '#12121299', colors.backgroundColor]}
-                style={styles.gradient}
-            >
-            </LinearGradient>
+           
 
             <View style={styles.btn}>
                 <LinkButton
@@ -437,10 +456,8 @@ const styles = StyleSheet.create({
     },
     btn: {
         alignItems: 'center',
-        marginBottom: 30,
+        marginBottom: 20,
         zIndex: 10,
-        backgroundColor: 'transparent',
-        color: 'transparent',
     },
     text: {
         color: "#aaa",
@@ -480,8 +497,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 30,
-        height: 110,
+        bottom: 20,
+        height: 100,
     },
     modalBar: {
         width: 40,
