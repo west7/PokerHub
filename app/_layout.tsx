@@ -1,41 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { router, Slot, Stack } from "expo-router";
+import { router, Slot } from "expo-router";
 import AuthProvider, { useAuth } from "../context/AuthProvider";
 import { StatusBar } from "react-native";
-import Toast, { BaseToast, BaseToastProps, ErrorToast } from 'react-native-toast-message';
-import { colors } from "../theme/theme";
+import Toast from 'react-native-toast-message';
 import LoadingScreen from "../components/LoadingScreen";
+import { ThemeProvider } from "../context/ThemeProvider";
+import { darkTheme } from "../theme/theme";
+import toastConfig from "../utils/toastConfig";
 
 export default function RootLayout() {
-
-    const toastConfig = {
-        success: (props: React.JSX.IntrinsicAttributes & BaseToastProps) => (
-            <BaseToast
-                {...props}
-                style={{ borderLeftColor: '#19ff19', backgroundColor: colors.backgroundLightColor }}
-                text1Style={{
-                    fontSize: 16,
-                    color: colors.textColor
-                }}
-                text2Style={{
-                    fontSize: 14
-                }}
-            />
-        ),
-        error: (props: React.JSX.IntrinsicAttributes & BaseToastProps) => (
-            <ErrorToast
-                {...props}
-                style={{ borderLeftColor: '#FA2D1E', backgroundColor: colors.backgroundLightColor }}
-                text1Style={{
-                    fontSize: 16,
-                    color: colors.textColor
-                }}
-                text2Style={{
-                    fontSize: 14
-                }}
-            />
-        )
-    }
 
     const Layout = () => {
         const { isSignedIn, initialLoading } = useAuth();
@@ -63,9 +36,11 @@ export default function RootLayout() {
 
     return (
         <AuthProvider>
-            <StatusBar barStyle="default" />
-            <Layout />
-            <Toast config={toastConfig} />
+            <ThemeProvider>
+                <StatusBar barStyle="default" />
+                <Layout />
+                <Toast config={toastConfig} />
+            </ThemeProvider>
         </AuthProvider>
     );
 }

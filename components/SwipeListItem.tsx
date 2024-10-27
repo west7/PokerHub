@@ -1,8 +1,9 @@
 import React from "react";
 import { Pressable, View, Text, StyleSheet, ViewStyle } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { colors } from "../theme/theme";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Theme } from "../theme/theme";
+import useThemedStyles, { useTheme } from "../context/ThemeProvider";
 
 interface SwipeListItemProps {
     onEdit: () => void;
@@ -13,17 +14,20 @@ interface SwipeListItemProps {
 
 export default function SwipeListItem({ onEdit, onDelete, children, containerStyle }: SwipeListItemProps) {
 
+    const styles = useThemedStyles(getStyles);
+    const { theme } = useTheme();
+
     const renderRightActions = () => (
         <View style={[containerStyle, styles.container]}>
             <Pressable
                 style={({ pressed }) => [
                     styles.actionButton,
                     pressed && styles.actionButtonPressed,
-                    { backgroundColor: colors.disabledColor }
+                    { backgroundColor: theme.disabledColor }
                 ]}
                 onPress={onEdit}
             >
-                <Icon name="pencil" size={18} color={colors.buttonText} />
+                <Icon name="pencil" size={18} color={theme.buttonText} />
             </Pressable>
 
 
@@ -31,11 +35,11 @@ export default function SwipeListItem({ onEdit, onDelete, children, containerSty
                 style={({ pressed }) => [
                     styles.actionButton,
                     pressed && styles.actionButtonPressed,
-                    { backgroundColor: colors.primaryLightColor }
+                    { backgroundColor: theme.primaryColor }
                 ]}
                 onPress={onDelete}
             >
-                <Icon name="delete" size={18} color={colors.buttonText} />
+                <Icon name="delete" size={18} color={theme.buttonText} />
             </Pressable>
         </View>
     );
@@ -50,7 +54,7 @@ export default function SwipeListItem({ onEdit, onDelete, children, containerSty
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -68,11 +72,11 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     actionText: {
-        color: colors.textColor,
+        color: theme.textColor,
         fontWeight: 'bold',
     },
     divider: {
-        width: 1,  // Largura da linha
-        backgroundColor: colors.backgroundLightColor,
+        width: 1,
+        backgroundColor: theme.backgroundLightColor,
     },
 });

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, Modal, StyleSheet } from "react-native";
-import { colors } from "../theme/theme";
 import Input from "./Input";
+import { Theme } from "../theme/theme";
+import useThemedStyles, { useTheme } from "../context/ThemeProvider";
 
 interface InputModelProps {
     value: string;
@@ -23,6 +24,9 @@ export default function ConfirmationModal({
     onCancel,
     input }: ConfirmationModalProps) {
     const [inputValue, setInputValue] = useState(input?.value || '');
+    
+    const styles = useThemedStyles(getStyles);
+    const { theme } = useTheme();
 
     useEffect(() => {
         if (!visible) {
@@ -62,7 +66,7 @@ export default function ConfirmationModal({
 
                     <View style={styles.buttonContainer}>
 
-                        <Pressable style={[styles.button, { backgroundColor: colors.disabledColor }]} onPress={onCancel}>
+                        <Pressable style={[styles.button, { backgroundColor: theme.disabledColor }]} onPress={onCancel}>
                             <Text style={styles.buttonText}>Cancel</Text>
                         </Pressable>
 
@@ -77,7 +81,7 @@ export default function ConfirmationModal({
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     modalContainer: {
         flex: 1,
         justifyContent: "center",
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 30,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
         borderRadius: 20,
         padding: 35,
         alignItems: "center",
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 16,
         textAlign: 'center',
-        color: colors.textColor,
+        color: theme.textColor,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     buttonText: {
-        color: colors.buttonText,
+        color: theme.buttonText,
     },
     inputContainer: {
         padding: 16,
@@ -124,11 +128,11 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: 16,
-        color: colors.textColor,
+        color: theme.textColor,
         zIndex: 1,
         opacity: 1,
         borderWidth: 2,
         borderRadius: 7,
-        borderColor: colors.textColor,
+        borderColor: theme.textColor,
     }
 });

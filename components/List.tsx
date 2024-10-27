@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet, ViewStyle } from "react-native";
+import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet, ViewStyle, RefreshControl } from "react-native";
 import { GameSetup } from "../interfaces/game.interface";
-import { colors } from "../theme/theme";
+import { Theme } from "../theme/theme";
 import { Player } from "../interfaces/player.interface";
 import GameCard from "./GameCard";
 import PlayerCard from "./PlayerCard";
+import useThemedStyles, { useTheme } from "../context/ThemeProvider";
 
 
 function isGameSetup(item: GameSetup | Player): item is GameSetup {
@@ -19,6 +20,7 @@ interface ListProps<T extends GameSetup | Player> {
     loading: boolean;
     onEdit: (item: T) => void;
     onDelete: (id: string) => void;
+    onScrollDown?: () => void;
     containerStyle?: ViewStyle;
 }
 
@@ -27,8 +29,12 @@ export default function List<T extends GameSetup | Player>({
     loading,
     onEdit,
     onDelete,
+    onScrollDown,
     containerStyle,
 }: ListProps<T>) {
+
+    const styles = useThemedStyles(getStyles);
+    const { theme } = useTheme();
 
     const renderItem = ({ item, index }: { item: T, index: number }) => {
         const isFirstItem = index === 0;
@@ -62,8 +68,16 @@ export default function List<T extends GameSetup | Player>({
         return null;
     };
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        onScrollDown && onScrollDown();
+        setRefreshing(false);
+    };
+
     if (loading) {
-        return <ActivityIndicator size="small" color={colors.primaryColor} />;
+        return <ActivityIndicator size="small" color={theme.primaryColor} />;
     }
 
     return (
@@ -72,30 +86,37 @@ export default function List<T extends GameSetup | Player>({
             data={data}
             keyExtractor={(item) => (isGameSetup(item) ? item.gameName : item.playerId)}
             renderItem={renderItem}
-            ListEmptyComponent={ <Text style={styles.emptyText}>No items found</Text> }
+            ListEmptyComponent={<Text style={styles.emptyText}>No items found</Text>}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    progressViewOffset={100}
+                />
+            }
         />
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         overflow: 'hidden',
     },
     title: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.textColor,
+        color: theme.textColor,
         marginBottom: 5,
     },
     text: {
-        color: colors.textColor,
+        color: theme.textColor,
         fontSize: 14,
         marginBottom: 5,
         fontWeight: 'semibold',
     },
     emptyText: {
-        color: colors.textColor,
+        color: theme.textColor,
         fontSize: 16,
         fontWeight: 'bold',
         alignSelf: 'center',

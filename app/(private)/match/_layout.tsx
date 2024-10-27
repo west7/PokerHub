@@ -1,19 +1,21 @@
 import React from "react";
 import { Stack } from "expo-router";
-
-// Não quero que o Drawer fique visível nessa tela
+import { StatusBar } from "react-native";
 
 export default function MatchLayout() {
 
     return (
-        <Stack
-            screenOptions={{
-                headerShown: false,
-            }}
-        >
-            <Stack.Screen
-                name="index"
-            />
-        </Stack>
+        <>
+            <StatusBar barStyle="default" />
+            <Stack
+                screenOptions={{
+                    headerShown: false,
+                }}
+            >
+                <Stack.Screen
+                    name="index"
+                />
+            </Stack>
+        </>
     );
 }

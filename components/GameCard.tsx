@@ -2,7 +2,8 @@ import React from "react";
 import SwipeListItem from "./SwipeListItem";
 import { Pressable, Text, View, StyleSheet } from "react-native";
 import { GameSetup } from "../interfaces/game.interface";
-import { colors } from "../theme/theme";
+import { Theme } from "../theme/theme";
+import useThemedStyles from "../context/ThemeProvider";
 
 interface GameCardProps {
     item: GameSetup;
@@ -11,8 +12,9 @@ interface GameCardProps {
     cardStyle?: any;
 }
 
-export default function GameCard({ item, onEdit, onDelete, cardStyle }: GameCardProps
-) {
+export default function GameCard({ item, onEdit, onDelete, cardStyle }: GameCardProps) {
+    const styles = useThemedStyles(getStyles);
+
     return (
         <SwipeListItem
             onEdit={() => onEdit(item)}
@@ -36,29 +38,28 @@ export default function GameCard({ item, onEdit, onDelete, cardStyle }: GameCard
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) =>  StyleSheet.create({
     container: {
-        backgroundColor: colors.backgroundLightColor,
+        backgroundColor: theme.backgroundLightColor,
         borderRadius: 10,
         padding: 10,
     },
     title: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.textColor,
+        color: theme.textColor,
         marginBottom: 5,
     },
     text: {
-        color: "grey",
+        color: theme.secondaryTextColor,
         fontSize: 14,
         marginBottom: 5,
         fontWeight: 'semibold',
     },
     gameCard: {
-        backgroundColor: colors.backgroundDarkColor,
+        backgroundColor: theme.backgroundDarkColor,
         padding: 10,
-        borderColor: colors.backgroundLightColor,
+        borderColor: theme.backgroundLightColor,
         borderWidth: 1,
-        
     },
-})
+});

@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
-import { AuthContext } from "../../../../context/AuthProvider";
-import { colors } from "../../../../theme/theme";
+import { useAuth } from "../../../../context/AuthProvider";
 import LinkButton from "../../../../components/LinkButton";
 import { GameSetup } from "../../../../interfaces/game.interface";
 import GamesList from "../../../../components/List";
@@ -10,23 +9,22 @@ import Modal from "../../../../components/Modal";
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
+import { Theme } from "../../../../theme/theme";
+import useThemedStyles from "../../../../context/ThemeProvider";
 
 export default function GameSettings() {
-    const context = useContext(AuthContext);
     const [gameSetups, setGameSetups] = useState<GameSetup[]>([]);
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [gameToDelete, setGameToDelete] = useState<string | null>(null);
 
+    const { user } = useAuth();
 
-    if (!context) {
-        throw new Error("User not found");
-    }
-
-    const { user } = context;
+    const styles = useThemedStyles(getStyles);
 
     const loadgames = (userId: string) => {
         setLoading(true);
+        console.log("Loading games");
         getUserGames(userId)
             .then((games) => {
                 setGameSetups(games);
@@ -93,13 +91,11 @@ export default function GameSettings() {
         setModalVisible(false);
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
+    useEffect(() => {
             if (user) {
                 loadgames(user.uid);
             }
-        }, [user])
-    );
+        }, [user]);
 
 
     return (
@@ -123,6 +119,7 @@ export default function GameSettings() {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 containerStyle={styles.gameList}
+                onScrollDown={() => loadgames(user?.uid || "")}
             />
 
             <Modal
@@ -135,14 +132,14 @@ export default function GameSettings() {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
         flex: 1,
         padding: 16,
     },
     title: {
-        color: colors.textColor,
+        color: theme.textColor,
         fontSize: 28,
         fontWeight: "bold",
         marginTop: 10,
@@ -155,14 +152,14 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 20,
-        color: colors.textColor,
+        color: theme.textColor,
         fontWeight: "bold",
         padding: 16,
     },
     gameList: {
         padding: 0,
         flexGrow: 0,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
         borderRadius: 10,
     },
 });

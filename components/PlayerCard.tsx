@@ -1,9 +1,10 @@
 import React from "react";
 import SwipeListItem from "./SwipeListItem";
 import { Pressable, Text, View, StyleSheet } from "react-native";
-import { colors } from "../theme/theme";
 import { Player } from "../interfaces/player.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Theme } from "../theme/theme";
+import useThemedStyles, { useTheme } from "../context/ThemeProvider";
 
 interface PlayerCardProps {
     item: Player;
@@ -19,6 +20,9 @@ export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: Player
         return balanceStr.length > 6 ? `${balanceStr.slice(0, 5)}...` : balanceStr;
     };
 
+    const styles = useThemedStyles(getStyles);
+    const { theme } = useTheme();
+
     return (
         <SwipeListItem
             onEdit={() => onEdit(item)}
@@ -32,11 +36,11 @@ export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: Player
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '30%' }}>
 
                         {item.totalBalance > 0 ? (
-                            <Icon name="chevron-up" size={24} color={'#19ff19'} />
+                            <Icon name="chevron-up" size={24} color={theme.successColor} />
                         ) : item.totalBalance < 0 ? (
-                                <Icon name="chevron-down" size={24} color={'#cc0000'} />
+                                <Icon name="chevron-down" size={24} color={theme.primaryColor} />
                         ) : (
-                            <Icon name="minus" size={24} color={'white'} />
+                            <Icon name="minus" size={24} color={theme.textColor} />
                         )}
                         <Text style={styles.text}> {formatBalance(item.totalBalance)} </Text>
 
@@ -48,29 +52,29 @@ export default function PlayerCard({ item, onEdit, onDelete, cardStyle }: Player
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         borderRadius: 10,
     },
     title: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.textColor,
+        color: theme.textColor,
         marginBottom: 5,
         margin: 5,
     },
     text: {
-        color: "#ccc",
+        color: theme.secondaryTextColor,
         fontSize: 15,
         marginBottom: 5,
-        fontWeight: 'bold',
+        fontWeight: 'semibold',
         alignSelf: 'center',
         paddingTop: 6,
     },
     playerCard: {
-        backgroundColor: colors.backgroundDarkColor,
+        backgroundColor: theme.backgroundDarkColor,
         padding: 10,
-        borderColor: colors.backgroundLightColor,
+        borderColor: theme.backgroundLightColor,
         borderWidth: 1,
     },
 })

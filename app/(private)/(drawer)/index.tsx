@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import LinkButton from "../../../components/LinkButton";
-import { colors } from "../../../theme/theme";
 import { useAuth } from "../../../context/AuthProvider";
 import LoadingScreen from "../../../components/LoadingScreen";
 import { router } from "expo-router";
+import { Theme } from "../../../theme/theme";
+import useThemedStyles from "../../../context/ThemeProvider";
 
 export default function Home() {
     const [userLoading, setUserLoading] = useState(true)
     const { user, isLoading } = useAuth();
+    const styles = useThemedStyles(getStyles);
 
     useEffect(() => {
         if (user) {
@@ -21,7 +23,7 @@ export default function Home() {
     }
 
     const handleStartMatch = () => {
-        router.push('/(private)/match'); // Ao entrar na tela de partida, o Drawer não deve ser exibido, uma nova Stack deve ser criada
+        router.push('/(private)/match');
     }
 
     return (
@@ -62,10 +64,10 @@ export default function Home() {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
     },
     contentContainer: {
         flex: 1,
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     label: {
-        color: colors.textColor,
+        color: theme.textColor,
         fontSize: 25,
         fontWeight: 'bold',
     },

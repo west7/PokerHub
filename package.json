@@ -31,7 +31,8 @@
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "expo-system-ui": "~3.0.7"
   },
   "devDependencies": {
     "@types/react": "~18.2.45",

@@ -25,11 +25,11 @@ export async function createGame(userId: string, gameSetup: GameSetup) {
     try {
         const existingDoc = await getDoc(gameSettingsRef);
         if (existingDoc.exists()) {
-            throw new  Error('Game setup with this name already exists!');
+            throw Error('Já existe um Game Setup com esse nome!');
         }
         await setDoc(gameSettingsRef, gameSetup);
-    } catch (e) {
-        console.error('Error saving game setup:');
+    } catch (err) {
+        throw err;
     }
 }
 
@@ -39,7 +39,7 @@ export async function deleteGame(userId: string, gameName: string) {
         await deleteDoc(gameDocRef);
     }
     catch (err) {
-        console.error('Error deleting game', err);
+        throw err;
     }
     
 }
@@ -50,6 +50,6 @@ export async function updateGame(userId: string, updatedData: GameSetup) {
         await setDoc(gameDocRef, { ...updatedData });
     }
     catch (err) {
-        console.error('Error updating game', err);
+        throw err;
     }
 }

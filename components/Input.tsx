@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, TextInput, KeyboardAvoidingView, StyleSheet, Platform, Text, Animated, Keyboard, Easing, TextInputProps, Pressable, ViewStyle } from "react-native";
+import { TextInput, StyleSheet, Animated, Keyboard, Easing, TextInputProps, Pressable, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors } from "../theme/theme";
+import useThemedStyles, { useTheme } from "../context/ThemeProvider";
+import { Theme } from "../theme/theme";
 
 interface IProps extends TextInputProps {
     placeholder: string;
@@ -20,16 +21,24 @@ export default function Input({
     iconName,
     animation = false,
     duration = 100,
-    textColor = colors.borderColor,
-    borderColor = colors.borderColor,
+    textColor,
+    borderColor,
     err = false,
     iconFunction,
     containerStyle,
     ...nativeprops }: IProps) {
 
+    const styles = useThemedStyles(getStyles);
+    const { theme } = useTheme();
+
     const [iconAnimation, setIconAnimation] = useState(false)
-    const [errColor, setErrColor] = useState("#CC0000")
+    const errColor = theme.errorColor
     const [holder, setPlaceHolder] = useState(placeholder)
+
+
+    const appliedTextColor = textColor || theme.textColor;
+    const appliedBorderColor = borderColor || (err ? theme.errorColor : theme.borderColor);
+
 
     const transY = useRef(new Animated.Value(0))
     const borderWidth = useRef(new Animated.Value(2))
@@ -78,13 +87,13 @@ export default function Input({
 
     const animateBorderColor = borderWidth.current.interpolate({
         inputRange: [1, 2],
-        outputRange: [err ? errColor : borderColor, err ? errColor : borderColor],
+        outputRange: [err ? errColor : appliedBorderColor, err ? errColor : appliedBorderColor],
         extrapolate: "clamp"
     })
 
     const animateTextColor = borderWidth.current.interpolate({
         inputRange: [1, 2],
-        outputRange: [err ? errColor : colors.textColor, err ? errColor : textColor],
+        outputRange: [err ? errColor : appliedTextColor, err ? errColor : appliedTextColor],
         extrapolate: "clamp",
     })
 
@@ -101,7 +110,7 @@ export default function Input({
             <Animated.View style={[styles.placeholderContainer, { transform: [{ translateY: transY.current }] }]}>
                 {animation && (
 
-                    <Animated.Text style={{ color: animateTextColor, backgroundColor: colors.backgroundColor, fontSize: 16, opacity: animateTextOpacity, padding: 3 }}>{holder}</Animated.Text>
+                    <Animated.Text style={{ color: animateTextColor, backgroundColor: theme.backgroundColor, fontSize: 16, opacity: animateTextOpacity, padding: 3 }}>{holder}</Animated.Text>
                 )}
             </Animated.View>
             <TextInput
@@ -109,20 +118,20 @@ export default function Input({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 placeholder={animation ? "" : holder}
-                placeholderTextColor={colors.disabledColor}
+                placeholderTextColor={theme.disabledColor}
                 style={styles.placeholder}
                 underlineColorAndroid="transparent"
             />
             {iconName && (
                 <Pressable onPress={iconFunction}>
-                    <Icon name={iconName} color={err ? errColor : (iconAnimation ? textColor : textColor)} size={16} style={[styles.icon, { opacity: iconAnimation ? 1 : 1}]} />
+                    <Icon name={iconName} color={err ? errColor : (iconAnimation ? appliedTextColor : appliedTextColor)} size={16} style={[styles.icon, { opacity: iconAnimation ? 1 : 1 }]} />
                 </Pressable>
             )}
         </Animated.View>
     )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     inputsText: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -139,7 +148,7 @@ const styles = StyleSheet.create({
     placeholder: {
         fontSize: 16,
         width: "90%",
-        color: colors.textColor,
+        color: theme.textColor,
         height: "100%",
         zIndex: 1,
         opacity: 1,
@@ -149,5 +158,5 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginLeft: 5,
         fontSize: 18,
-    }
-})
+    },
+});

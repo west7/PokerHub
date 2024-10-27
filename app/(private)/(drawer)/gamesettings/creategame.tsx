@@ -1,17 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput, Button, Pressable } from "react-native";
-import { colors } from "../../../../theme/theme";
 import Input from "../../../../components/Input";
 import LinkButton from "../../../../components/LinkButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlindLevel, GameSetup } from "../../../../interfaces/game.interface";
-import { FormContext, useForm } from "../../../../context/FormProvider";
+import { useForm } from "../../../../context/FormProvider";
 import { useAuth } from "../../../../context/AuthProvider";
 import { router, useLocalSearchParams } from "expo-router";
 import { createGame, updateGame } from "../../../../services/game.services";
 import BackButton from "../../../../components/BackButton";
-import Toast from "react-native-toast-message";
+import useThemedStyles, { useTheme } from "../../../../context/ThemeProvider";
+import { Theme } from "../../../../theme/theme";
+import Toast from 'react-native-toast-message';
+import toastConfig from "../../../../utils/toastConfig";
+
 interface Errors {
     gameName?: boolean;
     numberOfWinners?: boolean;
@@ -38,6 +41,9 @@ export default function CreateGameScreen() {
 
     const { user } = useAuth();
     const { formData, updateFormData, resetFormData } = useForm();
+
+    const styles = useThemedStyles(getStyles);
+    const { theme } = useTheme();
 
     const addBlindLevel = () => {
         const newLevel: BlindLevel = { level: formData.blindLevels.length + 1, smallBlind: '', bigBlind: '' };
@@ -194,16 +200,17 @@ export default function CreateGameScreen() {
                 .then(() => {
                     Toast.show({
                         type: 'success',
-                        text1: 'Success!',
+                        text1: 'Sucesso!',
                         text2: 'Game Setup editado com sucesso!',
                     });
-                    router.back();
+                    //router.back();
+                    resetFormData();
                 })
                 .catch((err) => {
                     Toast.show({
                         type: 'error',
                         text1: 'Erro!',
-                        text2: err.message
+                        text2: err.message,
                     });
                 })
                 .finally(() => {
@@ -216,10 +223,11 @@ export default function CreateGameScreen() {
             .then(() => {
                 Toast.show({
                     type: 'success',
-                    text1: 'Success!',
+                    text1: 'Sucesso!',
                     text2: 'Game Setup salvo com sucesso!',
                 });
-                router.back();
+                //router.back();
+                resetFormData();
             })
             .catch((err) => {
                 Toast.show({
@@ -254,6 +262,7 @@ export default function CreateGameScreen() {
                 type: 'error',
                 text1: 'Erro!',
                 text2: errMessage,
+
             });
         }
     }, [errMessage, showToast]);
@@ -281,7 +290,7 @@ export default function CreateGameScreen() {
 
         return () => {
             if (gameSetup) {
-                resetFormData();  // Limpa o formulário ao sair da tela em modo de edição
+                resetFormData();
             }
         }
     }, [gameSetup]);
@@ -329,7 +338,7 @@ export default function CreateGameScreen() {
                                 inputMode="numeric"
                                 style={styles.input}
                                 placeholder="Ex: 3"
-                                placeholderTextColor={colors.disabledColor}
+                                placeholderTextColor={theme.disabledColor}
                                 containerStyle={{ padding: 5 }}
                                 err={showErrors ? errors.numberOfWinners : false}
                             />
@@ -341,7 +350,7 @@ export default function CreateGameScreen() {
                                 inputMode="numeric"
                                 style={styles.input}
                                 placeholder="Ex: 15"
-                                placeholderTextColor={colors.disabledColor}
+                                placeholderTextColor={theme.disabledColor}
                                 containerStyle={{ padding: 5 }}
                                 err={showErrors ? errors.numberOfLevels : false}
                             />
@@ -354,7 +363,7 @@ export default function CreateGameScreen() {
                                 onChangeText={(value) => updateFormData('prizeDistribution', value)}
                                 style={styles.input}
                                 placeholder="Ex: 50, 30, 20"
-                                placeholderTextColor={colors.disabledColor}
+                                placeholderTextColor={theme.disabledColor}
                                 containerStyle={{ padding: 5 }}
                                 err={showErrors ? errors.prizeDistribution : false}
                             />
@@ -365,7 +374,7 @@ export default function CreateGameScreen() {
                                 inputMode="numeric"
                                 style={styles.input}
                                 placeholder="Ex: 20"
-                                placeholderTextColor={colors.disabledColor}
+                                placeholderTextColor={theme.disabledColor}
                                 containerStyle={{ padding: 5 }}
                                 err={showErrors ? errors.timeForLevel : false}
                             />
@@ -414,8 +423,8 @@ export default function CreateGameScreen() {
                         ))}
 
                         <Pressable onPress={addBlindLevel} style={styles.iconContainer}>
-                            <Icon name="plus-circle-outline" color={colors.disabledColor} size={24} />
-                            <Text style={[styles.text, { color: colors.disabledColor }]}>Add Blind Level</Text>
+                            <Icon name="plus-circle-outline" color={theme.disabledColor} size={24} />
+                            <Text style={[styles.text, { color: theme.disabledColor }]}>Add Blind Level</Text>
                         </Pressable>
                     </View>
 
@@ -423,7 +432,7 @@ export default function CreateGameScreen() {
                 </ScrollView>
             </KeyboardAvoidingView>
 
-           
+
 
             <View style={styles.btn}>
                 <LinkButton
@@ -432,19 +441,21 @@ export default function CreateGameScreen() {
                     isLoading={loading}
                 />
             </View>
+            
+            <Toast config={toastConfig}/>
 
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
     },
     title: {
         fontSize: 20,
-        color: colors.textColor,
+        color: theme.textColor,
         fontWeight: "bold",
         padding: 16,
     },
@@ -460,7 +471,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     text: {
-        color: "#aaa",
+        color: theme.secondaryTextColor,
         fontSize: 14,
         fontWeight: '700',
         paddingBottom: 5,
@@ -480,12 +491,12 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: 16,
-        color: colors.textColor,
+        color: theme.textColor,
         zIndex: 1,
         opacity: 1,
         borderWidth: 2,
         borderRadius: 7,
-        borderColor: colors.textColor,
+        borderColor: theme.textColor,
     },
     iconContainer: {
         flexDirection: 'row',
@@ -503,7 +514,7 @@ const styles = StyleSheet.create({
     modalBar: {
         width: 40,
         height: 5,
-        backgroundColor: '#ccc',
+        backgroundColor: theme.disabledColor,
         borderRadius: 2.5,
         alignSelf: 'center',
         marginVertical: 15,

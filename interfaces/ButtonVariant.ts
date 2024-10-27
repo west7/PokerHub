@@ -1,45 +1,47 @@
-import { colors } from "../theme/theme";
+import { useTheme } from "../context/ThemeProvider";
+import { darkTheme, Theme } from "../theme/theme";
 
+const theme = darkTheme; 
 export interface ButtonStyles {
-    button:{
+    button: {
         backgroundColor: string;
         borderWidth?: number;
         borderColor?: string;
     };
-    title:{
+    title: {
         color: string;
     };
-    icon:{
+    icon: {
         color: string;
     };
 }
 
 export interface ButtonVariant {
     enabled: ButtonStyles;
-    disabled: ButtonStyles;    
+    disabled: ButtonStyles;
 }
 
-export const primaryButton: ButtonVariant = { 
-    enabled:{
-        button:{
-            backgroundColor: colors.primaryColor,
+export const primaryButton: ButtonVariant = {
+    enabled: {
+        button: {
+            backgroundColor: theme.primaryColor,
         },
-        title:{
-            color: colors.buttonText,
+        title: {
+            color: theme.buttonText,
         },
-        icon:{
-            color: colors.buttonText,  
+        icon: {
+            color: theme.buttonText,
         }
     },
-    disabled:{
-        button:{
-            backgroundColor: colors.disabledColor,
+    disabled: {
+        button: {
+            backgroundColor: theme.disabledColor,
         },
-        title:{
-            color: colors.buttonText,
+        title: {
+            color: theme.buttonText,
         },
-        icon:{
-            color: colors.buttonText,  
+        icon: {
+            color: theme.buttonText,
         }
     },
 }
@@ -49,32 +51,32 @@ export const outlineButton: ButtonVariant = {
         button: {
             backgroundColor: "transparent",
             borderWidth: 2,
-            borderColor: colors.primaryColor,
+            borderColor: theme.primaryColor,
         },
-        title:{
-            color: colors.primaryColor,
+        title: {
+            color: theme.primaryColor,
         },
-        icon:{
-            color: colors.primaryColor,  
+        icon: {
+            color: theme.primaryColor,
         }
     },
-    disabled:{
-        button:{
+    disabled: {
+        button: {
             backgroundColor: "transparent",
             borderWidth: 2,
-            borderColor: colors.disabledColor,
+            borderColor: theme.disabledColor,
         },
-        title:{
-            color: colors.disabledColor,
+        title: {
+            color: theme.disabledColor,
         },
-        icon:{
-            color: colors.disabledColor,  
+        icon: {
+            color: theme.disabledColor,
         }
     },
 }
 
 export const variants = {
-    primary : primaryButton,
-    outline : outlineButton,
+    primary: primaryButton,
+    outline: outlineButton,
 }
-    
+

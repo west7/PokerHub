@@ -1,14 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
-import { colors } from "../../../../theme/theme";
 import LinkButton from "../../../../components/LinkButton";
-import { AuthContext } from "../../../../context/AuthProvider";
+import { AuthContext, useAuth } from "../../../../context/AuthProvider";
 import { useFocusEffect } from "@react-navigation/native";
 import Modal from "../../../../components/Modal";
 import { Player } from "../../../../interfaces/player.interface";
 import { createPlayer, deletePlayer, getUserPlayers, updatePlayer } from "../../../../services/players.services";
 import PlayerList from "../../../../components/List";
 import Toast from "react-native-toast-message";
+import useThemedStyles from "../../../../context/ThemeProvider";
+import { Theme } from "../../../../theme/theme";
 
 const inititalPlayer: Player = {
     playerId: '',
@@ -31,10 +32,8 @@ export default function Players() {
     const [modalEditVisible, setModalEditVisible] = useState(false);
     const [playerToEdit, setPlayerToEdit] = useState<Player | null>(null);
 
-    if (!context) {
-        throw new Error("User not found");
-    }
-    const { user } = context;
+    const { user } = useAuth();
+    const styles = useThemedStyles(getStyles);
 
     const handleNewPlayer = () => {
         if (Platform.OS === 'ios') {
@@ -199,13 +198,11 @@ export default function Players() {
             });
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
+    useEffect(() => {
             if (user) {
                 loadPlayers(user.uid);
             }
-        }, [user])
-    );
+        }, [user]);
 
     return (
         <View style={styles.container}>
@@ -227,6 +224,7 @@ export default function Players() {
                 loading={loading}
                 onDelete={handleDeletePlayer}
                 onEdit={handleEditPlayer}
+                onScrollDown={() => loadPlayers(user?.uid || '')}
                 containerStyle={styles.playerList}
             />
 
@@ -257,14 +255,14 @@ export default function Players() {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
         flex: 1,
         padding: 16,
     },
     title: {
-        color: colors.textColor,
+        color: theme.textColor,
         fontSize: 28,
         fontWeight: "bold",
         marginTop: 10,
@@ -277,13 +275,13 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 20,
-        color: colors.textColor,
+        color: theme.textColor,
         fontWeight: "bold",
         padding: 16,
     },
     playerList: {
         padding: 0,
         flexGrow: 0,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
     }
 });

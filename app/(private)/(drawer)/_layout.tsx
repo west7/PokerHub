@@ -1,16 +1,18 @@
 import React from "react";
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
-import { colors } from "../../../theme/theme";
 import { useAuth } from "../../../context/AuthProvider";
 import LoadingScreen from "../../../components/LoadingScreen";
 import Icon from 'react-native-vector-icons/Entypo';
 import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { Drawer } from 'expo-router/drawer'
+import ThemeSwitcher from "../../../components/ThemeSwitcher";
+import { useTheme } from "../../../context/ThemeProvider";
 
-export default function InsideLayout() {
+export default function DrawerLayout() {
 
     const { user, isLoading, signOut } = useAuth();
+    const { theme } = useTheme();
 
     const handleLogout = async () => {
         signOut();
@@ -24,23 +26,25 @@ export default function InsideLayout() {
         return (
             <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
 
-                <TouchableOpacity style={{ backgroundColor: colors.baseColor, padding: 20 }} activeOpacity={0.5}>
-                    <Text style={{ color: colors.textColor, fontSize: 20, fontWeight: "bold" }}>{user?.name}</Text>
+                <TouchableOpacity style={{ backgroundColor: theme.baseColor, padding: 20 }} activeOpacity={0.5}>
+                    <Text style={{ color: theme.textColor, fontSize: 20, fontWeight: "bold" }}>{user?.name}</Text>
                 </TouchableOpacity>
 
                 <View style={{ flex: 1 }}>
                     <DrawerItemList {...props} />
                 </View>
 
+                <ThemeSwitcher />
+
                 <DrawerItem
-                    style={{ backgroundColor: colors.baseColor, borderTopWidth: 2, borderTopColor: colors.backgroundLightColor, marginBottom: 12 }}
+                    style={{ backgroundColor: theme.baseColor, borderTopWidth: 2, borderTopColor: theme.backgroundLightColor, marginBottom: 12 }}
                     label="Sign Out"
-                    labelStyle={{ color: colors.textColor }}
+                    labelStyle={{ color: theme.textColor }}
                     onPress={handleLogout}
                     icon={() => (
                         <Icon
                             name="log-out"
-                            color={colors.textColor}
+                            color={theme.textColor}
                             size={18}
                         />
                     )}
@@ -58,26 +62,27 @@ export default function InsideLayout() {
                 screenOptions={{
                     headerShown: true,
                     headerStyle: {
-                        backgroundColor: colors.backgroundDarkColor,
-                        shadowColor: "#000", // Use a dark color for a subtle shadow
-                        elevation: 10,        // Android shadow depth, adjust to increase/decrease shadow
+                        backgroundColor: theme.backgroundDarkColor,
+                        shadowColor: "#000",
+                        elevation: 5,
                         shadowOffset: {
                             width: 0,
-                            height: 4,       // Higher height for more pronounced shadow
+                            height: 3,
                         },
-                        shadowOpacity: 0.25, // Adjust opacity for lighter or darker shadow
-                        shadowRadius: 5,    // Blur effect for shadow smoothness
+                        shadowOpacity: 0.25,
+                        shadowRadius: 5,
+                        borderBottomWidth: 0,
                     },
-                    headerTintColor: colors.primaryLightColor,
+                    headerTintColor: theme.primaryColor,
                     headerTitle: "",
                     drawerStyle: {
-                        backgroundColor: colors.baseColor,
+                        backgroundColor: theme.baseColor,
                         paddingTop: 20,
                     },
-                    drawerActiveBackgroundColor: colors.primaryLightColor,
-                    drawerActiveTintColor: colors.buttonText,
-                    drawerInactiveTintColor: colors.textColor,
-                    drawerInactiveBackgroundColor: colors.backgroundLightColor,
+                    drawerActiveBackgroundColor: theme.primaryColor,
+                    drawerActiveTintColor: theme.buttonText,
+                    drawerInactiveTintColor: theme.textColor,
+                    drawerInactiveBackgroundColor: theme.backgroundLightColor,
                 }}
                 drawerContent={(props) => <CustomDrawer {...props} />}
             >
@@ -88,7 +93,7 @@ export default function InsideLayout() {
                         drawerIcon: ({ focused }) => (
                             <Icon2
                                 name="home"
-                                color={focused ? colors.buttonText : colors.textColor}
+                                color={focused ? theme.buttonText : theme.textColor}
                                 size={18}
                             />
                         ),
@@ -98,10 +103,10 @@ export default function InsideLayout() {
                     name="gamesettings"
                     options={{
                         drawerLabel: "Game Settings",
-                        drawerIcon: ({focused}) => (
+                        drawerIcon: ({ focused }) => (
                             <Icon2
                                 name="cog"
-                                color={focused ? colors.buttonText : colors.textColor}
+                                color={focused ? theme.buttonText : theme.textColor}
                                 size={18}
                             />
                         ),
@@ -111,10 +116,10 @@ export default function InsideLayout() {
                     name="players"
                     options={{
                         drawerLabel: "Players",
-                        drawerIcon: ({focused}) => (
+                        drawerIcon: ({ focused }) => (
                             <Icon2
                                 name="account-group"
-                                color={focused ? colors.buttonText : colors.textColor}
+                                color={focused ? theme.buttonText : theme.textColor}
                                 size={18}
                             />
                         ),
@@ -124,10 +129,10 @@ export default function InsideLayout() {
                     name="history"
                     options={{
                         drawerLabel: "History",
-                        drawerIcon: ({focused}) => (
+                        drawerIcon: ({ focused }) => (
                             <Icon2
                                 name="history"
-                                color={focused ? colors.buttonText : colors.textColor}
+                                color={focused ? theme.buttonText : theme.textColor}
                                 size={18}
                             />
                         ),
@@ -137,10 +142,10 @@ export default function InsideLayout() {
                     name="statistics"
                     options={{
                         drawerLabel: "Statistics",
-                        drawerIcon: ({focused}) => (
+                        drawerIcon: ({ focused }) => (
                             <Icon2
                                 name="trending-up"
-                                color={focused ? colors.buttonText : colors.textColor}
+                                color={focused ? theme.buttonText : theme.textColor}
                                 size={18}
                             />
                         ),

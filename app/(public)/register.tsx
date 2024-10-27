@@ -5,14 +5,11 @@ import Input from "../../components/Input";
 import LinkButton from "../../components/LinkButton";
 import { router, } from "expo-router";
 import BackButton from "../../components/BackButton";
-import { setDoc, doc } from "firebase/firestore";
-import { FIREBASE_DB, FIREBASE_AUTH } from "../../firebaseConnection";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { colors } from "../../theme/theme";
 import Toast from "react-native-toast-message";
-import { FirebaseErrorCustomMessage } from "../../utils/firebaseerror.helper";
 import { useAuth } from "../../context/AuthProvider";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Theme } from "../../theme/theme";
+import useThemedStyles from "../../context/ThemeProvider";
 
 interface Errors {
     name?: boolean;
@@ -33,6 +30,7 @@ export default function Register() {
     const [showToast, setShowToast] = useState(false)
 
     const { signUp, isLoading } = useAuth();
+    const styles = useThemedStyles(getStyles);
 
     const handleErrors = () => {
         const e: Errors = {}
@@ -182,15 +180,15 @@ export default function Register() {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
     },
     title: {
         fontSize: 40,
         fontWeight: 'bold',
-        color: colors.textColor,
+        color: theme.textColor,
         marginLeft: 28,
         marginTop: 20,
     },
@@ -210,7 +208,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 15,
-        color: colors.textColor,
+        color: theme.textColor,
         marginTop: 5,
         marginBottom: 15,
         textDecorationLine: "underline",

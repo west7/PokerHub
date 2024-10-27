@@ -2,9 +2,11 @@ import { router } from "expo-router";
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors } from "../theme/theme";
+import { useTheme } from "../context/ThemeProvider";
+
 
 export default function BackButton() {
+    const { theme } = useTheme();
 
     const goBack = () => {
         if (router.canGoBack()) {
@@ -16,7 +18,7 @@ export default function BackButton() {
         <Pressable
             onPress={goBack}
             style={styles.container}>
-            <Icon name="chevron-left" size={30} color={colors.textColor} />
+            <Icon name="chevron-left" size={30} color={theme.textColor} />
         </Pressable>
     );
 }
@@ -28,4 +30,4 @@ const styles = StyleSheet.create({
         marginTop: 10,
         opacity: 0.7,
     }
-})
+});

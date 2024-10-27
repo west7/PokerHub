@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, ScrollView, Platform, Pressable, SafeAreaView, 
 import { router } from "expo-router";
 import LinkButton from "../../components/LinkButton";
 import Input from "../../components/Input";
-import { colors } from "../../theme/theme"
+import { Theme } from "../../theme/theme"
 import { useAuth } from "../../context/AuthProvider";
+import useThemedStyles from "../../context/ThemeProvider";
 
 interface Errors {
     email?: boolean;
@@ -21,6 +22,7 @@ export default function Login() {
     //TODO: Implementar recuperação de senha
 
     const { signIn, isLoading } = useAuth()
+    const styles = useThemedStyles(getStyles);
 
     const handleLogin = () => {
         if (Object.keys(errors).length > 0) {
@@ -108,11 +110,11 @@ export default function Login() {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
     },
     contentContainer: {
         flex: 1,
@@ -125,16 +127,16 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginBottom: 10,
         marginTop: 150,
-        color: colors.textColor,
+        color: theme.textColor,
         textDecorationLine: "underline",
-        textDecorationColor: colors.primaryColor,
+        textDecorationColor: theme.primaryColor,
     },
     subtitle: {
         fontWeight: "bold",
         fontSize: 18,
         alignSelf: "center",
         marginBottom: 40,
-        color: colors.textColor,
+        color: theme.textColor,
     },
     avoid: {
         flex: 1,
@@ -150,9 +152,9 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 15,
-        color: colors.textColor,
+        color: theme.textColor,
         marginTop: 5,
         marginBottom: 15,
         textDecorationLine: "underline",
     },
-})
+});

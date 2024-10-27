@@ -1,11 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { colors } from "../../../theme/theme";
 import BackButton from "../../../components/BackButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Theme } from "../../../theme/theme";
+import useThemedStyles from "../../../context/ThemeProvider";
 
 
 export default function Match() {
+    const styles = useThemedStyles(getStyles);  
+
     return (
         <SafeAreaView style={styles.container}>
             <BackButton />
@@ -14,15 +17,15 @@ export default function Match() {
     );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: theme.backgroundColor,
     },
     title: {
         fontSize: 20,
         fontWeight: "bold",
-        color: colors.textColor,
+        color: theme.textColor,
         padding: 16,
     }
 });
