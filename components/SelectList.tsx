@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet, ViewStyle, RefreshControl } from "react-native";
-import { GameSetup } from "../interfaces/game.interface";
-import { Theme } from "../theme/theme";
+import React from "react";
 import { Player } from "../interfaces/player.interface";
-import GameCard from "./GameCard";
-import PlayerCard from "./PlayerCard";
+import { GameSetup } from "../interfaces/game.interface";
+import { ActivityIndicator, FlatList, StyleSheet, ViewStyle } from "react-native";
+import GameCardSelect from "./GameCardSelect";
+import PlayerCardSelect from "./PlayerCardSelect";
 import useThemedStyles, { useTheme } from "../context/ThemeProvider";
-
+import { Theme } from "../theme/theme";
 
 function isGameSetup(item: GameSetup | Player): item is GameSetup {
     return (item as GameSetup).gameName !== undefined;
@@ -15,26 +14,30 @@ function isGameSetup(item: GameSetup | Player): item is GameSetup {
 function isPlayer(item: GameSetup | Player): item is Player {
     return (item as Player).playerId !== undefined;
 }
-interface ListProps<T extends GameSetup | Player> {
+
+interface SelectListProps<T extends GameSetup | Player> {
     data: T[];
     loading: boolean;
-    onEdit: (item: T) => void;
-    onDelete: (id: string) => void;
-    onScrollDown?: () => void;
+    horizontal?: boolean;
     containerStyle?: ViewStyle;
+    onClick: (item: T) => void;
+    selectedGameName?: string | null;
+    selectedPlayersId: string[];
+    scrollEnabled?: boolean;
 }
 
-export default function List<T extends GameSetup | Player>({
+export default function SelectList<T extends GameSetup | Player>({
     data,
     loading,
-    onEdit,
-    onDelete,
-    onScrollDown,
+    horizontal,
     containerStyle,
-}: ListProps<T>) {
-
-    const styles = useThemedStyles(getStyles);
+    onClick,
+    selectedGameName,
+    selectedPlayersId,
+    scrollEnabled,
+}: SelectListProps<T>) {
     const { theme } = useTheme();
+    const styles = useThemedStyles(getStyles)
 
     const renderItem = ({ item, index }: { item: T, index: number }) => {
         const isFirstItem = index === 0;
@@ -42,22 +45,22 @@ export default function List<T extends GameSetup | Player>({
 
         if (isGameSetup(item)) {
             return (
-                <GameCard
+                <GameCardSelect
                     item={item}
-                    onEdit={() => onEdit(item)}
-                    onDelete={onDelete}
+                    onClick={() => onClick(item)}
+                    isSelected={item.gameName === selectedGameName}
                     cardStyle={[
-                        isFirstItem && { borderTopLeftRadius: 10, borderTopRightRadius: 10 },
-                        isLastItem && { borderBottomLeftRadius: 10, borderBottomRightRadius: 10 },
+                        isFirstItem && { borderTopLeftRadius: 10, borderBottomLeftRadius: 10 },
+                        isLastItem && { borderTopRightRadius: 10, borderBottomRightRadius: 10 },
                     ]}
                 />
             );
         } else if (isPlayer(item)) {
             return (
-                <PlayerCard
+                <PlayerCardSelect
                     item={item}
-                    onEdit={() => onEdit(item)}
-                    onDelete={onDelete}
+                    onClick={() => onClick(item)}
+                    isSelected={selectedPlayersId.includes(item.playerId)}
                     cardStyle={[
                         isFirstItem && { borderTopLeftRadius: 10, borderTopRightRadius: 10 },
                         isLastItem && { borderBottomLeftRadius: 10, borderBottomRightRadius: 10 },
@@ -65,16 +68,9 @@ export default function List<T extends GameSetup | Player>({
                 />
             );
         }
-        return null;
-    };
 
-    
-    const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = () => {
-        setRefreshing(true);
-        onScrollDown && onScrollDown();
-        setRefreshing(false);
-    };
+        return null;
+    }
 
     if (loading) {
         return <ActivityIndicator size="small" color={theme.primaryColor} />;
@@ -82,26 +78,20 @@ export default function List<T extends GameSetup | Player>({
 
     return (
         <FlatList
-            style={[styles.container, containerStyle]}
             data={data}
             keyExtractor={(item) => (isGameSetup(item) ? item.gameName : item.playerId)}
             renderItem={renderItem}
-            ListEmptyComponent={<Text style={styles.emptyText}>No items found</Text>}
+            horizontal={horizontal}
+            showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    progressViewOffset={100}
-                />
-            }
+            style={[containerStyle, styles.container]}
+            scrollEnabled={scrollEnabled}
         />
     );
 }
 
 const getStyles = (theme: Theme) => StyleSheet.create({
     container: {
-        overflow: 'hidden',
     },
     title: {
         fontSize: 16,

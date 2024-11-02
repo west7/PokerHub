@@ -6,7 +6,6 @@ import { GameSetup } from "../../../../interfaces/game.interface";
 import GamesList from "../../../../components/List";
 import { deleteGame, getUserGames } from "../../../../services/game.services";
 import Modal from "../../../../components/Modal";
-import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Theme } from "../../../../theme/theme";
@@ -24,7 +23,6 @@ export default function GameSettings() {
 
     const loadgames = (userId: string) => {
         setLoading(true);
-        console.log("Loading games");
         getUserGames(userId)
             .then((games) => {
                 setGameSetups(games);
