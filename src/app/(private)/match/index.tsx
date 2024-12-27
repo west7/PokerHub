@@ -91,6 +91,7 @@ export default function Match() {
     return (
         <SafeAreaView style={styles.container}>
 
+            <ScrollView>
 
                 <View>
                     <BackButton />
@@ -111,12 +112,13 @@ export default function Match() {
 
                 <Text style={[styles.title, { marginTop: 20 }]}>Select the players</Text>
 
-                <View style={{ paddingHorizontal: 16, height: 280 }}> {/* Definir se vai usar ScrollView ou Flatlist */}
+                <View style={{ paddingHorizontal: 16 }}>
                     <SelectList
                         data={players}
                         loading={loading}
                         onClick={handleSelectPlayer}
                         selectedPlayersId={selectedPlayersId}
+                        scrollEnabled={false}
                     />
                 </View>
 
@@ -129,6 +131,8 @@ export default function Match() {
                         title='Go'
                     />
                 </View>
+                
+            </ScrollView>
 
         </SafeAreaView>
     );

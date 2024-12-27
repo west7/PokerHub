@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { GameSetup } from "../interfaces/game.interface";
-import { FIREBASE_DB } from "../firebaseConnection";
+import { FIREBASE_DB } from "../../firebaseConnection";
 
 const db = FIREBASE_DB;
 

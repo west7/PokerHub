@@ -7,7 +7,6 @@ interface FormProviderProps {
 interface FormContextProps {
     formData: GameSetup;
     updateFormData: (field: string, value: string | BlindLevel[]) => void;
-    updateBlindLevel: (index: number, field: 'smallBlind' | 'bigBlind', value: string) => void;
     resetFormData: () => void;
 }
 
@@ -37,7 +36,7 @@ export default function FormProvider({ children }: FormProviderProps) {
         setFormData((prev) => ({...prev, [field]: value}));
     };
 
-    const updateBlindLevel = (index: number, field: 'smallBlind' | 'bigBlind', value: string) => {
+   /*  const updateBlindLevel = (index: number, field: 'smallBlind' | 'bigBlind', value: string) => {
         setFormData(prev => {
             // Verifica se o índice está dentro dos limites do array
             if (index < 0 || index >= prev.blindLevels.length) {
@@ -51,14 +50,14 @@ export default function FormProvider({ children }: FormProviderProps) {
 
             return { ...prev, blindLevels: updatedBlindLevels };
         });
-    };
+    }; */
 
     const resetFormData = () => {
         setFormData(initialFormData);
     };
 
     return (
-        <FormContext.Provider value={{formData, updateFormData, updateBlindLevel, resetFormData}}>
+        <FormContext.Provider value={{formData, updateFormData, resetFormData}}>
             {children}
         </FormContext.Provider>
     );

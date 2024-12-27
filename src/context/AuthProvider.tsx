@@ -1,6 +1,6 @@
 import { onAuthStateChanged, User as FirebaseUser, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as FirebaseSignOut } from "firebase/auth";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../firebaseConnection";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../../firebaseConnection";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { User } from "../interfaces/user.interface";
 import { FirebaseErrorCustomMessage } from "../utils/firebaseerror.helper";
@@ -9,6 +9,7 @@ import { FirebaseError } from "firebase/app";
 
 const auth = FIREBASE_AUTH;
 const db = FIREBASE_DB;
+
 interface AuthProviderProps {
     children: ReactNode;
 }

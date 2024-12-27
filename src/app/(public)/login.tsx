@@ -26,7 +26,7 @@ export default function Login() {
 
     const handleLogin = () => {
         if (Object.keys(errors).length > 0) {
-            setShowErrors(true);
+            setShowErrors(true);                                    
             return;
         }
         setShowErrors(false);

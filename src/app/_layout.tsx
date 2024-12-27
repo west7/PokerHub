@@ -5,7 +5,6 @@ import { StatusBar } from "react-native";
 import Toast from 'react-native-toast-message';
 import LoadingScreen from "../components/LoadingScreen";
 import { ThemeProvider } from "../context/ThemeProvider";
-import { darkTheme } from "../theme/theme";
 import toastConfig from "../utils/toastConfig";
 
 export default function RootLayout() {
