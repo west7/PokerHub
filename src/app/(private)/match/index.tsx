@@ -14,6 +14,8 @@ import Toast from "react-native-toast-message";
 import { getUserPlayers } from "../../../services/players.services";
 import SelectList from '../../../components/SelectList';
 import LinkButton from '../../../components/LinkButton';
+import { router } from 'expo-router';
+import SearchBar from '../../../components/SearchBar';
 
 
 export default function Match() {
@@ -23,6 +25,7 @@ export default function Match() {
     const [loading, setLoading] = useState(false);
     const [selectedGameSetupName, setSelectedGameSetupName] = useState<string | null>(null);
     const [selectedPlayersId, setSelectedPlayersId] = useState<string[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const { user } = useAuth();
 
@@ -81,6 +84,30 @@ export default function Match() {
         });
     }
 
+    const filteredData = searchQuery.trim() === ""
+        ? players
+        : players.filter((player) =>
+            player.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+    const handleGo = () => {
+        if (!selectedGameSetupName || selectedPlayersId.length === 0) {
+            Toast.show({
+                type: "error",
+                text1: "Error!",
+                text2: "Seleção incompleta",
+            });
+            return;
+        }
+        router.push({
+            pathname: '/(private)/match/matchscreen',
+            params: {
+                gameSetup: selectedGameSetupName,
+                playersId: JSON.stringify(selectedPlayersId),
+            }
+        });
+    }
+
     useEffect(() => {
         if (user) {
             loadgames(user.uid);
@@ -91,48 +118,46 @@ export default function Match() {
     return (
         <SafeAreaView style={styles.container}>
 
-            <ScrollView>
 
-                <View>
-                    <BackButton />
-                    <Text style={styles.title}>Select the Game Setup</Text>
-                </View>
+            <View>
+                <BackButton />
+                <Text style={styles.title}>Select the Game Setup</Text>
+            </View>
 
-                <View style={{ paddingHorizontal: 16 }}>
-                    <SelectList
-                        data={gameSetups}
-                        loading={loading}
-                        horizontal
-                        onClick={handleSelectGame}
-                        selectedGameName={selectedGameSetupName}
-                        selectedPlayersId={[]}
-                    />
-                </View>
+            <View style={{ paddingHorizontal: 16 }}>
+                <SelectList
+                    data={gameSetups}
+                    loading={loading}
+                    horizontal
+                    onClick={handleSelectGame}
+                    selectedGameName={selectedGameSetupName}
+                    selectedPlayersId={[]}
+                />
+            </View>
 
 
-                <Text style={[styles.title, { marginTop: 20 }]}>Select the players</Text>
+            <Text style={[styles.title, { marginTop: 20 }]}>Select the players</Text>
 
-                <View style={{ paddingHorizontal: 16 }}>
-                    <SelectList
-                        data={players}
-                        loading={loading}
-                        onClick={handleSelectPlayer}
-                        selectedPlayersId={selectedPlayersId}
-                        scrollEnabled={false}
-                    />
-                </View>
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder='Search...' />
 
-                <View style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginVertical: 20,
-                }}>
-                    <LinkButton
-                        title='Go'
-                    />
-                </View>
-                
-            </ScrollView>
+            <View style={{ paddingHorizontal: 16, flex: 1 }}>
+                <SelectList
+                    data={filteredData}
+                    loading={loading}
+                    onClick={handleSelectPlayer}
+                    selectedPlayersId={selectedPlayersId}
+                    nestedScrollEnabled={true}
+                    columns={1}
+                />
+            </View>
+
+            <View style={styles.btn}>
+                <LinkButton
+                    title='Go'
+                    onPress={handleGo}
+                />
+            </View>
+
 
         </SafeAreaView>
     );
@@ -151,4 +176,10 @@ const getStyles = (theme: Theme) => StyleSheet.create({
     },
     gameList: {
     },
+    btn: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: theme.backgroundColor,
+        marginBottom: 50,
+    }
 });

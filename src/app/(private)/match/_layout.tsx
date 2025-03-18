@@ -15,6 +15,9 @@ export default function MatchLayout() {
                 <Stack.Screen
                     name="index"
                 />
+                <Stack.Screen
+                    name="matchscreen"
+                />
             </Stack>
         </>
     );

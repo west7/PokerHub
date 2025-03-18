@@ -1,61 +1,27 @@
 import React from "react";
-import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
+import { Drawer } from "expo-router/drawer";
+import { DrawerItemList, DrawerItem } from "@react-navigation/drawer";
 import { useAuth } from "../../../context/AuthProvider";
 import LoadingScreen from "../../../components/LoadingScreen";
-import Icon from 'react-native-vector-icons/Entypo';
-import { View, Text, TouchableOpacity, StatusBar } from "react-native";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import { Drawer } from 'expo-router/drawer'
 import ThemeSwitcher from "../../../components/ThemeSwitcher";
+import Icon from "react-native-vector-icons/Entypo";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../../context/ThemeProvider";
+import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 
 export default function DrawerLayout() {
-
     const { user, isLoading, signOut } = useAuth();
     const { theme } = useTheme();
 
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
+
     const handleLogout = async () => {
         signOut();
-    }
-
-    if (isLoading) {
-        return <LoadingScreen />
-    }
-
-    const CustomDrawer = (props: DrawerContentComponentProps) => {
-        return (
-            <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
-
-                <TouchableOpacity style={{ backgroundColor: theme.baseColor, padding: 20 }} activeOpacity={0.5}>
-                    <Text style={{ color: theme.textColor, fontSize: 20, fontWeight: "bold" }}>{user?.name}</Text>
-                </TouchableOpacity>
-
-                <View style={{ flex: 1 }}>
-                    <DrawerItemList {...props} />
-                </View>
-
-                <ThemeSwitcher />
-
-                <DrawerItem
-                    style={{ backgroundColor: theme.baseColor, borderTopWidth: 2, borderTopColor: theme.backgroundLightColor, marginBottom: 12 }}
-                    label="Sign Out"
-                    labelStyle={{ color: theme.textColor }}
-                    onPress={handleLogout}
-                    icon={() => (
-                        <Icon
-                            name="log-out"
-                            color={theme.textColor}
-                            size={18}
-                        />
-                    )}
-                />
-
-            </DrawerContentScrollView>
-        );
-    }
+    };
 
     return (
-
         <>
             <StatusBar barStyle="default" />
             <Drawer
@@ -83,45 +49,67 @@ export default function DrawerLayout() {
                     drawerActiveTintColor: theme.buttonText,
                     drawerInactiveTintColor: theme.textColor,
                     drawerInactiveBackgroundColor: theme.backgroundLightColor,
+                    drawerItemStyle: {
+                        marginVertical: 5,
+                        borderRadius: 8,
+                    },
                 }}
-                drawerContent={(props) => <CustomDrawer {...props} />}
+                drawerContent={(props) => (
+                    <View style={{ flex: 1, padding: 20, backgroundColor: theme.baseColor }}>
+                        <TouchableOpacity activeOpacity={0.5} style={{ marginBottom: 20 }}>
+                            <Text style={{ color: theme.textColor, fontSize: 20, fontWeight: "bold" }}>
+                                {user?.name}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <View style={{ flex: 1 }}>
+                            <DrawerItemList {...props} />
+                        </View>
+
+                        <ThemeSwitcher />
+
+                        <DrawerItem
+                            style={{
+                                backgroundColor: theme.baseColor,
+                                borderTopColor: theme.backgroundLightColor, marginBottom: 12,
+                                borderTopWidth: 2,
+                                borderRadius: 5,
+                            }}
+                            label="Sign Out"
+                            labelStyle={{ color: theme.textColor }}
+                            onPress={handleLogout}
+                            icon={() => (
+                                <Icon
+                                    name="log-out"
+                                    color={theme.textColor}
+                                    size={18}
+                                />
+                            )}
+                        />
+
+                    </View>
+                )}
             >
                 <Drawer.Screen
                     name="index"
                     options={{
                         drawerLabel: "Home",
-                        drawerIcon: ({ focused }) => (
-                            <Icon2
-                                name="home"
-                                color={focused ? theme.buttonText : theme.textColor}
-                                size={18}
-                            />
-                        ),
+                        drawerIcon: ({ color, size }) => <Icon2 name="home" color={color} size={size} />,
                     }}
                 />
                 <Drawer.Screen
                     name="gamesettings"
                     options={{
                         drawerLabel: "Game Settings",
-                        drawerIcon: ({ focused }) => (
-                            <Icon2
-                                name="cog"
-                                color={focused ? theme.buttonText : theme.textColor}
-                                size={18}
-                            />
-                        ),
+                        drawerIcon: ({ color, size }) => <Icon2 name="cog" color={color} size={size} />,
                     }}
                 />
                 <Drawer.Screen
                     name="players"
                     options={{
                         drawerLabel: "Players",
-                        drawerIcon: ({ focused }) => (
-                            <Icon2
-                                name="account-group"
-                                color={focused ? theme.buttonText : theme.textColor}
-                                size={18}
-                            />
+                        drawerIcon: ({ color, size }) => (
+                            <Icon2 name="account-group" color={color} size={size} />
                         ),
                     }}
                 />
@@ -129,25 +117,15 @@ export default function DrawerLayout() {
                     name="history"
                     options={{
                         drawerLabel: "History",
-                        drawerIcon: ({ focused }) => (
-                            <Icon2
-                                name="history"
-                                color={focused ? theme.buttonText : theme.textColor}
-                                size={18}
-                            />
-                        ),
+                        drawerIcon: ({ color, size }) => <Icon2 name="history" color={color} size={size} />,
                     }}
                 />
                 <Drawer.Screen
                     name="statistics"
                     options={{
                         drawerLabel: "Statistics",
-                        drawerIcon: ({ focused }) => (
-                            <Icon2
-                                name="trending-up"
-                                color={focused ? theme.buttonText : theme.textColor}
-                                size={18}
-                            />
+                        drawerIcon: ({ color, size }) => (
+                            <Icon2 name="trending-up" color={color} size={size} />
                         ),
                     }}
                 />

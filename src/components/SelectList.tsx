@@ -24,6 +24,8 @@ interface SelectListProps<T extends GameSetup | Player> {
     selectedGameName?: string | null;
     selectedPlayersId: string[];
     scrollEnabled?: boolean;
+    nestedScrollEnabled?: boolean;
+    columns?: number;
 }
 
 export default function SelectList<T extends GameSetup | Player>({
@@ -35,6 +37,8 @@ export default function SelectList<T extends GameSetup | Player>({
     selectedGameName,
     selectedPlayersId,
     scrollEnabled,
+    nestedScrollEnabled,
+    columns
 }: SelectListProps<T>) {
     const { theme } = useTheme();
     const styles = useThemedStyles(getStyles)
@@ -86,6 +90,8 @@ export default function SelectList<T extends GameSetup | Player>({
             showsVerticalScrollIndicator={false}
             style={[containerStyle, styles.container]}
             scrollEnabled={scrollEnabled}
+            nestedScrollEnabled={nestedScrollEnabled}
+            numColumns={columns}
         />
     );
 }
